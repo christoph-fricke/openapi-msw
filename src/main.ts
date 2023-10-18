@@ -1,10 +1,10 @@
 import { HttpHandler, http as mswHttp } from "msw";
-import type { RequestHandlerOptions } from "./missing-msw-types.js";
 import { convertToColonPath } from "./path-mapping.js";
 import type {
   AnyApiSpec,
   HttpMethod,
   PathsForMethod,
+  RequestHandlerOptions,
   SafeRequestResolver,
 } from "./type-helpers.js";
 

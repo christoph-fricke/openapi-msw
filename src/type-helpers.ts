@@ -6,7 +6,7 @@ import type {
   ResponseObjectMap,
   SuccessResponse,
 } from "openapi-typescript-helpers";
-import type { HttpHandlerFactory } from "./missing-msw-types.js";
+import type { http } from "msw";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -73,9 +73,12 @@ export type SafeRequestResolver<
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > = Parameters<
-  HttpHandlerFactory<
+  typeof http.get<
     PathParams<ApiSpec, Path, Method>,
     RequestBody<ApiSpec, Path, Method>,
     ResponseBody<ApiSpec, Path, Method>
   >
 >[1];
+
+/** MSW handler options. */
+export type RequestHandlerOptions = Parameters<typeof http.get>[2];
