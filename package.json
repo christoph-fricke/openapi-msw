@@ -14,8 +14,8 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
+      "types": "./dist/exports/main.d.ts",
+      "import": "./dist/exports/main.js"
     }
   },
   "scripts": {
@@ -29,6 +29,12 @@
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
     "*.{ts,js,mjs}": "eslint --fix"
+  },
+  "dependencies": {
+    "openapi-typescript-helpers": "^0.0.4"
+  },
+  "peerDependencies": {
+    "msw": "0.0.0-fetch.rc-23"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.7.5",
