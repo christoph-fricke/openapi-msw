@@ -14,8 +14,8 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/main.d.ts",
-      "import": "./dist/main.js"
+      "types": "./dist/exports/main.d.ts",
+      "import": "./dist/exports/main.js"
     }
   },
   "scripts": {

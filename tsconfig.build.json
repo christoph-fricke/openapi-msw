@@ -4,6 +4,6 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "include": ["src"],
+  "include": ["src", "exports"],
   "exclude": ["**/*.test.*"]
 }
