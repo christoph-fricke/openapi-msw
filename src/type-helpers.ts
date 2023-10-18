@@ -67,18 +67,34 @@ export type ResponseBody<
     : never
   : never;
 
+/** MSW http handler factory with type inference for provided api paths. */
+export type HttpHandlerFactory<
+  ApiSpec extends AnyApiSpec,
+  Method extends HttpMethod,
+> = <Path extends PathsForMethod<ApiSpec, Method>>(
+  path: Path,
+  resolver: ResponseResolver<ApiSpec, Path, Method>,
+  options?: RequestHandlerOptions,
+) => ReturnType<typeof http.all>;
+
+/** MSW handler options. */
+export type RequestHandlerOptions = Required<Parameters<typeof http.all>[2]>;
+
 /** MSW response resolver function that is made type-safe through an api spec. */
-export type ResponseResolver<
+export interface ResponseResolver<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> extends ResponseResolverType<ApiSpec, Path, Method> {}
+
+type ResponseResolverType<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > = Parameters<
-  typeof http.get<
+  typeof http.all<
     PathParams<ApiSpec, Path, Method>,
     RequestBody<ApiSpec, Path, Method>,
     ResponseBody<ApiSpec, Path, Method>
   >
 >[1];
-
-/** MSW handler options. */
-export type RequestHandlerOptions = Parameters<typeof http.get>[2];

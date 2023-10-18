@@ -1,19 +1,13 @@
-import { type HttpHandler, http as mswHttp } from "msw";
+import { http as mswHttp } from "msw";
 import { convertToColonPath } from "./path-mapping.js";
 import type {
   AnyApiSpec,
+  HttpHandlerFactory,
   HttpMethod,
-  PathsForMethod,
-  RequestHandlerOptions,
-  ResponseResolver,
 } from "./type-helpers.js";
 
 export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
-  [Method in HttpMethod]: <Path extends PathsForMethod<ApiSpec, Method>>(
-    path: Path,
-    resolver: ResponseResolver<ApiSpec, Path, Method>,
-    options?: RequestHandlerOptions,
-  ) => HttpHandler;
+  [Method in HttpMethod]: HttpHandlerFactory<ApiSpec, Method>;
 } & { untyped: typeof mswHttp };
 
 export interface HttpOptions {
@@ -38,12 +32,11 @@ export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
 function createHttpWrapper<
   ApiSpec extends AnyApiSpec,
   Method extends HttpMethod,
->(method: Method, httpOptions?: HttpOptions) {
-  return <Path extends PathsForMethod<ApiSpec, Method>>(
-    path: Path,
-    resolver: ResponseResolver<ApiSpec, Path, Method>,
-    options?: RequestHandlerOptions,
-  ): HttpHandler => {
+>(
+  method: Method,
+  httpOptions?: HttpOptions,
+): HttpHandlerFactory<ApiSpec, Method> {
+  return (path, resolver, options) => {
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
     return mswHttp[method](mswPath, resolver, options);
   };
