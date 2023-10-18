@@ -5,24 +5,24 @@ import type {
   HttpMethod,
   PathsForMethod,
   RequestHandlerOptions,
-  SafeRequestResolver,
+  ResponseResolver,
 } from "./type-helpers.js";
 
-export type SafeHttpHandlers<ApiSpec extends AnyApiSpec> = {
+export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
   [Method in HttpMethod]: <Path extends PathsForMethod<ApiSpec, Method>>(
     path: Path,
-    resolver: SafeRequestResolver<ApiSpec, Path, Method>,
+    resolver: ResponseResolver<ApiSpec, Path, Method>,
     options?: RequestHandlerOptions,
   ) => HttpHandler;
-} & { unsafe: typeof mswHttp };
+} & { untyped: typeof mswHttp };
 
 export interface HttpOptions {
   baseUrl?: string;
 }
 
-export function createSafeHttp<ApiSpec extends AnyApiSpec>(
+export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
   options?: HttpOptions,
-): SafeHttpHandlers<ApiSpec> {
+): OpenApiHttpHandlers<ApiSpec> {
   return {
     get: createHttpWrapper<ApiSpec, "get">("get", options),
     put: createHttpWrapper<ApiSpec, "put">("put", options),
@@ -31,7 +31,7 @@ export function createSafeHttp<ApiSpec extends AnyApiSpec>(
     options: createHttpWrapper<ApiSpec, "options">("options", options),
     head: createHttpWrapper<ApiSpec, "head">("head", options),
     patch: createHttpWrapper<ApiSpec, "patch">("patch", options),
-    unsafe: mswHttp,
+    untyped: mswHttp,
   };
 }
 
@@ -41,7 +41,7 @@ function createHttpWrapper<
 >(method: Method, httpOptions?: HttpOptions) {
   return <Path extends PathsForMethod<ApiSpec, Method>>(
     path: Path,
-    resolver: SafeRequestResolver<ApiSpec, Path, Method>,
+    resolver: ResponseResolver<ApiSpec, Path, Method>,
     options?: RequestHandlerOptions,
   ): HttpHandler => {
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);

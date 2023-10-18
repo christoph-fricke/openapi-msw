@@ -67,8 +67,8 @@ export type ResponseBody<
     : never
   : never;
 
-/** MSW handler resolver function that is made type-safe through an api spec. */
-export type SafeRequestResolver<
+/** MSW response resolver function that is made type-safe through an api spec. */
+export type ResponseResolver<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
