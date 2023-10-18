@@ -1,4 +1,4 @@
-import { HttpHandler, http as mswHttp } from "msw";
+import { type HttpHandler, http as mswHttp } from "msw";
 import { convertToColonPath } from "./path-mapping.js";
 import type {
   AnyApiSpec,
