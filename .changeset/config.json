@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "christoph-fricke/openapi-msw" }
+  ],
+  "commit": false,
+  "access": "public",
+  "baseBranch": "main"
+}
