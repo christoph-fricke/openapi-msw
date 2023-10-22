@@ -14,13 +14,13 @@ describe(convertToColonPath, () => {
     expect(result).toBe("/users/:id");
   });
 
-  it("should convert all fragment in a path to colon convention", () => {
+  it("should convert all fragments in a path to colon convention", () => {
     const result = convertToColonPath("/users/{userId}/posts/{postIds}");
 
     expect(result).toBe("/users/:userId/posts/:postIds");
   });
 
-  it("should append baseUrl to the path when provided", () => {
+  it("should append a baseUrl to the path when provided", () => {
     const noBaseUrl = convertToColonPath("/users");
     const withBaseUrl = convertToColonPath("/users", "https://localhost:3000");
 
