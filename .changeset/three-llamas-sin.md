@@ -4,7 +4,7 @@
 
 Added `createOpenApiHttp(...)` to create a thin, type-safe wrapper around
 [MSW](https://mswjs.io/)'s `http` that uses
-[openapi-ts](https://openapi-ts.pages.dev/introduction/) `paths``:
+[openapi-ts](https://openapi-ts.pages.dev/introduction/) `paths`:
 
 ```ts
 import type { paths } from "./openapi-ts-definitions";
