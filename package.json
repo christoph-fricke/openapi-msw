@@ -19,12 +19,13 @@
     }
   },
   "scripts": {
+    "prepare": "husky install",
     "build": "rimraf ./dist && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
     "lint": "tsc --noEmit && eslint . && prettier -c .",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "prepare": "husky install"
+    "release": "changeset publish"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
@@ -37,6 +38,8 @@
     "msw": "0.0.0-fetch.rc-23"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@vitest/coverage-v8": "^0.34.6",
