@@ -25,6 +25,7 @@
     "lint": "tsc --noEmit && eslint . && prettier -c .",
     "test": "vitest",
     "test:cov": "vitest --coverage",
+    "version": "changeset version && npm i",
     "release": "changeset publish"
   },
   "lint-staged": {
