@@ -12,10 +12,10 @@
     "@typescript-eslint/no-empty-interface": [
       "error",
       {
-        // Often types are computed and expanded in Intellisense previews in editors,
-        // which can lead to verbose and heard to understand type signatures.
-        // Interface keep their name in previews, which can be used to clarify
-        // previews by using interfaces that just extend a type.
+        // Often types are computed and expanded in editor previews,
+        // which can lead to verbose and hard-to-understand type signatures.
+        // Interfaces keep their name in previews, which can be used to clarify
+        // previews by using interfaces that only extend a type.
         "allowSingleExtends": true
       }
     ]
