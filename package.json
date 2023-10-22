@@ -20,12 +20,13 @@
     }
   },
   "scripts": {
+    "prepare": "husky install",
     "build": "rimraf ./dist && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
     "lint": "tsc --noEmit && eslint . && prettier -c .",
     "test": "vitest",
     "test:cov": "vitest --coverage",
-    "prepare": "husky install"
+    "release": "changeset publish"
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
