@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "author": "Christoph Fricke <christoph@frickeonline.de>",
-  "description": "Type-safe MSW wrapper for your OpenAPI schema.",
+  "description": "Tiny, type-safe wrapper around MSW wrapper for type inference from OpenApi schemas.",
   "repository": "github:christoph-fricke/openapi-msw",
   "files": [
     "dist",
