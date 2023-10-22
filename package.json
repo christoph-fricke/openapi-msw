@@ -3,7 +3,6 @@
   "name": "openapi-msw",
   "type": "module",
   "version": "0.0.0",
-  "private": true,
   "license": "MIT",
   "author": "Christoph Fricke <christoph@frickeonline.de>",
   "description": "Type-safe MSW wrapper for your OpenAPI schema.",
