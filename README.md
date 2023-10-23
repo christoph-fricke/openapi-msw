@@ -17,17 +17,17 @@ provide backwards compatibility for MSW v1.
 
 ## Usage Guide
 
-This guide assumes that you already have OpenApi-TS setup and configured to
-generate `paths` definitions. Please refer to
-[their setup guide](https://openapi-ts.pages.dev/introduction) before continuing
-with this usage guide.
+This guide assumes that you already have OpenApi-TS set up and configured to
+generate `paths` definitions. If you have not set it up, please refer to the
+[OpenApi-TS setup guide](https://openapi-ts.pages.dev/introduction) before
+continuing with this usage guide.
 
 ### Getting Started
 
 Once you have your OpenApi schema types ready-to-go, you can use OpenApi-MSW to
 create an enhanced version of MSW's `http` object. The enhanced version is
 designed to be almost identical to MSW in usage. Using the `http` object created
-with OpenApi-MSW enables multiple type-safety and editor suggestion benefits.
+with OpenApi-MSW enables multiple type-safety and editor suggestion benefits:
 
 - **Paths:** Only accepts paths that are available for the current HTTP method
 - **Params**: Automatically typed with path parameters in the current path
@@ -83,11 +83,9 @@ export const getHandler = http.get("/resource", () => {
 
 MSW handlers can be very flexible with the ability to define wildcards (\*) in a
 path. This can be very useful for catch-all handlers but clashes with your
-OpenApi spec, since it probably is endpoint of your API. To define handlers that
-are unknown to your OpenApi spec, you have two options available:
-
-1. Import the original `http` object from MSW
-1. **Suggested:** Access the original `http` object through `http.untyped`
+OpenApi spec, since it probably is not an endpoint of your API. To define
+handlers that are unknown to your OpenApi spec, you can access the original
+`http` object through `http.untyped`.
 
 ```typescript
 const http = createOpenApiHttp<paths>();
@@ -97,6 +95,9 @@ const catchAll = http.untyped.all("/resource/*", ({ params }) => {
   return HttpResponse.json(/* ... */);
 });
 ```
+
+Alternatively, you can import the original `http` object from MSW and use that
+one for unknown paths instead.
 
 ## License
 
