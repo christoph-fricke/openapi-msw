@@ -1,12 +1,12 @@
-<h1 align="center">OpenApi-MSW</h1>
+<h1 align="center">OpenAPI-MSW</h1>
 
 A tiny, type-safe wrapper around [MSW](https://mswjs.io) to add support for full
-type inference from OpenApi schema definitions that are generated with
-[OpenApi-TS](https://openapi-ts.pages.dev/introduction).
+type inference from OpenAPI schema definitions that are generated with
+[OpenAPI-TS](https://openapi-ts.pages.dev/introduction).
 
 ## Installation
 
-You can install OpenApi-MSW with this shell command:
+You can install OpenAPI-MSW with this shell command:
 
 ```bash
 npm i -D openapi-msw
@@ -17,17 +17,17 @@ provide backwards compatibility for MSW v1.
 
 ## Usage Guide
 
-This guide assumes that you already have OpenApi-TS set up and configured to
+This guide assumes that you already have OpenAPI-TS set up and configured to
 generate `paths` definitions. If you have not set it up, please refer to the
-[OpenApi-TS setup guide](https://openapi-ts.pages.dev/introduction) before
+[OpenAPI-TS setup guide](https://openapi-ts.pages.dev/introduction) before
 continuing with this usage guide.
 
 ### Getting Started
 
-Once you have your OpenApi schema types ready-to-go, you can use OpenApi-MSW to
+Once you have your OpenAPI schema types ready-to-go, you can use OpenAPI-MSW to
 create an enhanced version of MSW's `http` object. The enhanced version is
 designed to be almost identical to MSW in usage. Using the `http` object created
-with OpenApi-MSW enables multiple type-safety and editor suggestion benefits:
+with OpenAPI-MSW enables multiple type-safety and editor suggestion benefits:
 
 - **Paths:** Only accepts paths that are available for the current HTTP method
 - **Params**: Automatically typed with path parameters in the current path
@@ -39,7 +39,7 @@ with OpenApi-MSW enables multiple type-safety and editor suggestion benefits:
 ```typescript
 import { HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-// 1. Import the paths from your OpenApi schema definitions
+// 1. Import the paths from your OpenAPI schema definitions
 import type { paths } from "./your-openapi-schema";
 
 // 2. Provide your paths definition to enable the above benefits during usage
@@ -57,7 +57,7 @@ const getHandler = http.post("/resource", async ({ request }) => {
   return HttpResponse.json({ ...data /* ... more response data */ });
 });
 
-// TS shows an error when "/unknown" is not defined in the OpenApi schema paths
+// TS shows an error when "/unknown" is not defined in the OpenAPI schema paths
 const otherHandler = http.get("/unknown", () => {
   return new HttpResponse();
 });
@@ -83,8 +83,8 @@ export const getHandler = http.get("/resource", () => {
 
 MSW handlers can be very flexible with the ability to define wildcards (\*) in a
 path. This can be very useful for catch-all handlers but clashes with your
-OpenApi spec, since it probably is not an endpoint of your API. To define
-handlers that are unknown to your OpenApi spec, you can access the original
+OpenAPI spec, since it probably is not an endpoint of your API. To define
+handlers that are unknown to your OpenAPI spec, you can access the original
 `http` object through `http.untyped`.
 
 ```typescript
