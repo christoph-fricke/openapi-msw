@@ -11,7 +11,7 @@ import type { http } from "msw";
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
 
-/** Intersection of HTTP methods that are supported by both OpenApi-TS and MSW. */
+/** Intersection of HTTP methods that are supported by both OpenAPI-TS and MSW. */
 export type HttpMethod =
   | "get"
   | "put"
