@@ -34,8 +34,8 @@ jobs:
         with:
           publish: npm run release
           version: npm run version
-          commit: "[ci] release"
-          title: "[ci] release"
+          commit: "ci: release package"
+          title: "ci: release package"
         env:
           NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
