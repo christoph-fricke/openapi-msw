@@ -13,6 +13,9 @@
     "README.md",
     "LICENSE"
   ],
+  "sideEffects": false,
+  "types": "./dist/exports/main.d.ts",
+  "module": "./dist/exports/main.js",
   "exports": {
     ".": {
       "types": "./dist/exports/main.d.ts",
