@@ -60,12 +60,23 @@ export type ResponseBody<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       responses: any;
     }
-    ? FilterKeys<
-        SuccessResponse<ResponseObjectMap<ApiSpec[Path][Method]>>,
-        MediaType
+    ? ConvertNoContent<
+        FilterKeys<
+          SuccessResponse<ResponseObjectMap<ApiSpec[Path][Method]>>,
+          MediaType
+        >
       >
     : never
   : never;
+
+/**
+ * OpenAPI-TS generates "no content" with `content?: never`.
+ * However, `new Response().body` is `null` and strictly typing no-content in MSW requires `null`.
+ * Therefore, this helper maps no-content to `null`.
+ */
+export type ConvertNoContent<Content> = [Content] extends [never]
+  ? null
+  : Content;
 
 /** MSW http handler factory with type inference for provided api paths. */
 export type HttpHandlerFactory<
