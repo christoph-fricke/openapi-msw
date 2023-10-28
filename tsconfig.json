@@ -12,10 +12,6 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
 
-    /* Emit */
-    "declaration": true,
-    "sourceMap": true,
-
     /* Type Checking */
     "forceConsistentCasingInFileNames": true,
     "strict": true,
