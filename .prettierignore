@@ -1,8 +1,0 @@
-coverage
-dist
-node_modules
-
-# GitHub interprets "proseWrap" as a new line, which destroys the layout in
-# GitHub release notes, as they are created from the CHANGELOG.md entry.
-.changeset/*.md
-CHANGELOG.md
