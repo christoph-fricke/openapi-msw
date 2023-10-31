@@ -1,5 +1,21 @@
 # openapi-msw
 
+## 0.1.2
+
+### Patch Changes
+
+- [#17](https://github.com/christoph-fricke/openapi-msw/pull/17) [`2931f0c`](https://github.com/christoph-fricke/openapi-msw/commit/2931f0c37e5ca66378ec2a9596e07736b417a96b) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed OpenAPI operations with no-content responses cannot return a response. Now they are required to return an empty response, i.e. `null` as response body.
+
+  ```typescript
+  const http = createOpenApiHttp<paths>();
+
+  // Resolver function is required to return a `StrictResponse<null>` (empty response)
+  // if the OpenAPI operation specifies `content?: never` for the response.
+  const noContent = http.delete("/resource", ({ params }) => {
+    return HttpResponse.json(null, { status: 204 });
+  });
+  ```
+
 ## 0.1.1
 
 ### Patch Changes
