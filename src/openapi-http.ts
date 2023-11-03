@@ -1,4 +1,4 @@
-import { http as mswHttp } from "msw";
+import { http } from "msw";
 import { convertToColonPath } from "./path-mapping.js";
 import type {
   AnyApiSpec,
@@ -6,14 +6,37 @@ import type {
   HttpMethod,
 } from "./type-helpers.js";
 
+/** Collection of enhanced HTTP handler factories for each available HTTP Method. */
 export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
   [Method in HttpMethod]: HttpHandlerFactory<ApiSpec, Method>;
-} & { untyped: typeof mswHttp };
+} & { untyped: typeof http };
 
 export interface HttpOptions {
+  /** Optional baseUrl that is prepended to the `path` of each HTTP handler. */
   baseUrl?: string;
 }
 
+/**
+ * Creates a wrapper around MSW's {@link http} object, which is enhanced with
+ * type inference from the provided OpenAPI-TS `paths` definition.
+ *
+ * @param options Additional options that are used by all defined HTTP handlers.
+ *
+ * @example
+ * import { HttpResponse } from "msw";
+ * import { createOpenApiHttp } from "openapi-msw";
+ * // 1. Import the paths from your OpenAPI schema definitions
+ * import type { paths } from "./your-openapi-schema";
+ *
+ * // 2. Provide your paths definition to enable type inference in HTTP handlers
+ * const http = createOpenApiHttp<paths>();
+ *
+ * // TS only suggests available GET paths
+ * const getHandler = http.get("/resource/{id}", ({ params }) => {
+ *   const id = params.id;
+ *   return HttpResponse.json({ id, other: "..." });
+ * });
+ */
 export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
   options?: HttpOptions,
 ): OpenApiHttpHandlers<ApiSpec> {
@@ -25,7 +48,7 @@ export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
     options: createHttpWrapper<ApiSpec, "options">("options", options),
     head: createHttpWrapper<ApiSpec, "head">("head", options),
     patch: createHttpWrapper<ApiSpec, "patch">("patch", options),
-    untyped: mswHttp,
+    untyped: http,
   };
 }
 
@@ -38,6 +61,6 @@ function createHttpWrapper<
 ): HttpHandlerFactory<ApiSpec, Method> {
   return (path, resolver, options) => {
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
-    return mswHttp[method](mswPath, resolver, options);
+    return http[method](mswPath, resolver, options);
   };
 }
