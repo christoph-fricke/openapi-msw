@@ -1,5 +1,15 @@
 # openapi-msw
 
+## 0.2.0
+
+### Minor Changes
+
+- [#24](https://github.com/christoph-fricke/openapi-msw/pull/24) [`bfd7a99`](https://github.com/christoph-fricke/openapi-msw/commit/bfd7a997c662c29bac8a91ea0952993c20dadee8) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added JSDoc comments to public API for improved DX.
+
+### Patch Changes
+
+- [#23](https://github.com/christoph-fricke/openapi-msw/pull/23) [`29ecb9c`](https://github.com/christoph-fricke/openapi-msw/commit/29ecb9cbccff09d042fe3e55552c906e22f6054c) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed a small naming mistake in the "Getting Started" code example.
+
 ## 0.1.2
 
 ### Patch Changes
