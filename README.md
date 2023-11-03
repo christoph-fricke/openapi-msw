@@ -52,7 +52,7 @@ const getHandler = http.get("/resource/{id}", ({ params }) => {
 });
 
 // TS only suggests available POST paths
-const getHandler = http.post("/resource", async ({ request }) => {
+const postHandler = http.post("/resource", async ({ request }) => {
   const data = await request.json();
   return HttpResponse.json({ ...data /* ... more response data */ });
 });
