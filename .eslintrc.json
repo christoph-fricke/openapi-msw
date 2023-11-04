@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/eslintrc.json",
   "root": true,
-  "ignorePatterns": ["coverage", "dist", "node_modules"],
+  "ignorePatterns": ["coverage", "dist", "node_modules", "test/fixtures/*.ts"],
   "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
