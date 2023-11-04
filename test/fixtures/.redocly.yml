@@ -6,3 +6,7 @@ apis:
     root: ./no-content.api.yml
     openapi-ts:
       output: ./no-content.api.ts
+  path-fragments:
+    root: ./path-fragments.api.yml
+    openapi-ts:
+      output: ./path-fragments.api.ts
