@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
-import { createOpenApiHttp } from "../src/openapi-http.js";
+import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/request-body.api.js";
 import { HttpResponse, type StrictRequest } from "msw";
 

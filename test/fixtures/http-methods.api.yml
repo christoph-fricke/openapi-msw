@@ -1,0 +1,118 @@
+openapi: 3.0.2
+info:
+  title: Http Methods API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    post:
+      summary: Create Resource
+      operationId: createResource
+      responses:
+        201:
+          description: Created
+    put:
+      summary: Replace Resource
+      operationId: replaceResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    patch:
+      summary: Update Resource
+      operationId: updateResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    delete:
+      summary: Delete Resource
+      operationId: deleteResource
+      responses:
+        204:
+          description: No Content
+    options:
+      summary: Options Resource
+      operationId: optionsResource
+      responses:
+        200:
+          description: Success
+    head:
+      summary: Head Resource
+      operationId: headResource
+      responses:
+        200:
+          description: Success
+  /resource/get:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /resource/post:
+    post:
+      summary: Create Resource
+      operationId: createResource
+      responses:
+        201:
+          description: Created
+  /resource/put:
+    put:
+      summary: Replace Resource
+      operationId: replaceResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /resource/patch:
+    patch:
+      summary: Update Resource
+      operationId: updateResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /resource/delete:
+    delete:
+      summary: Delete Resource
+      operationId: deleteResource
+      responses:
+        204:
+          description: No Content
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - value
+      properties:
+        value:
+          type: string

@@ -2,6 +2,10 @@ extends:
   - recommended
 
 apis:
+  http-methods:
+    root: ./http-methods.api.yml
+    openapi-ts:
+      output: ./http-methods.api.ts
   no-content:
     root: ./no-content.api.yml
     openapi-ts:
