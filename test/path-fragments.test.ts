@@ -3,7 +3,7 @@ import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/path-fragments.api.js";
 import { HttpResponse } from "msw";
 
-describe("Given an OpenAPI schema with an endpoint that contains path fragments", () => {
+describe("Given an OpenAPI schema endpoint that contains path fragments", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
   test("When a endpoint is mocked, Then OpenAPI path fragments can be parsed by the handler", async () => {

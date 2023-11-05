@@ -10,3 +10,7 @@ apis:
     root: ./path-fragments.api.yml
     openapi-ts:
       output: ./path-fragments.api.ts
+  request-body:
+    root: ./request-body.api.yml
+    openapi-ts:
+      output: ./request-body.api.ts

@@ -3,7 +3,7 @@ import { describe, expect, expectTypeOf, test } from "vitest";
 import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/no-content.api.js";
 
-describe("Given an OpenAPI schema with a no-content endpoint", () => {
+describe("Given an OpenAPI schema endpoint with no-content", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
   test("When the DELETE method is mocked, Then empty responses can be returned", async () => {

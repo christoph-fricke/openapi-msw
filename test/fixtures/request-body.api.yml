@@ -1,0 +1,71 @@
+openapi: 3.0.2
+info:
+  title: Request Body API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    post:
+      summary: Create Resource
+      operationId: createResource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewResource"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+    patch:
+      summary: Patch Resource
+      operationId: patchResource
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewResource"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    Resource:
+      allOf:
+        - $ref: "#/components/schemas/NewResource"
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+    NewResource:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
