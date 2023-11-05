@@ -44,6 +44,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Count"
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
 components:
   schemas:
     Resource:

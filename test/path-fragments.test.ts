@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/path-fragments.api.js";
 import { HttpResponse } from "msw";
@@ -21,15 +21,20 @@ describe("Given an OpenAPI schema with an endpoint that contains path fragments"
     expect(responseBody?.name).toBe("test-name");
   });
 
-  test("When a endpoint is mocked, Then the path fragments are strict-typed", () => {
-    http.get("/resource/{id}/{name}", ({ params }) => {
-      const id = params.id;
-      const name = params.name;
-      //@ts-expect-error Non existing fragments cannot be accessed
-      params["unknown"];
+  test("When an endpoint is mocked, Then the path fragments are strict-typed", () => {
+    type Endpoint = typeof http.get<"/resource/{id}/{name}">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const params = resolver.parameter(0).toHaveProperty("params");
 
-      return HttpResponse.json({ id, name });
-    });
+    params.toEqualTypeOf<{ id: string; name: string }>();
+  });
+
+  test("When a endpoint contains no path fragments, Then no params are provided", () => {
+    type Endpoint = typeof http.get<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const params = resolver.parameter(0).toHaveProperty("params");
+
+    params.toEqualTypeOf<never>();
   });
 
   // FIXME: See https://github.com/christoph-fricke/openapi-msw/issues/22

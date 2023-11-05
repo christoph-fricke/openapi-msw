@@ -1,5 +1,5 @@
 import { HttpResponse, type StrictResponse } from "msw";
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/no-content.api.js";
 
@@ -34,23 +34,20 @@ describe("Given an OpenAPI schema with a no-content endpoint", () => {
     expect(result?.response?.status).toBe(201);
   });
 
-  test("When a endpoint is mocked, Then responses with content cannot be returned", async () => {
-    http.delete(
-      "/resource",
-      // @ts-expect-error "{ id: number }" is not assignable to "null"
-      () => {
-        return HttpResponse.json({ id: 42 }, { status: 204 });
-      },
-    );
+  test("When an endpoint is mocked, Then responses with content cannot be returned", async () => {
+    type Endpoint = typeof http.delete<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const response = resolver.returns.extract<Response>();
+
+    response.not.toEqualTypeOf<StrictResponse<{ id: number }>>();
   });
 
-  test("When a endpoint is mocked, Then responses must be strict responses", async () => {
-    http.delete(
-      "/resource",
-      // @ts-expect-error Response is not assignable to StrictResponse
-      () => {
-        return new Response(null, { status: 204 });
-      },
-    );
+  test("When an endpoint is mocked, Then responses must be strict responses", async () => {
+    type Endpoint = typeof http.delete<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const response = resolver.returns.extract<Response>();
+
+    response.not.toEqualTypeOf<Response>();
+    response.toEqualTypeOf<StrictResponse<null>>();
   });
 });
