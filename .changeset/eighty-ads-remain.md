@@ -2,4 +2,4 @@
 "openapi-msw": patch
 ---
 
-fix compilation warning due to missing sources in source map
+Fixed a compilation warning in projects using OpenAPI-MSW, which was caused by missing sources in source maps.
