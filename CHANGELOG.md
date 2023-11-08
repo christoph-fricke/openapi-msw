@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 0.2.1
+
+### Patch Changes
+
+- [#27](https://github.com/christoph-fricke/openapi-msw/pull/27) [`232ae11`](https://github.com/christoph-fricke/openapi-msw/commit/232ae11b46bda40ec493b4eed6c270e4a9160a00) Thanks [@luchsamapparat](https://github.com/luchsamapparat)! - Fixed a compilation warning in projects using OpenAPI-MSW, which was caused by missing sources in source maps.
+
 ## 0.2.0
 
 ### Minor Changes
