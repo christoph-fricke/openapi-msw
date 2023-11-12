@@ -28,7 +28,7 @@ jobs:
         run: npm run test:unit
       - name: Build Package
         run: npm run build
-      - name: Generate Fixtures
+      - name: Generate Test Fixtures
         run: npm run generate
       - name: Run Integration Tests
         run: npm run test:int

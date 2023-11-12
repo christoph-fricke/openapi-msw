@@ -30,7 +30,6 @@
     "generate": "openapi-typescript --redoc ./test/fixtures/.redocly.yml",
     "test:unit": "TEST_SUITE=unit vitest",
     "test:int": "TEST_SUITE=integration vitest --typecheck",
-    "test:cov": "vitest --coverage",
     "version": "changeset version && npm i",
     "release": "changeset publish"
   },
@@ -49,6 +48,7 @@
     "@changesets/cli": "^2.26.2",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
+    "@vitest/coverage-v8": "^1.0.0-beta.4",
     "eslint": "^8.52.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.0.2",
