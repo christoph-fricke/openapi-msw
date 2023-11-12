@@ -1,5 +1,5 @@
+import { createOpenApiHttp } from "openapi-msw";
 import { describe, expectTypeOf, test } from "vitest";
-import { createOpenApiHttp } from "../exports/main.js";
 import type { paths } from "./fixtures/http-methods.api.js";
 
 describe("Given an OpenAPI endpoint with multiple HTTP methods", () => {

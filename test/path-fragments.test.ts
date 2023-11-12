@@ -1,7 +1,7 @@
-import { describe, expect, expectTypeOf, test } from "vitest";
-import { createOpenApiHttp } from "../exports/main.js";
-import type { paths } from "./fixtures/path-fragments.api.js";
 import { HttpResponse } from "msw";
+import { createOpenApiHttp } from "openapi-msw";
+import { describe, expect, expectTypeOf, test } from "vitest";
+import type { paths } from "./fixtures/path-fragments.api.js";
 
 describe("Given an OpenAPI schema endpoint that contains path fragments", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
