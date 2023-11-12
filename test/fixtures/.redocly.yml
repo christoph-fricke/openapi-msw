@@ -10,6 +10,10 @@ apis:
     root: ./no-content.api.yml
     openapi-ts:
       output: ./no-content.api.ts
+  options:
+    root: ./options.api.yml
+    openapi-ts:
+      output: ./options.api.ts
   path-fragments:
     root: ./path-fragments.api.yml
     openapi-ts:
