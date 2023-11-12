@@ -63,7 +63,7 @@ paths:
   /resource/get:
     get:
       summary: Get Resource
-      operationId: getResource
+      operationId: resourceGetter
       responses:
         200:
           description: Success
@@ -74,14 +74,14 @@ paths:
   /resource/post:
     post:
       summary: Create Resource
-      operationId: createResource
+      operationId: resourcePoster
       responses:
         201:
           description: Created
   /resource/put:
     put:
       summary: Replace Resource
-      operationId: replaceResource
+      operationId: resourcePutter
       responses:
         200:
           description: Success
@@ -92,7 +92,7 @@ paths:
   /resource/patch:
     patch:
       summary: Update Resource
-      operationId: updateResource
+      operationId: resourcePatcher
       responses:
         200:
           description: Success
@@ -103,7 +103,7 @@ paths:
   /resource/delete:
     delete:
       summary: Delete Resource
-      operationId: deleteResource
+      operationId: resourceDeleter
       responses:
         204:
           description: No Content
