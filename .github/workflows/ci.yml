@@ -22,11 +22,13 @@ jobs:
           cache: "npm"
       - name: Install Dependencies
         run: npm ci
-      - name: Generate Fixtures
-        run: npm run generate
       - name: Lint Project
         run: npm run lint
-      - name: Run Tests
-        run: npm run test:cov
+      - name: Run Unit Tests
+        run: npm run test:unit
       - name: Build Package
         run: npm run build
+      - name: Generate Fixtures
+        run: npm run generate
+      - name: Run Integration Tests
+        run: npm run test:int

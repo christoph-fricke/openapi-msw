@@ -26,7 +26,7 @@
     "prepare": "husky install",
     "build": "rimraf ./dist && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
-    "lint": "tsc --noEmit && eslint . && prettier -c .",
+    "lint": "eslint . && prettier -c .",
     "generate": "openapi-typescript --redoc ./test/fixtures/.redocly.yml",
     "test:unit": "TEST_SUITE=unit vitest",
     "test:int": "TEST_SUITE=integration vitest --typecheck",
