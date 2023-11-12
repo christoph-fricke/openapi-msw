@@ -1,0 +1,27 @@
+openapi: 3.0.2
+info:
+  title: Options API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string

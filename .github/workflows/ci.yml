@@ -24,7 +24,11 @@ jobs:
         run: npm ci
       - name: Lint Project
         run: npm run lint
-      - name: Run Tests
-        run: npm run test:cov
+      - name: Run Unit Tests
+        run: npm run test:unit
       - name: Build Package
         run: npm run build
+      - name: Generate Test Fixtures
+        run: npm run generate
+      - name: Run Integration Tests
+        run: npm run test:int

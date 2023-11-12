@@ -3,7 +3,7 @@
   "compilerOptions": {
     /* Language and Environment */
     "target": "ESNext",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
 
     /* Modules */
     "module": "NodeNext",
@@ -26,5 +26,5 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
-  "include": ["src", "exports"]
+  "include": ["src", "exports", "test"]
 }
