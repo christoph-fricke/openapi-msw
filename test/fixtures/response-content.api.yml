@@ -1,0 +1,44 @@
+openapi: 3.0.2
+info:
+  title: Response Content API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /text-resource:
+    get:
+      summary: Get Text Resource
+      operationId: getTextResource
+      responses:
+        200:
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+        - name
+        - value
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          type: integer
