@@ -1,3 +1,5 @@
 {
-  "cSpell.words": ["openapi"]
+  "cSpell.words": ["openapi", "typecheck", "redoc", "redocly"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
