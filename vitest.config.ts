@@ -1,4 +1,4 @@
-import { name } from "./package.json";
+import { name, exports } from "./package.json";
 import { defineProject } from "vitest/config";
 
 const suite = process.env["TEST_SUITE"];
@@ -20,6 +20,9 @@ export default defineProject({
     dir: getTestDir(suite),
     typecheck: {
       include: ["**/*.test.ts"],
+    },
+    alias: {
+      [name]: exports["."].import,
     },
   },
 });
