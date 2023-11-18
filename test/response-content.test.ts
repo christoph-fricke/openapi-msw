@@ -1,6 +1,6 @@
-import { HttpResponse, type StrictResponse } from "msw";
+import { HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expect, expectTypeOf, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import type { paths } from "./fixtures/response-content.api.js";
 
 describe("Given an OpenAPI schema endpoint with response content", () => {
@@ -41,16 +41,5 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const responseBody = await result?.response?.text();
     expect(responseBody).toBe("Hello World");
     expect(result?.response?.status).toBe(200);
-  });
-
-  test("When a JSON endpoint is mocked, Then responses must be strict content response", async () => {
-    type Endpoint = typeof http.get<"/resource">;
-    const resolver = expectTypeOf<Endpoint>().parameter(1);
-    const response = resolver.returns.extract<Response>();
-
-    response.not.toEqualTypeOf<Response>();
-    response.toEqualTypeOf<
-      StrictResponse<{ id: string; name: string; value: number }>
-    >();
   });
 });

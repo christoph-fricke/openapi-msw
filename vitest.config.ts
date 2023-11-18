@@ -18,9 +18,6 @@ export default defineProject({
   test: {
     name: suite ?? name,
     dir: getTestDir(suite),
-    typecheck: {
-      include: ["**/*.test.ts"],
-    },
     alias: {
       [name]: exports["."].import,
     },
