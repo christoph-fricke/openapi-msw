@@ -4,7 +4,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import type { paths } from "./fixtures/response-content.api.js";
 
 describe("Given an OpenAPI schema endpoint with response content", () => {
-  const http = createOpenApiHttp<paths>({ baseUrl: "*" });
+  const http = createOpenApiHttp<paths>();
 
   test("When a JSON endpoint is mocked, Then responses must be a strict content response", async () => {
     type Endpoint = typeof http.get<"/resource">;
