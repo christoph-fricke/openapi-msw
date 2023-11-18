@@ -37,9 +37,13 @@ export type PathParams<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       parameters: { path: any };
     }
-    ? Required<ApiSpec[Path][Method]["parameters"]["path"]>
+    ? ConvertToStringLike<ApiSpec[Path][Method]["parameters"]["path"]>
     : never
   : never;
+
+type ConvertToStringLike<Params> = {
+  [Name in keyof Params]: Params[Name] extends string ? Params[Name] : string;
+};
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<

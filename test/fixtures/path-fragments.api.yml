@@ -44,6 +44,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Count"
+  /resource/{enum}:
+    parameters:
+      - name: enum
+        in: path
+        required: true
+        schema:
+          type: string
+          enum: [test1, test2]
+    get:
+      summary: Get Resource By Enum
+      operationId: getResourceEnum
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
   /resource:
     get:
       summary: Get Resource

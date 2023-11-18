@@ -3,7 +3,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import type { paths } from "./fixtures/path-fragments.api.js";
 
 describe("Given an OpenAPI schema endpoint that contains path fragments", () => {
-  const http = createOpenApiHttp<paths>({ baseUrl: "*" });
+  const http = createOpenApiHttp<paths>();
 
   test("When an endpoint is mocked, Then the path fragments are strict-typed", () => {
     type Endpoint = typeof http.get<"/resource/{id}/{name}">;
@@ -19,5 +19,23 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
     const params = resolver.parameter(0).toHaveProperty("params");
 
     params.toEqualTypeOf<never>();
+  });
+
+  test("When a path fragment is typed with non-string typed, Then the types are converted to strings", async () => {
+    // The values passed in by MSW will always be strings at runtime.
+    // Therefore, we convert to to enable parsing, e.g. parseInt(...).
+    type Endpoint = typeof http.get<"/resource/{count}">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const params = resolver.parameter(0).toHaveProperty("params");
+
+    params.toEqualTypeOf<{ count: string }>();
+  });
+
+  test("When a path fragment is typed with string literals, Then the literal values are preserved", async () => {
+    type Endpoint = typeof http.get<"/resource/{enum}">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const params = resolver.parameter(0).toHaveProperty("params");
+
+    params.toEqualTypeOf<{ enum: "test1" | "test2" }>();
   });
 });
