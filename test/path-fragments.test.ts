@@ -21,7 +21,7 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
     expect(responseBody?.name).toBe("test-name");
   });
 
-  test("When a path fragment is defined as a number, Then it can be parsed to a number", async () => {
+  test("When a path fragment is specified as a number, Then it can be parsed to a number", async () => {
     const request = new Request(
       new URL("/resource/42", "http://localhost:3000"),
     );
