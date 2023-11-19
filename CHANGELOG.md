@@ -1,5 +1,21 @@
 # openapi-msw
 
+## 0.2.2
+
+### Patch Changes
+
+- [#31](https://github.com/christoph-fricke/openapi-msw/pull/31) [`556dfca`](https://github.com/christoph-fricke/openapi-msw/commit/556dfca3a2c87eeec6f1f7acd2db63af52df2806) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed a type mismatch between path fragment types and the values provided at runtime, which are always strings. Now all path-fragments are typed as string. If a fragment's schema is a string constrained by an enum, the resulting string literals are preserved. This fixes bug [#22](https://github.com/christoph-fricke/openapi-msw/issues/22).
+
+  ```typescript
+  const handler = http.get("/resource/{id}", ({ params }) => {
+    // Previously calling "parseInt(...)" caused a type error
+    // when the schema type for "id" is defined as number.
+    const id = parseInt(params.id);
+
+    return HttpResponse.json({ id });
+  });
+  ```
+
 ## 0.2.1
 
 ### Patch Changes
