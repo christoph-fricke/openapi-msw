@@ -4,7 +4,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import type { paths } from "./fixtures/request-body.api.js";
 
 describe("Given an OpenAPI schema endpoint with request content", () => {
-  const http = createOpenApiHttp<paths>({ baseUrl: "*" });
+  const http = createOpenApiHttp<paths>();
 
   test("When a request is expected to contain content, Then the content is strict-typed", () => {
     type Endpoint = typeof http.post<"/resource">;

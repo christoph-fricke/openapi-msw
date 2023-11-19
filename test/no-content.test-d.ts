@@ -4,7 +4,7 @@ import { describe, expectTypeOf, test } from "vitest";
 import type { paths } from "./fixtures/no-content.api.js";
 
 describe("Given an OpenAPI schema endpoint with no-content", () => {
-  const http = createOpenApiHttp<paths>({ baseUrl: "*" });
+  const http = createOpenApiHttp<paths>();
 
   test("When an endpoint is mocked, Then responses with content cannot be returned", async () => {
     type Endpoint = typeof http.delete<"/resource">;

@@ -21,14 +21,13 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
     expect(responseBody?.name).toBe("test-name");
   });
 
-  // FIXME: See https://github.com/christoph-fricke/openapi-msw/issues/22
-  test.skip("When a path fragments is defined as non-string, Then the fragment is still typed as a string", async () => {
+  test("When a path fragment is specified as a number, Then it can be parsed to a number", async () => {
     const request = new Request(
       new URL("/resource/42", "http://localhost:3000"),
     );
 
     const handler = http.get("/resource/{count}", ({ params }) => {
-      const count = params.count;
+      const count = parseInt(params.count);
 
       return HttpResponse.json({ count });
     });
