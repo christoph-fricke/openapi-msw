@@ -12,6 +12,9 @@ import type {
   SuccessResponse,
 } from "openapi-typescript-helpers";
 
+// Computes a type for better readability in type hints.
+type Compute<A> = { [K in keyof A]: A[K] } & unknown;
+
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
 
@@ -31,7 +34,7 @@ export type PathsForMethod<
   Method extends HttpMethod,
 > = PathsWithMethod<ApiSpec, Method>;
 
-/** Extract the params of a given path and method from an api spec. */
+/** Extract the path params of a given path and method from an api spec. */
 export type PathParams<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
@@ -45,9 +48,27 @@ export type PathParams<
     : never
   : never;
 
+/** Extract the query params of a given path and method from an api spec. */
+export type QueryParams<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = Method extends keyof ApiSpec[Path]
+  ? ApiSpec[Path][Method] extends {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      parameters: { query: any };
+    }
+    ? Compute<ConvertToStringLike<ApiSpec[Path][Method]["parameters"]["query"]>>
+    : never
+  : never;
+
 type ConvertToStringLike<Params> = {
-  [Name in keyof Params]: Params[Name] extends string ? Params[Name] : string;
+  [Name in keyof Params]: Params[Name] extends (infer Item)[]
+    ? StringLike<Item>[]
+    : StringLike<Params[Name]>;
 };
+
+type StringLike<Value> = Value extends string | undefined ? Value : string;
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<
@@ -110,7 +131,9 @@ interface ResponseResolverInfo<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
-> extends MSWResponseResolverInfo<ApiSpec, Path, Method> {}
+> extends MSWResponseResolverInfo<ApiSpec, Path, Method> {
+  query: QueryParams<ApiSpec, Path, Method>;
+}
 
 /** MSW response resolver info that is made type-safe through an api spec. */
 type MSWResponseResolverInfo<
