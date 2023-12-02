@@ -4,6 +4,8 @@ import type {
   AnyApiSpec,
   HttpHandlerFactory,
   HttpMethod,
+  MSWResponseResolver,
+  ResponseResolver,
 } from "./type-helpers.js";
 
 /** Collection of enhanced HTTP handler factories for each available HTTP Method. */
@@ -61,6 +63,20 @@ function createHttpWrapper<
 ): HttpHandlerFactory<ApiSpec, Method> {
   return (path, resolver, options) => {
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
-    return http[method](mswPath, resolver, options);
+    const mswResolver = createResolverWrapper(resolver);
+
+    return http[method](mswPath, mswResolver, options);
+  };
+}
+
+function createResolverWrapper<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+>(
+  resolver: ResponseResolver<ApiSpec, Path, Method>,
+): MSWResponseResolver<ApiSpec, Path, Method> {
+  return (info) => {
+    return resolver(info);
   };
 }

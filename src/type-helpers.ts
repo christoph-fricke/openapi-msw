@@ -1,4 +1,9 @@
 import type {
+  AsyncResponseResolverReturnType,
+  RequestHandlerOptions,
+  http,
+} from "msw";
+import type {
   FilterKeys,
   MediaType,
   OperationRequestBodyContent,
@@ -6,7 +11,6 @@ import type {
   ResponseObjectMap,
   SuccessResponse,
 } from "openapi-typescript-helpers";
-import type { http } from "msw";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -82,7 +86,7 @@ export type ConvertNoContent<Content> = [Content] extends [never]
   ? null
   : Content;
 
-/** MSW http handler factory with type inference for provided api paths. */
+/** HTTP handler factory with type inference for provided api paths. */
 export type HttpHandlerFactory<
   ApiSpec extends AnyApiSpec,
   Method extends HttpMethod,
@@ -92,17 +96,31 @@ export type HttpHandlerFactory<
   options?: RequestHandlerOptions,
 ) => ReturnType<typeof http.all>;
 
-/** MSW handler options. */
-export type RequestHandlerOptions = Required<Parameters<typeof http.all>[2]>;
-
-/** MSW response resolver function that is made type-safe through an api spec. */
-export interface ResponseResolver<
+/** Response resolver that gets provided to HTTP handler factories. */
+export type ResponseResolver<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
-> extends ResponseResolverType<ApiSpec, Path, Method> {}
+> = (
+  info: ResponseResolverInfo<ApiSpec, Path, Method>,
+) => AsyncResponseResolverReturnType<ResponseBody<ApiSpec, Path, Method>>;
 
-type ResponseResolverType<
+/** Response resolver info that extends MSW's resolver info with additional functionality. */
+interface ResponseResolverInfo<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> extends MSWResponseResolverInfo<ApiSpec, Path, Method> {}
+
+/** MSW response resolver info that is made type-safe through an api spec. */
+type MSWResponseResolverInfo<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = Parameters<MSWResponseResolver<ApiSpec, Path, Method>>[0];
+
+/** MSW response resolver function that is made type-safe through an api spec. */
+export type MSWResponseResolver<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
