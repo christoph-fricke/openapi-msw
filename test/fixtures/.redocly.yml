@@ -4,25 +4,25 @@ extends:
 apis:
   http-methods:
     root: ./http-methods.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./http-methods.api.ts
   no-content:
     root: ./no-content.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./no-content.api.ts
   options:
     root: ./options.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./options.api.ts
   path-fragments:
     root: ./path-fragments.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./path-fragments.api.ts
   request-body:
     root: ./request-body.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./request-body.api.ts
   response-content:
     root: ./response-content.api.yml
-    openapi-ts:
+    x-openapi-ts:
       output: ./response-content.api.ts
