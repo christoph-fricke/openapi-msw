@@ -19,7 +19,7 @@ export default defineProject({
     name: suite ?? name,
     dir: getTestDir(suite),
     alias: {
-      [name]: exports["."].import,
+      [name]: new URL(exports["."].import, import.meta.url).pathname,
     },
   },
 });
