@@ -11,9 +11,8 @@ import type {
   ResponseObjectMap,
   SuccessResponse,
 } from "openapi-typescript-helpers";
-
-// Computes a type for better readability in type hints.
-type Compute<A> = { [K in keyof A]: A[K] } & unknown;
+import { QueryParams as QueryParamsImpl } from "./query-params.js";
+import type { ConvertToStringified } from "./type-utils.js";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -44,7 +43,7 @@ export type PathParams<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       parameters: { path: any };
     }
-    ? ConvertToStringLike<ApiSpec[Path][Method]["parameters"]["path"]>
+    ? ConvertToStringified<ApiSpec[Path][Method]["parameters"]["path"]>
     : never
   : never;
 
@@ -56,19 +55,13 @@ export type QueryParams<
 > = Method extends keyof ApiSpec[Path]
   ? ApiSpec[Path][Method] extends {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      parameters: { query: any };
+      parameters: { query?: any };
     }
-    ? Compute<ConvertToStringLike<ApiSpec[Path][Method]["parameters"]["query"]>>
+    ? ConvertToStringified<
+        Required<ApiSpec[Path][Method]["parameters"]>["query"]
+      >
     : never
   : never;
-
-type ConvertToStringLike<Params> = {
-  [Name in keyof Params]: Params[Name] extends (infer Item)[]
-    ? StringLike<Item>[]
-    : StringLike<Params[Name]>;
-};
-
-type StringLike<Value> = Value extends string | undefined ? Value : string;
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<
@@ -132,7 +125,7 @@ interface ResponseResolverInfo<
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > extends MSWResponseResolverInfo<ApiSpec, Path, Method> {
-  query: QueryParams<ApiSpec, Path, Method>;
+  query: QueryParamsImpl<QueryParams<ApiSpec, Path, Method>>;
 }
 
 /** MSW response resolver info that is made type-safe through an api spec. */

@@ -5,9 +5,9 @@ import type {
   HttpHandlerFactory,
   HttpMethod,
   MSWResponseResolver,
-  QueryParams,
   ResponseResolver,
 } from "./type-helpers.js";
+import { QueryParams } from "./query-params.js";
 
 /** Collection of enhanced HTTP handler factories for each available HTTP Method. */
 export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
@@ -80,26 +80,7 @@ function createResolverWrapper<
   return (info) => {
     return resolver({
       ...info,
-      query: getQueryParams(info.request),
+      query: new QueryParams(info.request),
     });
   };
-}
-
-function getQueryParams<
-  ApiSpec extends AnyApiSpec,
-  Path extends keyof ApiSpec,
-  Method extends HttpMethod,
->(request: Request): QueryParams<ApiSpec, Path, Method> {
-  const searchParams = new URL(request.url).searchParams;
-
-  const query: Record<string, string | string[]> = {};
-  for (const [key, value] of searchParams.entries()) {
-    const queryValue = query[key];
-
-    if (!queryValue) query[key] = value;
-    else if (Array.isArray(queryValue)) queryValue.push(value);
-    else query[key] = [queryValue, value];
-  }
-
-  return query as QueryParams<ApiSpec, Path, Method>;
 }
