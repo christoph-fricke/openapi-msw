@@ -3,9 +3,11 @@ import type {
   AnyApiSpec,
   HttpMethod,
   PathParams,
+  QueryParams,
   RequestBody,
   ResponseBody,
 } from "./api-spec.js";
+import { QueryParams as QueryParamsUtil } from "./query-params.js";
 
 /** Response resolver that gets provided to HTTP handler factories. */
 export type ResponseResolver<
@@ -21,7 +23,9 @@ export interface ResponseResolverInfo<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
-> extends MSWResponseResolverInfo<ApiSpec, Path, Method> {}
+> extends MSWResponseResolverInfo<ApiSpec, Path, Method> {
+  query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
+}
 
 /** Wraps MSW's resolver function to provide additional info to a given resolver. */
 export function createResolverWrapper<
@@ -32,7 +36,7 @@ export function createResolverWrapper<
   resolver: ResponseResolver<ApiSpec, Path, Method>,
 ): MSWResponseResolver<ApiSpec, Path, Method> {
   return (info) => {
-    return resolver(info);
+    return resolver({ ...info, query: new QueryParamsUtil(info.request) });
   };
 }
 

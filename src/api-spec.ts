@@ -41,6 +41,22 @@ export type PathParams<
     : never
   : never;
 
+/** Extract the query params of a given path and method from an api spec. */
+export type QueryParams<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = Method extends keyof ApiSpec[Path]
+  ? ApiSpec[Path][Method] extends {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      parameters: { query?: any };
+    }
+    ? ConvertToStringified<
+        Required<ApiSpec[Path][Method]["parameters"]>["query"]
+      >
+    : never
+  : never;
+
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<
   ApiSpec extends AnyApiSpec,
