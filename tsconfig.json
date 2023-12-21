@@ -21,6 +21,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
 
     /* Completeness */
     "skipDefaultLibCheck": true,

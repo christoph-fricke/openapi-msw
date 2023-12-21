@@ -6,7 +6,7 @@ import type {
   ResponseObjectMap,
   SuccessResponse,
 } from "openapi-typescript-helpers";
-import type { http } from "msw";
+import type { ConvertToStringified } from "./type-utils.js";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -27,7 +27,7 @@ export type PathsForMethod<
   Method extends HttpMethod,
 > = PathsWithMethod<ApiSpec, Method>;
 
-/** Extract the params of a given path and method from an api spec. */
+/** Extract the path params of a given path and method from an api spec. */
 export type PathParams<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
@@ -37,13 +37,9 @@ export type PathParams<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       parameters: { path: any };
     }
-    ? ConvertToStringLike<ApiSpec[Path][Method]["parameters"]["path"]>
+    ? ConvertToStringified<ApiSpec[Path][Method]["parameters"]["path"]>
     : never
   : never;
-
-type ConvertToStringLike<Params> = {
-  [Name in keyof Params]: Params[Name] extends string ? Params[Name] : string;
-};
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<
@@ -75,41 +71,7 @@ export type ResponseBody<
 
 /**
  * OpenAPI-TS generates "no content" with `content?: never`.
- * However, `new Response().body` is `null` and strictly typing no-content in MSW requires `null`.
- * Therefore, this helper maps no-content to `null`.
+ * However, `new Response().body` is `null` and strictly typing no-content in
+ * MSW requires `null`. Therefore, this helper maps no-content to `null`.
  */
-export type ConvertNoContent<Content> = [Content] extends [never]
-  ? null
-  : Content;
-
-/** MSW http handler factory with type inference for provided api paths. */
-export type HttpHandlerFactory<
-  ApiSpec extends AnyApiSpec,
-  Method extends HttpMethod,
-> = <Path extends PathsForMethod<ApiSpec, Method>>(
-  path: Path,
-  resolver: ResponseResolver<ApiSpec, Path, Method>,
-  options?: RequestHandlerOptions,
-) => ReturnType<typeof http.all>;
-
-/** MSW handler options. */
-export type RequestHandlerOptions = Required<Parameters<typeof http.all>[2]>;
-
-/** MSW response resolver function that is made type-safe through an api spec. */
-export interface ResponseResolver<
-  ApiSpec extends AnyApiSpec,
-  Path extends keyof ApiSpec,
-  Method extends HttpMethod,
-> extends ResponseResolverType<ApiSpec, Path, Method> {}
-
-type ResponseResolverType<
-  ApiSpec extends AnyApiSpec,
-  Path extends keyof ApiSpec,
-  Method extends HttpMethod,
-> = Parameters<
-  typeof http.all<
-    PathParams<ApiSpec, Path, Method>,
-    RequestBody<ApiSpec, Path, Method>,
-    ResponseBody<ApiSpec, Path, Method>
-  >
->[1];
+type ConvertNoContent<Content> = [Content] extends [never] ? null : Content;
