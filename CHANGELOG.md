@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 0.3.0
+
+### Minor Changes
+
+- [#35](https://github.com/christoph-fricke/openapi-msw/pull/35) [`07fa9b0`](https://github.com/christoph-fricke/openapi-msw/commit/07fa9b0822c441708c70d3e0698a6dbe7577f58c) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Restructured the library to add support for additional response resolver info. The enhanced `ResponseResolver` type and `ResponseResolverInfo` are available as exports.
+
 ## 0.2.2
 
 ### Patch Changes
