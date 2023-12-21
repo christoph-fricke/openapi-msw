@@ -1,12 +1,35 @@
-import { http } from "msw";
+import { http, type RequestHandlerOptions } from "msw";
+import type { AnyApiSpec, HttpMethod, PathsForMethod } from "./api-spec.js";
 import { convertToColonPath } from "./path-mapping.js";
-import type {
-  AnyApiSpec,
-  HttpHandlerFactory,
-  HttpMethod,
-  MSWResponseResolver,
-  ResponseResolver,
-} from "./type-helpers.js";
+import {
+  createResolverWrapper,
+  type ResponseResolver,
+} from "./response-resolver.js";
+
+/** HTTP handler factory with type inference for provided api paths. */
+export type HttpHandlerFactory<
+  ApiSpec extends AnyApiSpec,
+  Method extends HttpMethod,
+> = <Path extends PathsForMethod<ApiSpec, Method>>(
+  path: Path,
+  resolver: ResponseResolver<ApiSpec, Path, Method>,
+  options?: RequestHandlerOptions,
+) => ReturnType<typeof http.all>;
+
+function createHttpWrapper<
+  ApiSpec extends AnyApiSpec,
+  Method extends HttpMethod,
+>(
+  method: Method,
+  httpOptions?: HttpOptions,
+): HttpHandlerFactory<ApiSpec, Method> {
+  return (path, resolver, options) => {
+    const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
+    const mswResolver = createResolverWrapper(resolver);
+
+    return http[method](mswPath, mswResolver, options);
+  };
+}
 
 /** Collection of enhanced HTTP handler factories for each available HTTP Method. */
 export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
@@ -43,40 +66,13 @@ export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
   options?: HttpOptions,
 ): OpenApiHttpHandlers<ApiSpec> {
   return {
-    get: createHttpWrapper<ApiSpec, "get">("get", options),
-    put: createHttpWrapper<ApiSpec, "put">("put", options),
-    post: createHttpWrapper<ApiSpec, "post">("post", options),
-    delete: createHttpWrapper<ApiSpec, "delete">("delete", options),
-    options: createHttpWrapper<ApiSpec, "options">("options", options),
-    head: createHttpWrapper<ApiSpec, "head">("head", options),
-    patch: createHttpWrapper<ApiSpec, "patch">("patch", options),
+    get: createHttpWrapper("get", options),
+    put: createHttpWrapper("put", options),
+    post: createHttpWrapper("post", options),
+    delete: createHttpWrapper("delete", options),
+    options: createHttpWrapper("options", options),
+    head: createHttpWrapper("head", options),
+    patch: createHttpWrapper("patch", options),
     untyped: http,
-  };
-}
-
-function createHttpWrapper<
-  ApiSpec extends AnyApiSpec,
-  Method extends HttpMethod,
->(
-  method: Method,
-  httpOptions?: HttpOptions,
-): HttpHandlerFactory<ApiSpec, Method> {
-  return (path, resolver, options) => {
-    const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
-    const mswResolver = createResolverWrapper(resolver);
-
-    return http[method](mswPath, mswResolver, options);
-  };
-}
-
-function createResolverWrapper<
-  ApiSpec extends AnyApiSpec,
-  Path extends keyof ApiSpec,
-  Method extends HttpMethod,
->(
-  resolver: ResponseResolver<ApiSpec, Path, Method>,
-): MSWResponseResolver<ApiSpec, Path, Method> {
-  return (info) => {
-    return resolver(info);
   };
 }

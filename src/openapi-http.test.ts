@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { http as mswHttp } from "msw";
 import { createOpenApiHttp } from "./openapi-http.js";
-import type { HttpMethod } from "./type-helpers.js";
+import type { HttpMethod } from "./api-spec.js";
 
 const methods: HttpMethod[] = [
   "get",
