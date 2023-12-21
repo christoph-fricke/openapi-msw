@@ -1,5 +1,5 @@
-import { name, exports } from "./package.json";
 import { defineProject } from "vitest/config";
+import { exports, name } from "./package.json";
 
 const suite = process.env["TEST_SUITE"];
 
