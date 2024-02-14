@@ -4,7 +4,7 @@
 
 Added `query` helper to resolver info. It provides a type-safe wrapper around `URLSearchParams` for reading search params. As usual, the information about available params is inferred from your OpenAPI spec.
 
-```ts
+```typescript
 /*
 Imagine this endpoint specification for the following example:
 /query-example:
@@ -38,7 +38,7 @@ const handler = http.get("/query-example", ({ query }) => {
   const queryString = query.get("query"); // Typed as string
   const page = query.get("page"); // Typed as string | null since it is not required
   const sort = query.get("sort"); // Typed as "asc" | "desc" | null
-  const sortBy = query.getAll("sortBy"); // Types as string[]
+  const sortBy = query.getAll("sortBy"); // Typed as string[]
 
   // Supported methods from URLSearchParams: get(), getAll(), has(), size
   const exists = query.has("sort");
