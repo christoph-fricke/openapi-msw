@@ -18,6 +18,10 @@ apis:
     root: ./path-fragments.api.yml
     x-openapi-ts:
       output: ./path-fragments.api.ts
+  query-params:
+    root: ./query-params.api.yml
+    x-openapi-ts:
+      output: ./query-params.api.ts
   request-body:
     root: ./request-body.api.yml
     x-openapi-ts:
