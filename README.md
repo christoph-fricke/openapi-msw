@@ -26,11 +26,13 @@ continuing with this usage guide.
 
 Once you have your OpenAPI schema types ready-to-go, you can use OpenAPI-MSW to
 create an enhanced version of MSW's `http` object. The enhanced version is
-designed to be almost identical to MSW in usage. Using the `http` object created
+designed to be almost identical to MSW in usage, which the exception of opt-in
+helpers for an even better type-safe experience. Using the `http` object created
 with OpenAPI-MSW enables multiple type-safety and editor suggestion benefits:
 
 - **Paths:** Only accepts paths that are available for the current HTTP method
 - **Params**: Automatically typed with path parameters in the current path
+- **Search Params**: Automatically typed with query schema of the current path
 - **Request Body:** Automatically typed with the request-body schema of the
   current path
 - **Response:** Automatically forced to match the response-body schema of the
@@ -52,7 +54,10 @@ const getHandler = http.get("/resource/{id}", ({ params }) => {
 });
 
 // TS only suggests available POST paths
-const postHandler = http.post("/resource", async ({ request }) => {
+const postHandler = http.post("/resource", async ({ request, query }) => {
+  // TS infers available query keys and return types from the OpenAPI schema
+  const sortDir = query.get("sort");
+
   const data = await request.json();
   return HttpResponse.json({ ...data /* ... more response data */ });
 });
@@ -98,6 +103,42 @@ const catchAll = http.untyped.all("/resource/*", ({ params }) => {
 
 Alternatively, you can import the original `http` object from MSW and use that
 one for unknown paths instead.
+
+### Opt-in Helpers
+
+For an even better type-safe experience, OpenAPI-MSW provides additional helpers
+through MSW's resolver info. Currently, the following helpers are provided for
+optional usage.
+
+#### `query`
+
+Type-safe wrapper around
+[`URLSearchParams`](https://developer.mozilla.org/docs/Web/API/URLSearchParams)
+that implements methods for reading search parameters. For the following
+example, imagine an OpenAPI specification that defines some query parameters:
+
+- _query_: required string
+- _sort_: optional enum of "desc" or "asc"
+- _sort_: optional array of strings
+
+```typescript
+const http = createOpenApiHttp<paths>();
+
+const handler = http.get("/query-example", ({ query }) => {
+  const queryString = query.get("query"); // Typed as string
+  const sort = query.get("sort"); // Typed as "asc" | "desc" | null
+  const sortBy = query.getAll("sortBy"); // Typed as string[]
+
+  // Supported methods from URLSearchParams: get(), getAll(), has(), size
+  if (query.has("sort", "asc")) {
+    /* ... */
+  }
+
+  return HttpResponse.json({
+    /* ... */
+  });
+});
+```
 
 ## License
 
