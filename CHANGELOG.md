@@ -1,5 +1,62 @@
 # openapi-msw
 
+## 0.3.0
+
+### Minor Changes
+
+- [#33](https://github.com/christoph-fricke/openapi-msw/pull/33) [`1f3958d`](https://github.com/christoph-fricke/openapi-msw/commit/1f3958dee1fce818b20c37bf486d6d73a0fcd1ea) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added `query` helper to resolver-info argument. It provides a type-safe wrapper around `URLSearchParams` for reading search parameters. As usual, the information about available parameters is inferred from your OpenAPI spec.
+
+  ```typescript
+  /*
+  Imagine this endpoint specification for the following example:
+  
+  /query-example:
+    get:
+      summary: Query Example
+      operationId: getQueryExample
+      parameters:
+        - name: filter
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["asc", "desc"]
+        - name: sortBy
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+  */
+
+  const handler = http.get("/query-example", ({ query }) => {
+    const filter = query.get("filter"); // Typed as string
+    const page = query.get("page"); // Typed as string | null since it is not required
+    const sort = query.get("sort"); // Typed as "asc" | "desc" | null
+    const sortBy = query.getAll("sortBy"); // Typed as string[]
+
+    // Supported methods from URLSearchParams: get(), getAll(), has(), size
+    if (query.has("sort", "asc")) {
+      /* ... */
+    }
+
+    return HttpResponse.json({
+      /* ... */
+    });
+  });
+  ```
+
+- [#35](https://github.com/christoph-fricke/openapi-msw/pull/35) [`07fa9b0`](https://github.com/christoph-fricke/openapi-msw/commit/07fa9b0822c441708c70d3e0698a6dbe7577f58c) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Restructured the library to add support for additional response resolver info. The enhanced `ResponseResolver` type and `ResponseResolverInfo` are available as exports.
+
 ## 0.2.2
 
 ### Patch Changes
