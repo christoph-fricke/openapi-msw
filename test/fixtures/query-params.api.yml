@@ -1,0 +1,68 @@
+openapi: 3.0.2
+info:
+  title: Options API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /single-query:
+    get:
+      summary: Single Query Params
+      operationId: getSingleQuery
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["asc", "desc"]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /multi-query:
+    get:
+      summary: Multi Query Params
+      operationId: getMultiQuery
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: array
+            items:
+              type: number
+        - name: sortBy
+          in: query
+          schema:
+            type: "array"
+            items:
+              type: string
+              enum: ["asc", "desc"]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
