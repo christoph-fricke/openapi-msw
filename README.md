@@ -26,13 +26,15 @@ continuing with this usage guide.
 
 Once you have your OpenAPI schema types ready-to-go, you can use OpenAPI-MSW to
 create an enhanced version of MSW's `http` object. The enhanced version is
-designed to be almost identical to MSW in usage, which the exception of opt-in
-helpers for an even better type-safe experience. Using the `http` object created
-with OpenAPI-MSW enables multiple type-safety and editor suggestion benefits:
+designed to be almost identical to MSW in usage. To go beyond MSW's typing
+capabilities, OpenAPI-MSW provides optional helpers for an even better type-safe
+experience. Using the `http` object created with OpenAPI-MSW enables multiple
+type-safety and editor suggestion benefits:
 
 - **Paths:** Only accepts paths that are available for the current HTTP method
 - **Params**: Automatically typed with path parameters in the current path
-- **Search Params**: Automatically typed with query schema of the current path
+- **Query Params**: Automatically typed with the query parameters schema of the
+  current path
 - **Request Body:** Automatically typed with the request-body schema of the
   current path
 - **Response:** Automatically forced to match the response-body schema of the
@@ -55,7 +57,7 @@ const getHandler = http.get("/resource/{id}", ({ params }) => {
 
 // TS only suggests available POST paths
 const postHandler = http.post("/resource", async ({ request, query }) => {
-  // TS infers available query keys and return types from the OpenAPI schema
+  // TS infers available query parameters from the OpenAPI schema
   const sortDir = query.get("sort");
 
   const data = await request.json();
@@ -104,30 +106,30 @@ const catchAll = http.untyped.all("/resource/*", ({ params }) => {
 Alternatively, you can import the original `http` object from MSW and use that
 one for unknown paths instead.
 
-### Opt-in Helpers
+### Optional Helpers
 
-For an even better type-safe experience, OpenAPI-MSW provides additional helpers
-through MSW's resolver info. Currently, the following helpers are provided for
-optional usage.
+For an even better type-safe experience, OpenAPI-MSW provides optional helpers
+that are attached to MSW's resolver-info argument. Currently, the helper `query`
+is provided for type-safe access to query parameters.
 
-#### `query`
+#### `query` Helper
 
 Type-safe wrapper around
 [`URLSearchParams`](https://developer.mozilla.org/docs/Web/API/URLSearchParams)
-that implements methods for reading search parameters. For the following
-example, imagine an OpenAPI specification that defines some query parameters:
+that implements methods for reading query parameters. For the following example,
+imagine an OpenAPI specification that defines some query parameters:
 
-- _query_: required string
-- _sort_: optional enum of "desc" or "asc"
-- _sort_: optional array of strings
+- **filter**: required string
+- **sort**: optional string enum of "desc" and "asc"
+- **sortBy**: optional array of strings
 
 ```typescript
 const http = createOpenApiHttp<paths>();
 
 const handler = http.get("/query-example", ({ query }) => {
-  const queryString = query.get("query"); // Typed as string
-  const sort = query.get("sort"); // Typed as "asc" | "desc" | null
-  const sortBy = query.getAll("sortBy"); // Typed as string[]
+  const filter = query.get("filter"); // string
+  const sort = query.get("sort"); // "asc" | "desc" | null
+  const sortBy = query.getAll("sortBy"); // string[]
 
   // Supported methods from URLSearchParams: get(), getAll(), has(), size
   if (query.has("sort", "asc")) {
