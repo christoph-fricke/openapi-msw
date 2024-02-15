@@ -24,6 +24,20 @@ export interface ResponseResolverInfo<
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > extends MSWResponseResolverInfo<ApiSpec, Path, Method> {
+  /**
+   * Type-safe wrapper around {@link URLSearchParams} that implements methods for
+   * reading query parameters.
+   *
+   * @example
+   * const handler = http.get("/query-example", ({ query }) => {
+   *   const filter = query.get("filter");
+   *   const sortBy = query.getAll("sortBy");
+   *
+   *   if (query.has("sort", "asc")) { ... }
+   *
+   *   return HttpResponse.json({ ... });
+   * });
+   */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
 }
 
