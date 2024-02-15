@@ -23,7 +23,7 @@
     }
   },
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "build": "rimraf ./dist && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
     "lint": "eslint . && prettier -c .",
@@ -38,7 +38,7 @@
     "*.{ts,js,mjs}": "eslint --fix"
   },
   "dependencies": {
-    "openapi-typescript-helpers": "^0.0.6"
+    "openapi-typescript-helpers": "^0.0.7"
   },
   "peerDependencies": {
     "msw": "^2.0.0"
@@ -46,17 +46,17 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.1",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "eslint": "^8.56.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "openapi-typescript": "^7.0.0-next.5",
-    "prettier": "^3.1.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "openapi-typescript": "^7.0.0-next.7",
+    "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "vitest": "^1.2.2"
   },
   "overrides": {
     "msw": {
