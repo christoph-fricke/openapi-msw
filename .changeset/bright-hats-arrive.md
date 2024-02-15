@@ -2,17 +2,18 @@
 "openapi-msw": minor
 ---
 
-Added `query` helper to resolver info. It provides a type-safe wrapper around `URLSearchParams` for reading search params. As usual, the information about available params is inferred from your OpenAPI spec.
+Added `query` helper to resolver-info argument. It provides a type-safe wrapper around `URLSearchParams` for reading search parameters. As usual, the information about available parameters is inferred from your OpenAPI spec.
 
 ```typescript
 /*
 Imagine this endpoint specification for the following example:
+
 /query-example:
   get:
     summary: Query Example
     operationId: getQueryExample
     parameters:
-      - name: query
+      - name: filter
         in: query
         required: true
         schema:
@@ -34,14 +35,17 @@ Imagine this endpoint specification for the following example:
           items:
             type: string
 */
+
 const handler = http.get("/query-example", ({ query }) => {
-  const queryString = query.get("query"); // Typed as string
+  const filter = query.get("filter"); // Typed as string
   const page = query.get("page"); // Typed as string | null since it is not required
   const sort = query.get("sort"); // Typed as "asc" | "desc" | null
   const sortBy = query.getAll("sortBy"); // Typed as string[]
 
   // Supported methods from URLSearchParams: get(), getAll(), has(), size
-  const exists = query.has("sort");
+  if (query.has("sort", "asc")) {
+    /* ... */
+  }
 
   return HttpResponse.json({
     /* ... */
