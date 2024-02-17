@@ -33,17 +33,17 @@ export interface OpenApiResponse<
 
 export function createResponseHelper<
   ResponseMap extends Record<number, unknown>,
-  SuccessResponse extends DefaultBodyType,
->(): OpenApiResponse<ResponseMap, SuccessResponse> {
-  const response: OpenApiResponse<ResponseMap, SuccessResponse> = (status) => {
+  ExpectedResponse extends DefaultBodyType,
+>(): OpenApiResponse<ResponseMap, ExpectedResponse> {
+  const response: OpenApiResponse<ResponseMap, ExpectedResponse> = (status) => {
     return {
       text: (body, init) =>
         HttpResponse.text(body as string, {
           ...init,
           status: status as number,
-        }) as StrictResponse<SuccessResponse>,
+        }) as StrictResponse<ExpectedResponse>,
       json: (body, init) =>
-        HttpResponse.json(body as SuccessResponse, {
+        HttpResponse.json(body as ExpectedResponse, {
           ...init,
           status: status as number,
         }),
