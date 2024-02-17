@@ -3,6 +3,7 @@ import type {
   MediaType,
   OperationRequestBodyContent,
   PathsWithMethod,
+  ResponseContent,
   ResponseObjectMap,
   SuccessResponse,
 } from "openapi-typescript-helpers";
@@ -64,6 +65,23 @@ export type RequestBody<
   Method extends HttpMethod,
 > = Method extends keyof ApiSpec[Path]
   ? OperationRequestBodyContent<ApiSpec[Path][Method]>
+  : never;
+
+export type ResponseMap<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = Method extends keyof ApiSpec[Path]
+  ? ApiSpec[Path][Method] extends {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      responses: any;
+    }
+    ? {
+        [Status in keyof ApiSpec[Path][Method]["responses"]]: ResponseContent<
+          ApiSpec[Path][Method]["responses"][Status]
+        >;
+      }
+    : never
   : never;
 
 /** Extract the response body of a given path and method from an api spec. */

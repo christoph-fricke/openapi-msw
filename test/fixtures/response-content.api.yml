@@ -27,6 +27,33 @@ paths:
             text/plain:
               schema:
                 type: string
+  /multi-resource:
+    get:
+      summary: Get Multi Resource
+      operationId: getMultiResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+            plain/text:
+              schema:
+                type: string
+                enum: ["Hello", "Goodby"]
+        418:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: number
+                required: [error, code]
 components:
   schemas:
     Resource:
