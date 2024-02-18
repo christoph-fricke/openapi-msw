@@ -20,3 +20,24 @@ export type OptionalKeys<O extends object> = {
   // eslint-disable-next-line @typescript-eslint/ban-types
   [K in keyof O]-?: {} extends Pick<O, K> ? K : never;
 }[keyof O];
+
+/**
+ * Combines a union of objects into a single object.
+ * This is useful for types like `keyof ({ a: string } | { b: string })`,
+ * which is `never` without {@link ResolvedObjectUnion}.
+ *
+ * A use-case example of such situation is mapping different media-types that
+ * split across multiple status codes.
+ *
+ * @see https://www.steveruiz.me/posts/smooshed-object-union
+ */
+export type ResolvedObjectUnion<T> = {
+  [K in T extends infer P ? keyof P : never]: T extends infer P
+    ? K extends keyof P
+      ? P[K]
+      : never
+    : never;
+};
+
+/** Maps an object into a union of all its inner values. */
+export type MapToValues<Obj> = Obj[keyof Obj];

@@ -1,12 +1,14 @@
 import type {
-  FilterKeys,
-  MediaType,
   OperationRequestBodyContent,
   PathsWithMethod,
+  ResponseContent,
   ResponseObjectMap,
-  SuccessResponse,
 } from "openapi-typescript-helpers";
-import type { ConvertToStringified } from "./type-utils.js";
+import type {
+  ConvertToStringified,
+  MapToValues,
+  ResolvedObjectUnion,
+} from "./type-utils.js";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -77,9 +79,12 @@ export type ResponseBody<
       responses: any;
     }
     ? ConvertNoContent<
-        FilterKeys<
-          SuccessResponse<ResponseObjectMap<ApiSpec[Path][Method]>>,
-          MediaType
+        MapToValues<
+          ResolvedObjectUnion<
+            ResponseContent<
+              MapToValues<ResponseObjectMap<ApiSpec[Path][Method]>>
+            >
+          >
         >
       >
     : never

@@ -16,6 +16,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+            plain/text:
+              schema:
+                type: string
+                enum: ["Hello", "Goodby"]
+        418:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: number
+                required: [error, code]
   /text-resource:
     get:
       summary: Get Text Resource
