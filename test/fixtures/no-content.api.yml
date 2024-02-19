@@ -18,3 +18,31 @@ paths:
       responses:
         204:
           description: No Content
+  /no-content-resource:
+    get:
+      summary: Get Resource With No Content
+      operationId: getResourceNoContent
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        204:
+          description: NoContent
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+        - name
+        - value
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          type: integer
