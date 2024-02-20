@@ -2,7 +2,7 @@
 "openapi-msw": minor
 ---
 
-Changed response bodies to be a union of all response bodies for all status codes and media types. This makes it possible to return responses for specified error codes without requiring a type cast. Imagine the following endpoint. Its response body is now typed as `StrictResponse<{ id: string, value: number } | string | null>`.
+Changed response body types to be a union of all response bodies for all status codes and media types. This makes it possible to return responses for specified error codes without requiring a type cast. Imagine the following endpoint. Its response body is now typed as `StrictResponse<{ id: string, value: number } | string | null>`.
 
 ```yaml
 /resource:
