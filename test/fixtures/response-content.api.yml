@@ -25,13 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                  code:
-                    type: number
-                required: [error, code]
+                $ref: "#/components/schemas/Exception"
   /text-resource:
     get:
       summary: Get Text Resource
@@ -58,3 +52,11 @@ components:
           type: string
         value:
           type: integer
+    Exception:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: number
