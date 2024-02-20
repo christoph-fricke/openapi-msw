@@ -5,6 +5,17 @@ info:
 servers:
   - url: http://localhost:3000
 paths:
+  /no-query:
+    get:
+      summary: No Query Params
+      operationId: getNoQuery
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
   /single-query:
     get:
       summary: Single Query Params

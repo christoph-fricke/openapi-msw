@@ -52,10 +52,17 @@ export type QueryParams<
       parameters: { query?: any };
     }
     ? ConvertToStringified<
-        Required<ApiSpec[Path][Method]["parameters"]>["query"]
+        StrictQueryParams<
+          Required<ApiSpec[Path][Method]["parameters"]>["query"]
+        >
       >
     : never
   : never;
+
+/** Ensures that query params are not usable in case no query params are specified (never). */
+type StrictQueryParams<Params> = [Params] extends [never]
+  ? NonNullable<unknown>
+  : Params;
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<

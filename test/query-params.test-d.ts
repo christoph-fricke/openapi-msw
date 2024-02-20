@@ -44,4 +44,12 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
       expectTypeOf(multiSortBy).toEqualTypeOf<("asc" | "desc")[]>();
     });
   });
+
+  test("When a endpoint with no query params is mocked, Then no query keys can be passed to the query helper", () => {
+    http.get("/no-query", ({ query }) => {
+      expectTypeOf(query.get).parameter(0).toEqualTypeOf<never>();
+      expectTypeOf(query.getAll).parameter(0).toEqualTypeOf<never>();
+      expectTypeOf(query.has).parameter(0).toEqualTypeOf<never>();
+    });
+  });
 });
