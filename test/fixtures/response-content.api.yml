@@ -16,6 +16,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+            plain/text:
+              schema:
+                type: string
+                enum: ["Hello", "Goodby"]
+        418:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
   /text-resource:
     get:
       summary: Get Text Resource
@@ -42,3 +52,11 @@ components:
           type: string
         value:
           type: integer
+    Exception:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: number

@@ -13,7 +13,12 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
 
     response.not.toEqualTypeOf<Response>();
     response.toEqualTypeOf<
-      StrictResponse<{ id: string; name: string; value: number }>
+      StrictResponse<
+        | { id: string; name: string; value: number }
+        | "Hello"
+        | "Goodby"
+        | { error: string; code: number }
+      >
     >();
   });
 });

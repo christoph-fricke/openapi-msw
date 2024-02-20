@@ -1,12 +1,12 @@
 import type {
-  FilterKeys,
-  MediaType,
   OperationRequestBodyContent,
   PathsWithMethod,
-  ResponseObjectMap,
-  SuccessResponse,
 } from "openapi-typescript-helpers";
-import type { ConvertToStringified } from "./type-utils.js";
+import type {
+  ConvertToStringified,
+  MapToValues,
+  ResolvedObjectUnion,
+} from "./type-utils.js";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;
@@ -73,8 +73,11 @@ export type RequestBody<
   ? OperationRequestBodyContent<ApiSpec[Path][Method]>
   : never;
 
-/** Extract the response body of a given path and method from an api spec. */
-export type ResponseBody<
+/**
+ * Extract a response map for a given path and method from an api spec.
+ * A response map has the shape of (status -> media-type -> body).
+ */
+export type ResponseMap<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
@@ -83,18 +86,33 @@ export type ResponseBody<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       responses: any;
     }
-    ? ConvertNoContent<
-        FilterKeys<
-          SuccessResponse<ResponseObjectMap<ApiSpec[Path][Method]>>,
-          MediaType
-        >
-      >
+    ? {
+        [Status in keyof ApiSpec[Path][Method]["responses"]]: ConvertContent<
+          ApiSpec[Path][Method]["responses"][Status]
+        >["content"];
+      }
     : never
   : never;
+
+/** Extract the response body of a given path and method from an api spec. */
+export type ResponseBody<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = MapToValues<
+  ResolvedObjectUnion<MapToValues<ResponseMap<ApiSpec, Path, Method>>>
+>;
 
 /**
  * OpenAPI-TS generates "no content" with `content?: never`.
  * However, `new Response().body` is `null` and strictly typing no-content in
- * MSW requires `null`. Therefore, this helper maps no-content to `null`.
+ * MSW requires `null`. Therefore, this helper ensures that "no-content"
+ * can be mapped to null when typing the response body.
  */
-type ConvertNoContent<Content> = [Content] extends [never] ? null : Content;
+type ConvertContent<Content> =
+  Required<Content> extends { content: never }
+    ? { content: { "no-content": null } }
+    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Content extends { content: any }
+      ? Content
+      : never;
