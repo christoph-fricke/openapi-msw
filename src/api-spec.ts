@@ -67,7 +67,7 @@ export type RequestBody<
   : never;
 
 /**
- * Extract a response map of a given path and method from an api spec.
+ * Extract a response map for a given path and method from an api spec.
  * A response map has the shape of (status -> media-type -> body).
  */
 export type ResponseMap<
