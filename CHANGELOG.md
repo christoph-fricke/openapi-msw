@@ -1,5 +1,43 @@
 # openapi-msw
 
+## 0.4.0
+
+### Minor Changes
+
+- [#42](https://github.com/christoph-fricke/openapi-msw/pull/42) [`c466bbc`](https://github.com/christoph-fricke/openapi-msw/commit/c466bbcf4c27dea2e4c6928bf92369abf138fb47) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Changed response body types to be a union of all response bodies for all status codes and media types. This makes it possible to return responses for specified error codes without requiring a type cast. Imagine the following endpoint. Its response body is now typed as `StrictResponse<{ id: string, value: number } | string | null>`.
+
+  ```yaml
+  /resource:
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, value]
+                properties:
+                  id:
+                    type: string
+                  value:
+                    type: integer
+        202:
+          description: Accepted
+          content:
+            text/plain:
+              schema:
+                type: string
+        418:
+          description: NoContent
+  ```
+
+### Patch Changes
+
+- [#44](https://github.com/christoph-fricke/openapi-msw/pull/44) [`a9338b5`](https://github.com/christoph-fricke/openapi-msw/commit/a9338b5bcb289ceaab0e5538a4131995c10dd5f0) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed endpoints with no specified query params allow any query key in the `query` helper methods. Now, providing any query key causes a type error.
+
 ## 0.3.0
 
 ### Minor Changes
