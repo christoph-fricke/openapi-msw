@@ -42,4 +42,31 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     expect(responseBody).toBe("Hello World");
     expect(result?.response?.status).toBe(200);
   });
+
+  test("When an endpoint return multiple media types or error codes, Then responses for all of them can be returned", async () => {
+    // TODO: Temporary test for playing with the new response helper...
+
+    http.get("/multi-resource", ({ response }) => {
+      // TS is able to provide hints on literal string responses. Not possible before. :chefkiss:
+      return response(200).text("Hello");
+    });
+
+    http.get("/multi-resource", ({ response }) => {
+      return response(200).json({ id: "test-id", name: "Test", value: 16 });
+    });
+
+    http.get("/multi-resource", ({ response }) => {
+      return response(418).json({
+        error: "Strict typed exception occurred.",
+        code: 9000,
+      });
+    });
+
+    http.get("/multi-resource", ({ response }) => {
+      // TODO: Will be changed to not require casting...
+      return response.untyped.text("Unexpected Error" as "Hello", {
+        status: 500,
+      });
+    });
+  });
 });

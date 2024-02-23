@@ -6,8 +6,10 @@ import type {
   QueryParams,
   RequestBody,
   ResponseBody,
+  ResponseMap,
 } from "./api-spec.js";
 import { QueryParams as QueryParamsUtil } from "./query-params.js";
+import { createResponseHelper, type OpenApiResponse } from "./response.js";
 
 /** Response resolver that gets provided to HTTP handler factories. */
 export type ResponseResolver<
@@ -39,6 +41,16 @@ export interface ResponseResolverInfo<
    * });
    */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
+  /**
+   * Helper function for creating responses based on status codes defined in the
+   * provided OpenAPI spec.
+   *
+   * TODO: Add more sophisticated JSDoc with example.
+   */
+  response: OpenApiResponse<
+    ResponseMap<ApiSpec, Path, Method>,
+    ResponseBody<ApiSpec, Path, Method>
+  >;
 }
 
 /** Wraps MSW's resolver function to provide additional info to a given resolver. */
@@ -50,7 +62,11 @@ export function createResolverWrapper<
   resolver: ResponseResolver<ApiSpec, Path, Method>,
 ): MSWResponseResolver<ApiSpec, Path, Method> {
   return (info) => {
-    return resolver({ ...info, query: new QueryParamsUtil(info.request) });
+    return resolver({
+      ...info,
+      query: new QueryParamsUtil(info.request),
+      response: createResponseHelper(),
+    });
   };
 }
 
