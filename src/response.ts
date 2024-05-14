@@ -4,52 +4,54 @@ import {
   type HttpResponseInit,
   type StrictResponse,
 } from "msw";
-import type { FilterKeys } from "openapi-typescript-helpers";
+import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
 
+type ScopedHttpResponseInit = Omit<HttpResponseInit, "status">;
+
+// TODO: Handle status codes that contain "XX", e.g. 2XX, 4XX... 2XX --> 200, 201, 204...
 export interface OpenApiResponse<
-  ResponseMap extends Record<number, unknown>,
-  // TODO: Should a resolver continue to only allow successful responses or a union of typed responses?
-  // The later, might make this generic for type casting obsolete.
-  ExpectedResponse extends DefaultBodyType,
+  ExpectedResponseBody extends DefaultBodyType,
+  ResponseMap,
 > {
-  // TODO: Handle status codes that contain "XX", e.g. 2XX, 4XX... 2XX --> 200, 201, 204...
   <Status extends keyof ResponseMap>(
     status: Status,
   ): {
-    // TODO: Do we need to support more HttpResponse helpers? Those are the only onces that return a `StrictResponse`.
-    // Currently, our strict typed resolver do not allow returning a `Response` anyway...
     text(
-      body: FilterKeys<ResponseMap[Status], `plain/${string}`>,
-      init?: Omit<HttpResponseInit, "status">,
-    ): StrictResponse<ExpectedResponse>;
+      body: FilterKeys<ResponseMap[Status], `text/${string}`>,
+      init?: ScopedHttpResponseInit,
+    ): StrictResponse<ExpectedResponseBody>;
     json(
-      body: FilterKeys<ResponseMap[Status], `${string}/json`>,
-      init?: Omit<HttpResponseInit, "status">,
-    ): StrictResponse<ExpectedResponse>;
+      body: JSONLike<ResponseMap[Status]>,
+      init?: ScopedHttpResponseInit,
+    ): StrictResponse<ExpectedResponseBody>;
+    empty(init?: ScopedHttpResponseInit): StrictResponse<null>;
   };
-  // TODO: Allow "untyped" helper to return any response as a fallback for unknown codes, e.g. 401, 5XX
-  untyped: typeof HttpResponse;
+  untyped(response: Response): StrictResponse<ExpectedResponseBody>;
 }
 
 export function createResponseHelper<
-  ResponseMap extends Record<number, unknown>,
-  ExpectedResponse extends DefaultBodyType,
->(): OpenApiResponse<ResponseMap, ExpectedResponse> {
-  const response: OpenApiResponse<ResponseMap, ExpectedResponse> = (status) => {
+  ExpectedResponseBody extends DefaultBodyType,
+  ResponseMap,
+>(): OpenApiResponse<ExpectedResponseBody, ResponseMap> {
+  const response: OpenApiResponse<ExpectedResponseBody, ResponseMap> = (
+    status,
+  ) => {
     return {
       text: (body, init) =>
         HttpResponse.text(body as string, {
           ...init,
           status: status as number,
-        }) as StrictResponse<ExpectedResponse>,
+        }) as StrictResponse<ExpectedResponseBody>,
       json: (body, init) =>
-        HttpResponse.json(body as ExpectedResponse, {
+        HttpResponse.json(body as ExpectedResponseBody, {
           ...init,
           status: status as number,
         }),
+      empty: (init) => new HttpResponse(null, init) as StrictResponse<null>,
     };
   };
-  response.untyped = HttpResponse;
+  response.untyped = (response) =>
+    response as StrictResponse<ExpectedResponseBody>;
 
   return response;
 }

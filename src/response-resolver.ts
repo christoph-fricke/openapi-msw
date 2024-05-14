@@ -42,14 +42,18 @@ export interface ResponseResolverInfo<
    */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
   /**
-   * Helper function for creating responses based on status codes defined in the
+   * Helper function for creating responses based on status codes allowed in the
    * provided OpenAPI spec.
    *
-   * TODO: Add more sophisticated JSDoc with example.
+   * @example
+   * const handler = http.get("/response-example", ({ response }) => {
+   *   // Helper provided type safety for the status code as well as the json body
+   *   return response(200).json({id: 123});
+   * });
    */
   response: OpenApiResponse<
-    ResponseMap<ApiSpec, Path, Method>,
-    ResponseBody<ApiSpec, Path, Method>
+    ResponseBody<ApiSpec, Path, Method>,
+    ResponseMap<ApiSpec, Path, Method>
   >;
 }
 

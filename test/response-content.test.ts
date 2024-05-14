@@ -46,27 +46,39 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
   test("When an endpoint return multiple media types or error codes, Then responses for all of them can be returned", async () => {
     // TODO: Temporary test for playing with the new response helper...
 
-    http.get("/multi-resource", ({ response }) => {
-      // TS is able to provide hints on literal string responses. Not possible before. :chefkiss:
+    http.get("/resource", ({ response }) => {
       return response(200).text("Hello");
     });
 
-    http.get("/multi-resource", ({ response }) => {
+    http.get("/resource", ({ response }) => {
       return response(200).json({ id: "test-id", name: "Test", value: 16 });
     });
 
-    http.get("/multi-resource", ({ response }) => {
+    http.get("/text-resource", ({ response }) => {
+      return response(200).text("Some Text");
+    });
+
+    http.get("/resource", ({ response }) => {
       return response(418).json({
         error: "Strict typed exception occurred.",
         code: 9000,
       });
     });
+  });
 
-    http.get("/multi-resource", ({ response }) => {
-      // TODO: Will be changed to not require casting...
-      return response.untyped.text("Unexpected Error" as "Hello", {
-        status: 500,
-      });
+  test("When an endpoint is mocked with the fallback helper, Then any response can be returned", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
     });
+    const handler = http.get("/resource", ({ response }) => {
+      return response.untyped(
+        HttpResponse.text("Unexpected Error", { status: 500 }),
+      );
+    });
+    const result = await handler.run({ request });
+
+    const responseBody = await result?.response?.text();
+    expect(result?.response?.status).toBe(500);
+    expect(responseBody).toBe("Unexpected Error");
   });
 });
