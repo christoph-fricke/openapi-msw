@@ -64,6 +64,10 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
         code: 9000,
       });
     });
+
+    http.get("/resource", ({ response }) => {
+      return response("5XX").json({ code: 1, error: "" }, { status: 502 });
+    });
   });
 
   test("When an endpoint is mocked with the fallback helper, Then any response can be returned", async () => {

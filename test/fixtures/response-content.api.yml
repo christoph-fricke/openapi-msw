@@ -26,6 +26,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Exception"
+        "5XX":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+        "default":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
   /text-resource:
     get:
       summary: Get Text Resource
