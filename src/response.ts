@@ -7,74 +7,77 @@ import {
 import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
 import type { Wildcard } from "./http-status-wildcard.js";
 
+type SafeResponseInit<Status> = Status extends keyof Wildcard
+  ? ResponseInitForWildcard<Status>
+  : ResponseInitNoStatus | void;
+
 type ResponseInitNoStatus = Omit<HttpResponseInit, "status">;
 type ResponseInitForWildcard<Key extends keyof Wildcard> =
   ResponseInitNoStatus & {
     status: Wildcard[Key];
   };
 
-interface StrictResponseForStatus<
-  Status extends keyof ResponseMap,
-  ExpectedResponseBody extends DefaultBodyType,
-  ResponseMap,
-> {
-  text(
-    body: FilterKeys<ResponseMap[Status], `text/${string}`>,
-    init: Status extends keyof Wildcard
-      ? ResponseInitForWildcard<Status>
-      : // TODO: Void is a but weird. Can this be solved better?
-        // Using "undefined" causes type errors when undefined is not explicitly provided...
-        ResponseInitNoStatus | void,
-  ): StrictResponse<ExpectedResponseBody>;
-  json(
-    body: JSONLike<ResponseMap[Status]>,
-    init: Status extends keyof Wildcard
-      ? ResponseInitForWildcard<Status>
-      : ResponseInitNoStatus | void,
-  ): StrictResponse<ExpectedResponseBody>;
-  empty(
-    init: Status extends keyof Wildcard
-      ? ResponseInitForWildcard<Status>
-      : ResponseInitNoStatus | void,
-  ): StrictResponse<null>;
-}
-
 export interface OpenApiResponse<
-  ExpectedResponseBody extends DefaultBodyType,
   ResponseMap,
+  ExpectedResponseBody extends DefaultBodyType,
 > {
   <Status extends keyof ResponseMap>(
     status: Status,
-  ): StrictResponseForStatus<Status, ExpectedResponseBody, ResponseMap>;
+  ): {
+    text: FilterKeys<ResponseMap[Status], `text/${string}`> extends never
+      ? unknown
+      : (
+          body: FilterKeys<ResponseMap[Status], `text/${string}`>,
+          init: SafeResponseInit<Status>,
+        ) => StrictResponse<ExpectedResponseBody>;
+    json: JSONLike<ResponseMap[Status]> extends never
+      ? unknown
+      : (
+          body: JSONLike<ResponseMap[Status]>,
+          init: SafeResponseInit<Status>,
+        ) => StrictResponse<ExpectedResponseBody>;
+    empty: FilterKeys<ResponseMap[Status], "no-content"> extends never
+      ? unknown
+      : (init: SafeResponseInit<Status>) => StrictResponse<null>;
+  };
   untyped(response: Response): StrictResponse<ExpectedResponseBody>;
 }
 
 export function createResponseHelper<
-  ExpectedResponseBody extends DefaultBodyType,
   ResponseMap,
->(): OpenApiResponse<ExpectedResponseBody, ResponseMap> {
-  const response: OpenApiResponse<ExpectedResponseBody, ResponseMap> = (
-    status,
-  ) => {
+  ExpectedResponseBody extends DefaultBodyType,
+>(): OpenApiResponse<ResponseMap, ExpectedResponseBody> {
+  const response = <Status extends keyof ResponseMap>(status: Status) => {
     return {
-      text: (body, init) =>
-        HttpResponse.text(body as string, {
-          ...init,
+      text: (
+        body: FilterKeys<ResponseMap[Status], `text/${string}`>,
+        init: Status extends keyof Wildcard
+          ? ResponseInitForWildcard<Status>
+          : ResponseInitNoStatus | void,
+      ): StrictResponse<ExpectedResponseBody> => {
+        return HttpResponse.text(body as string, {
           status: status as number,
-        }) as StrictResponse<ExpectedResponseBody>,
-      json: (body, init) =>
-        HttpResponse.json(body as ExpectedResponseBody, {
           ...init,
+        }) as StrictResponse<ExpectedResponseBody>;
+      },
+      json: (
+        body: JSONLike<ResponseMap[Status]>,
+        init: SafeResponseInit<Status>,
+      ): StrictResponse<ExpectedResponseBody> => {
+        return HttpResponse.json(body as ExpectedResponseBody, {
           status: status as number,
-        }),
-      empty: (init) =>
-        new HttpResponse(
-          null,
-          init as HttpResponseInit,
-        ) as StrictResponse<null>,
+          ...init,
+        });
+      },
+      empty: (init: SafeResponseInit<Status>): StrictResponse<null> => {
+        return new HttpResponse(null, {
+          status: status as number,
+          ...init,
+        }) as StrictResponse<null>;
+      },
     };
   };
-  response.untyped = (response) =>
+  response.untyped = (response: Response) =>
     response as StrictResponse<ExpectedResponseBody>;
 
   return response;

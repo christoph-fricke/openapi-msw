@@ -52,8 +52,8 @@ export interface ResponseResolverInfo<
    * });
    */
   response: OpenApiResponse<
-    ResponseBody<ApiSpec, Path, Method>,
-    ResponseMap<ApiSpec, Path, Method>
+    ResponseMap<ApiSpec, Path, Method>,
+    ResponseBody<ApiSpec, Path, Method>
   >;
 }
 

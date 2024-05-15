@@ -20,6 +20,8 @@ paths:
               schema:
                 type: string
                 enum: ["Hello", "Goodbye"]
+        204:
+          description: NoContent
         418:
           description: Error
           content:

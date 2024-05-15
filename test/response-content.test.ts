@@ -47,6 +47,13 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     // TODO: Temporary test for playing with the new response helper...
 
     http.get("/resource", ({ response }) => {
+      return response(204).empty();
+
+      //@ts-expect-error Assigning empty when status returns content should be allowed
+      return response(200).empty();
+    });
+
+    http.get("/resource", ({ response }) => {
       return response(200).text("Hello");
     });
 
