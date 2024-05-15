@@ -17,6 +17,28 @@ type ResponseInitForWildcard<Key extends keyof Wildcard> =
     status: Wildcard[Key];
   };
 
+type TextResponse<
+  ResponseMap,
+  Status extends keyof ResponseMap,
+  ExpectedResponseBody extends DefaultBodyType,
+> = (
+  body: FilterKeys<ResponseMap[Status], `text/${string}`>,
+  init: SafeResponseInit<Status>,
+) => StrictResponse<ExpectedResponseBody>;
+
+type JSONResponse<
+  ResponseMap,
+  Status extends keyof ResponseMap,
+  ExpectedResponseBody extends DefaultBodyType,
+> = (
+  body: JSONLike<ResponseMap[Status]>,
+  init: SafeResponseInit<Status>,
+) => StrictResponse<ExpectedResponseBody>;
+
+type EmptyResponse<ResponseMap, Status extends keyof ResponseMap> = (
+  init: SafeResponseInit<Status>,
+) => StrictResponse<null>;
+
 export interface OpenApiResponse<
   ResponseMap,
   ExpectedResponseBody extends DefaultBodyType,
@@ -26,19 +48,13 @@ export interface OpenApiResponse<
   ): {
     text: FilterKeys<ResponseMap[Status], `text/${string}`> extends never
       ? unknown
-      : (
-          body: FilterKeys<ResponseMap[Status], `text/${string}`>,
-          init: SafeResponseInit<Status>,
-        ) => StrictResponse<ExpectedResponseBody>;
+      : TextResponse<ResponseMap, Status, ExpectedResponseBody>;
     json: JSONLike<ResponseMap[Status]> extends never
       ? unknown
-      : (
-          body: JSONLike<ResponseMap[Status]>,
-          init: SafeResponseInit<Status>,
-        ) => StrictResponse<ExpectedResponseBody>;
+      : JSONResponse<ResponseMap, Status, ExpectedResponseBody>;
     empty: FilterKeys<ResponseMap[Status], "no-content"> extends never
       ? unknown
-      : (init: SafeResponseInit<Status>) => StrictResponse<null>;
+      : EmptyResponse<ResponseMap, Status>;
   };
   untyped(response: Response): StrictResponse<ExpectedResponseBody>;
 }
@@ -47,37 +63,42 @@ export function createResponseHelper<
   ResponseMap,
   ExpectedResponseBody extends DefaultBodyType,
 >(): OpenApiResponse<ResponseMap, ExpectedResponseBody> {
-  const response = <Status extends keyof ResponseMap>(status: Status) => {
-    return {
-      text: (
-        body: FilterKeys<ResponseMap[Status], `text/${string}`>,
-        init: Status extends keyof Wildcard
-          ? ResponseInitForWildcard<Status>
-          : ResponseInitNoStatus | void,
-      ): StrictResponse<ExpectedResponseBody> => {
-        return HttpResponse.text(body as string, {
-          status: status as number,
-          ...init,
-        }) as StrictResponse<ExpectedResponseBody>;
-      },
-      json: (
-        body: JSONLike<ResponseMap[Status]>,
-        init: SafeResponseInit<Status>,
-      ): StrictResponse<ExpectedResponseBody> => {
-        return HttpResponse.json(body as ExpectedResponseBody, {
-          status: status as number,
-          ...init,
-        });
-      },
-      empty: (init: SafeResponseInit<Status>): StrictResponse<null> => {
-        return new HttpResponse(null, {
-          status: status as number,
-          ...init,
-        }) as StrictResponse<null>;
-      },
+  const response: OpenApiResponse<ResponseMap, ExpectedResponseBody> = (
+    status,
+  ) => {
+    const text: TextResponse<
+      ResponseMap,
+      typeof status,
+      ExpectedResponseBody
+    > = (body, init) => {
+      return HttpResponse.text(body as string, {
+        status: status as number,
+        ...init,
+      }) as StrictResponse<ExpectedResponseBody>;
     };
+
+    const json: JSONResponse<
+      ResponseMap,
+      typeof status,
+      ExpectedResponseBody
+    > = (body, init) => {
+      return HttpResponse.json(body as ExpectedResponseBody, {
+        status: status as number,
+        ...init,
+      });
+    };
+
+    const empty: EmptyResponse<ResponseMap, typeof status> = (init) => {
+      return new HttpResponse(null, {
+        status: status as number,
+        ...init,
+      }) as StrictResponse<null>;
+    };
+
+    return { text, json, empty };
   };
-  response.untyped = (response: Response) =>
+
+  response.untyped = (response) =>
     response as StrictResponse<ExpectedResponseBody>;
 
   return response;
