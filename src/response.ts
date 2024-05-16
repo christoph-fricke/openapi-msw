@@ -29,7 +29,7 @@ type TextResponse<ResponseBody, Status> = (
 ) => StrictResponse<typeof body>;
 
 /** Creates a type-safe json response, which may require an additional status code. */
-type JSONResponse<ResponseBody, Status> = (
+type JsonResponse<ResponseBody, Status> = (
   body: ResponseBody extends DefaultBodyType ? ResponseBody : never,
   init: DynamicResponseInit<Status>,
 ) => StrictResponse<typeof body>;
@@ -57,7 +57,7 @@ export interface OpenApiResponse<
 
     json: JSONLike<ResponseMap[Status]> extends never
       ? unknown
-      : JSONResponse<JSONLike<ResponseMap[Status]>, Status>;
+      : JsonResponse<JSONLike<ResponseMap[Status]>, Status>;
 
     empty: FilterKeys<ResponseMap[Status], "no-content"> extends never
       ? unknown
@@ -83,7 +83,7 @@ export function createResponseHelper<
       });
     };
 
-    const json: JSONResponse<
+    const json: JsonResponse<
       JSONLike<ResponseMap[typeof status]>,
       typeof status
     > = (body, init) => {
