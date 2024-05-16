@@ -28,9 +28,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
   test("When a TEXT endpoint is mocked, Then text response content can be returned", async () => {
     const request = new Request(
       new URL("/text-resource", "http://localhost:3000"),
-      {
-        method: "get",
-      },
+      { method: "get" },
     );
 
     const handler = http.get("/text-resource", () => {
@@ -43,38 +41,72 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     expect(result?.response?.status).toBe(200);
   });
 
-  test("When an endpoint return multiple media types or error codes, Then responses for all of them can be returned", async () => {
-    // TODO: Temporary test for playing with the new response helper...
-
-    http.get("/resource", ({ response }) => {
-      return response(204).empty();
-
-      //@ts-expect-error Assigning empty when status returns content should be allowed
-      return response(200).empty();
+  test("When the response helper is used for fix status codes, Then a JSON response can be returned", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
     });
 
-    http.get("/resource", ({ response }) => {
+    const handler = http.get("/resource", ({ response }) => {
+      return response(418).json({ code: 123, error: "Something wrong." });
+    });
+    const result = await handler.run({ request });
+
+    const responseBody = await result?.response?.json();
+    expect(responseBody).toStrictEqual({
+      code: 123,
+      error: "Something wrong.",
+    });
+    expect(result?.response?.status).toBe(418);
+  });
+
+  test("When the response helper is used for fix status codes, Then a TEXT response can be returned", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
+    });
+
+    const handler = http.get("/resource", ({ response }) => {
       return response(200).text("Hello");
     });
+    const result = await handler.run({ request });
 
-    http.get("/resource", ({ response }) => {
-      return response(200).json({ id: "test-id", name: "Test", value: 16 });
+    const responseBody = await result?.response?.text();
+    expect(responseBody).toBe("Hello");
+    expect(result?.response?.status).toBe(200);
+  });
+
+  test("When the response helper is used for fix status codes, Then a EMPTY response can be returned", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
     });
 
-    http.get("/text-resource", ({ response }) => {
-      return response(200).text("Some Text");
+    const handler = http.get("/resource", ({ response }) => {
+      return response(204).empty();
+    });
+    const result = await handler.run({ request });
+
+    expect(result?.response?.body).toBeNull();
+    expect(result?.response?.status).toBe(204);
+  });
+
+  test("When the response helper is used for wildcard status codes, Then a specific response status must be chosen", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
     });
 
-    http.get("/resource", ({ response }) => {
-      return response(418).json({
-        error: "Strict typed exception occurred.",
-        code: 9000,
-      });
+    const handler = http.get("/resource", ({ response }) => {
+      return response("5XX").json(
+        { code: 123, error: "Something wrong." },
+        { status: 503 },
+      );
     });
+    const result = await handler.run({ request });
 
-    http.get("/resource", ({ response }) => {
-      return response("5XX").json({ code: 1, error: "" }, { status: 502 });
+    const responseBody = await result?.response?.json();
+    expect(responseBody).toStrictEqual({
+      code: 123,
+      error: "Something wrong.",
     });
+    expect(result?.response?.status).toBe(503);
   });
 
   test("When an endpoint is mocked with the fallback helper, Then any response can be returned", async () => {
