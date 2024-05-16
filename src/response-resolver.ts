@@ -41,14 +41,33 @@ export interface ResponseResolverInfo<
    * });
    */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
+
   /**
-   * Helper function for creating responses based on status codes allowed in the
-   * provided OpenAPI spec.
+   * A type-safe response helper that narrows allowed status codes and content types,
+   * based on the given OpenAPI spec. The response body is further narrowed to
+   * the match the selected status code and content-type.
+   *
+   * If a wildcard status code is chosen, a returning status code must be provided
+   * in the response init. Status code allowed by the wildcard are inferred.
+   *
+   * A fallback for returning any response without casting regardless of the OpenAPI spec
+   * is provided through `response.untyped(...)`.
    *
    * @example
    * const handler = http.get("/response-example", ({ response }) => {
-   *   // Helper provided type safety for the status code as well as the json body
    *   return response(200).json({id: 123});
+   * });
+   *
+   * const empty = http.get("/response-example", ({ response }) => {
+   *   return response(204).empty();
+   * });
+   *
+   * const wildcard = http.get("/response-example", ({ response }) => {
+   *   return response("5XX").text("Unexpected Error", { status: 501 });
+   * });
+   *
+   * const fallback = http.get("/response-example", ({ response }) => {
+   *   return response.untyped(new Response("Hello"));
    * });
    */
   response: OpenApiResponse<

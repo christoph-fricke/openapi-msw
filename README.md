@@ -146,9 +146,14 @@ const handler = http.get("/query-example", ({ query }) => {
 
 #### `response` Helper
 
-Type-safe response constructor that limits allowed response bodies based on the
-chosen status code and content type. For the following example, imagine an
-OpenAPI specification that defines various response options for an endpoint:
+Type-safe response constructor that narrows allowed response bodies based on the
+chosen status code and content type. This helper enables granular type-safety
+for responses. Instead of being able to return any status code, it limits status
+codes, content-types, and their response bodies to the combinations defined the
+given OpenAPI spec.
+
+For the following example, imagine an OpenAPI specification that defines various
+response options for an endpoint:
 
 | Status Code | Content-Type       | Content                |
 | :---------- | :----------------- | :--------------------- |
