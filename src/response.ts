@@ -7,38 +7,43 @@ import {
 import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
 import type { Wildcard } from "./http-status-wildcard.js";
 
-type SafeResponseInit<Status> = Status extends keyof Wildcard
+/**
+ * Requires or removes the status code from response init depending on the chosen
+ * OpenAPI status code. When the status is a wildcard, a specific status code
+ * must be provided.
+ */
+type DynamicResponseInit<Status> = Status extends keyof Wildcard
   ? ResponseInitForWildcard<Status>
   : ResponseInitNoStatus | void;
 
-type ResponseInitNoStatus = Omit<HttpResponseInit, "status">;
-type ResponseInitForWildcard<Key extends keyof Wildcard> =
-  ResponseInitNoStatus & {
-    status: Wildcard[Key];
-  };
+interface ResponseInitNoStatus extends Omit<HttpResponseInit, "status"> {}
+interface ResponseInitForWildcard<Key extends keyof Wildcard>
+  extends ResponseInitNoStatus {
+  status: Wildcard[Key];
+}
 
-type TextResponse<
-  ResponseMap,
-  Status extends keyof ResponseMap,
-  ExpectedResponseBody extends DefaultBodyType,
-> = (
-  body: FilterKeys<ResponseMap[Status], `text/${string}`>,
-  init: SafeResponseInit<Status>,
-) => StrictResponse<ExpectedResponseBody>;
+/** Creates a type-safe text response, which may require an additional status code. */
+type TextResponse<ResponseBody, Status> = (
+  body: ResponseBody extends string ? ResponseBody : never,
+  init: DynamicResponseInit<Status>,
+) => StrictResponse<typeof body>;
 
-type JSONResponse<
-  ResponseMap,
-  Status extends keyof ResponseMap,
-  ExpectedResponseBody extends DefaultBodyType,
-> = (
-  body: JSONLike<ResponseMap[Status]>,
-  init: SafeResponseInit<Status>,
-) => StrictResponse<ExpectedResponseBody>;
+/** Creates a type-safe json response, which may require an additional status code. */
+type JSONResponse<ResponseBody, Status> = (
+  body: ResponseBody extends DefaultBodyType ? ResponseBody : never,
+  init: DynamicResponseInit<Status>,
+) => StrictResponse<typeof body>;
 
-type EmptyResponse<ResponseMap, Status extends keyof ResponseMap> = (
-  init: SafeResponseInit<Status>,
+/** Creates a type-safe empty response, which may require an additional status code. */
+type EmptyResponse<Status> = (
+  init: DynamicResponseInit<Status>,
 ) => StrictResponse<null>;
 
+/**
+ * A type-safe response helper that narrows available status codes and content-types,
+ * based on the given OpenAPI spec. The response body is specifically narrowed to
+ * the specified status code and content-type.
+ */
 export interface OpenApiResponse<
   ResponseMap,
   ExpectedResponseBody extends DefaultBodyType,
@@ -48,13 +53,15 @@ export interface OpenApiResponse<
   ): {
     text: FilterKeys<ResponseMap[Status], `text/${string}`> extends never
       ? unknown
-      : TextResponse<ResponseMap, Status, ExpectedResponseBody>;
+      : TextResponse<FilterKeys<ResponseMap[Status], `text/${string}`>, Status>;
+
     json: JSONLike<ResponseMap[Status]> extends never
       ? unknown
-      : JSONResponse<ResponseMap, Status, ExpectedResponseBody>;
+      : JSONResponse<JSONLike<ResponseMap[Status]>, Status>;
+
     empty: FilterKeys<ResponseMap[Status], "no-content"> extends never
       ? unknown
-      : EmptyResponse<ResponseMap, Status>;
+      : EmptyResponse<Status>;
   };
   untyped(response: Response): StrictResponse<ExpectedResponseBody>;
 }
@@ -67,28 +74,23 @@ export function createResponseHelper<
     status,
   ) => {
     const text: TextResponse<
-      ResponseMap,
-      typeof status,
-      ExpectedResponseBody
+      FilterKeys<ResponseMap[typeof status], `text/${string}`>,
+      typeof status
     > = (body, init) => {
-      return HttpResponse.text(body as string, {
-        status: status as number,
-        ...init,
-      }) as StrictResponse<ExpectedResponseBody>;
-    };
-
-    const json: JSONResponse<
-      ResponseMap,
-      typeof status,
-      ExpectedResponseBody
-    > = (body, init) => {
-      return HttpResponse.json(body as ExpectedResponseBody, {
+      return HttpResponse.text(body, {
         status: status as number,
         ...init,
       });
     };
 
-    const empty: EmptyResponse<ResponseMap, typeof status> = (init) => {
+    const json: JSONResponse<
+      JSONLike<ResponseMap[typeof status]>,
+      typeof status
+    > = (body, init) => {
+      return HttpResponse.json(body, { status: status as number, ...init });
+    };
+
+    const empty: EmptyResponse<typeof status> = (init) => {
       return new HttpResponse(null, {
         status: status as number,
         ...init,

@@ -109,36 +109,19 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
   test("When the response helper is used, Then the matching strict-typed responses are returned", async () => {
     http.get("/resource", ({ response }) => {
       expectTypeOf(response(200).text).returns.toEqualTypeOf<
-        StrictResponse<
-          | { id: string; name: string; value: number }
-          | "Hello"
-          | "Goodbye"
-          | { error: string; code: number }
-          | null
-        >
+        StrictResponse<"Hello" | "Goodbye">
       >();
 
       expectTypeOf(response(200).json).returns.toEqualTypeOf<
-        StrictResponse<
-          | { id: string; name: string; value: number }
-          | "Hello"
-          | "Goodbye"
-          | { error: string; code: number }
-          | null
-        >
+        StrictResponse<{ id: string; name: string; value: number }>
       >();
+
       expectTypeOf(response(204).empty).returns.toEqualTypeOf<
         StrictResponse<null>
       >();
 
       expectTypeOf(response("default").json).returns.toEqualTypeOf<
-        StrictResponse<
-          | { id: string; name: string; value: number }
-          | "Hello"
-          | "Goodbye"
-          | { error: string; code: number }
-          | null
-        >
+        StrictResponse<{ error: string; code: number }>
       >();
     });
   });
