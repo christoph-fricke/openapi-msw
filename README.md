@@ -37,10 +37,11 @@ type-safety and editor suggestion benefits:
   current path
 - **Request Body:** Automatically typed with the request-body schema of the
   current path
-- **Response:** Automatically forced to match the available status-codes,
-  content-types, and response-bodies schema of the current path
+- **Response:** Automatically forced to match an specified status-code,
+  content-type, and response-body schema of the current path
 
 ```typescript
+import { HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 // 1. Import the paths from your OpenAPI schema definitions
 import type { paths } from "./your-openapi-schema";
@@ -67,7 +68,7 @@ const postHandler = http.post(
 
 // TS shows an error when "/unknown" is not defined in the OpenAPI schema paths
 const otherHandler = http.get("/unknown", () => {
-  return new Response();
+  return new HttpResponse();
 });
 ```
 
@@ -148,27 +149,27 @@ const handler = http.get("/query-example", ({ query }) => {
 
 Type-safe response constructor that narrows allowed response bodies based on the
 chosen status code and content type. This helper enables granular type-safety
-for responses. Instead of being able to return any status code, it limits status
-codes, content-types, and their response bodies to the combinations defined the
-given OpenAPI spec.
+for responses. Instead of being able to return any status code, `response`
+limits status codes, content types, and their response bodies to the
+combinations defined by the given OpenAPI spec.
 
 For the following example, imagine an OpenAPI specification that defines various
-response options for an endpoint:
+responses for an endpoint:
 
-| Status Code | Content-Type       | Content                |
+| Status Code | Content Type       | Content                |
 | :---------- | :----------------- | :--------------------- |
 | `200`       | `application/json` | _Some Object Schema_   |
 | `200`       | `text/plain`       | Literal: "Hello World" |
-| `204`       |                    | No Content             |
+| `204`       | Empty              |                        |
 
 ```typescript
 const http = createOpenApiHttp<paths>();
 
 const handler = http.get("/response-example", ({ response }) => {
-  // Error: Status Code 204 only allows "no content"
+  // Error: Status Code 204 only allows empty responses
   const invalidRes = response(204).text("Hello World");
 
-  // Error: Status Code 200 does not allow "no content"
+  // Error: Status Code 200 does not allow empty responses
   const invalidRes = response(200).empty();
 
   // Error: Status Code 200 only allows "Hello World" as text
@@ -194,18 +195,18 @@ The OpenAPI specification allows the
 such as `"default"`, `"3XX"`, and `"5XX"`. OpenAPI-MSW's `response` helper
 supports using wildcards as status codes. When a wildcard is used, TypeScript
 requires you to provide a matching status code that will be used for the
-response. Allowed status codes are inferred automatically and suggested based on
+response. Allowed status codes are inferred by TS and suggested based on
 [RFC 9110](https://httpwg.org/specs/rfc9110.html#overview.of.status.codes).
 
-**Note:** The `"default"` wildcard is categorized as "any error status code" in
-OpenAPI-TS. To align with this assumption, OpenAPI-MSW only allows matching
-`"4XX"` and `"5XX"` status codes for the response when the `"default"` wildcard
-is used.
+**Note:** The `"default"` wildcard is categorized as
+["any error status code" in OpenAPI-TS](https://github.com/drwpow/openapi-typescript/blob/a7dbe90905e07921147a2239c0323d778d1a72de/packages/openapi-typescript-helpers/index.d.ts#L8).
+To align with this assumption, OpenAPI-MSW only allows matching `"4XX"` and
+`"5XX"` status codes for the response if the `"default"` wildcard is used.
 
 ```typescript
 const http = createOpenApiHttp<paths>();
 
-const handler = http.get("/untyped-response-example", ({ response }) => {
+const handler = http.get("/wildcard-status-code-example", ({ response }) => {
   // Error: A wildcards is used but no status code provided
   const invalidRes = response("5XX").text("Fatal Error");
 
@@ -225,18 +226,19 @@ const handler = http.get("/untyped-response-example", ({ response }) => {
 
 ##### Untyped Response Fallback
 
-Sometimes an OpenAPI spec might not define all status codes that are returned.
-This can be quite common for server error responses (5XX). Nonetheless, still
-being able to test those with MSW is helpful. OpenAPI-MSW supports this scenario
-with an `untyped` wrapper on the `response` helper, which type-casts any
-response into an allowed response.
+Sometimes an OpenAPI spec might not define all status codes that are actually
+returned by the implementing API. This can be quite common for server error
+responses (5XX). Nonetheless, still being able to mock those with MSW through
+otherwise fully typed http-handlers is really helpful. OpenAPI-MSW supports this
+scenario with an `untyped` wrapper on the `response` helper, which type-casts
+any response into an allowed response.
 
 ```typescript
 const http = createOpenApiHttp<paths>();
 
 const handler = http.get("/untyped-response-example", ({ response }) => {
-  // Any response wrapped with `untyped` can be returned.
-  // Regardless of the expected response body.
+  // Any response wrapped with `untyped` can be returned regardless
+  // of the expected response body.
   return response.untyped(
     HttpResponse.json({ message: "Teapot" }, { status: 418 }),
   );

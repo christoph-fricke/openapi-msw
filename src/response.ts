@@ -8,9 +8,9 @@ import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
 import type { Wildcard } from "./http-status-wildcard.js";
 
 /**
- * Requires or removes the status code from response init depending on the chosen
- * OpenAPI status code. When the status is a wildcard, a specific status code
- * must be provided.
+ * Requires or removes the status code from {@linkcode HttpResponseInit} depending
+ * on the chosen OpenAPI status code. When the status is a wildcard, a specific
+ * status code must be provided.
  */
 type DynamicResponseInit<Status> = Status extends keyof Wildcard
   ? ResponseInitForWildcard<Status>
@@ -100,8 +100,9 @@ export function createResponseHelper<
     return { text, json, empty };
   };
 
-  response.untyped = (response) =>
-    response as StrictResponse<ExpectedResponseBody>;
+  response.untyped = (response) => {
+    return response as StrictResponse<ExpectedResponseBody>;
+  };
 
   return response;
 }
