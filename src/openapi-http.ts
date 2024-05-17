@@ -27,7 +27,10 @@ function createHttpWrapper<
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
     const mswResolver = createResolverWrapper(resolver);
 
-    return http[method](mswPath, mswResolver, options);
+    // Since TS v5.4 mswResolver errors with "Type 'undefined' is not assignable to type 'RequestBody<ApiSpec, Path, Method>'"
+    // This assignment is only part of the inner workings and does not leak to the outer type-safety.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return http[method]<any, any, any>(mswPath, mswResolver, options);
   };
 }
 
