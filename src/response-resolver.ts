@@ -45,14 +45,14 @@ export interface ResponseResolverInfo<
   /**
    * A type-safe response helper that narrows allowed status codes and content types
    * based on the given OpenAPI spec. The response body is further narrowed to
-   * the match the selected status code and content-type.
+   * the match the selected status code and content type.
    *
    * If a wildcard status code is chosen, a specific status code for the response
    * must be provided in the {@linkcode ResponseInit} argument. All status codes
    * allowed by the wildcard are inferred.
    *
-   * A fallback for returning any response without casting regardless of the OpenAPI spec
-   * is provided through `response.untyped(...)`.
+   * A fallback for returning any response without casting is provided
+   * through `response.untyped(...)`.
    *
    * @example
    * const handler = http.get("/response-example", ({ response }) => {

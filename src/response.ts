@@ -40,9 +40,9 @@ type EmptyResponse<Status> = (
 ) => StrictResponse<null>;
 
 /**
- * A type-safe response helper that narrows available status codes and content-types,
+ * A type-safe response helper that narrows available status codes and content types,
  * based on the given OpenAPI spec. The response body is specifically narrowed to
- * the specified status code and content-type.
+ * the specified status code and content type.
  */
 export interface OpenApiResponse<
   ResponseMap,
