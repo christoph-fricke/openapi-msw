@@ -1,6 +1,3 @@
-extends:
-  - recommended
-
 apis:
   http-methods:
     root: ./http-methods.api.yml
