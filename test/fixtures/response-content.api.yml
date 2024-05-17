@@ -16,11 +16,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
-            plain/text:
+            text/plain:
               schema:
                 type: string
-                enum: ["Hello", "Goodby"]
+                enum: ["Hello", "Goodbye"]
+        204:
+          description: NoContent
         418:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+        "5XX":
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exception"
+        "default":
           description: Error
           content:
             application/json:

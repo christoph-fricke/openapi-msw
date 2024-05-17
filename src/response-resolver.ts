@@ -6,8 +6,10 @@ import type {
   QueryParams,
   RequestBody,
   ResponseBody,
+  ResponseMap,
 } from "./api-spec.js";
 import { QueryParams as QueryParamsUtil } from "./query-params.js";
+import { createResponseHelper, type OpenApiResponse } from "./response.js";
 
 /** Response resolver that gets provided to HTTP handler factories. */
 export type ResponseResolver<
@@ -39,6 +41,40 @@ export interface ResponseResolverInfo<
    * });
    */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
+
+  /**
+   * A type-safe response helper that narrows allowed status codes and content types
+   * based on the given OpenAPI spec. The response body is further narrowed to
+   * the match the selected status code and content type.
+   *
+   * If a wildcard status code is chosen, a specific status code for the response
+   * must be provided in the {@linkcode ResponseInit} argument. All status codes
+   * allowed by the wildcard are inferred.
+   *
+   * A fallback for returning any response without casting is provided
+   * through `response.untyped(...)`.
+   *
+   * @example
+   * const handler = http.get("/response-example", ({ response }) => {
+   *   return response(200).json({ id: 123 });
+   * });
+   *
+   * const empty = http.get("/response-example", ({ response }) => {
+   *   return response(204).empty();
+   * });
+   *
+   * const wildcard = http.get("/response-example", ({ response }) => {
+   *   return response("5XX").text("Unexpected Error", { status: 501 });
+   * });
+   *
+   * const fallback = http.get("/response-example", ({ response }) => {
+   *   return response.untyped(new Response("Hello"));
+   * });
+   */
+  response: OpenApiResponse<
+    ResponseMap<ApiSpec, Path, Method>,
+    ResponseBody<ApiSpec, Path, Method>
+  >;
 }
 
 /** Wraps MSW's resolver function to provide additional info to a given resolver. */
@@ -50,7 +86,11 @@ export function createResolverWrapper<
   resolver: ResponseResolver<ApiSpec, Path, Method>,
 ): MSWResponseResolver<ApiSpec, Path, Method> {
   return (info) => {
-    return resolver({ ...info, query: new QueryParamsUtil(info.request) });
+    return resolver({
+      ...info,
+      query: new QueryParamsUtil(info.request),
+      response: createResponseHelper(),
+    });
   };
 }
 
