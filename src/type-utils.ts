@@ -17,7 +17,7 @@ export type ConvertToStringified<Params> = {
 
 /** Returns a union of all property keys that are optional in the given object. */
 export type OptionalKeys<O extends object> = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   [K in keyof O]-?: {} extends Pick<O, K> ? K : never;
 }[keyof O];
 
