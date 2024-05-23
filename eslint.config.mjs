@@ -3,7 +3,7 @@ import tsEslint from "typescript-eslint";
 
 export default tsEslint.config(
   {
-    ignores: ["coverage", "dist", "test/fixtures/*.ts"],
+    ignores: ["coverage", "cjs", "dist", "test/fixtures/*.ts"],
   },
   eslint.configs.recommended,
   ...tsEslint.configs.recommended,
