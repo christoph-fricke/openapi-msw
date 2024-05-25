@@ -4,6 +4,7 @@
     /* Language and Environment */
     "target": "ESNext",
     "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
 
     /* Modules */
     "module": "NodeNext",
@@ -21,11 +22,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "allowUnreachableCode": false,
-    "exactOptionalPropertyTypes": true,
-
-    /* Completeness */
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    "exactOptionalPropertyTypes": true
   },
   "include": ["src", "exports", "test"]
 }
