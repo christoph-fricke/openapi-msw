@@ -48,6 +48,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+  /multi-body:
+    post:
+      summary: "Create from Text"
+      operationId: postTextBody
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              enum: ["Hello", "Goodbye"]
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewResource"
+      responses:
+        204:
+          description: NoContent
 components:
   schemas:
     Resource:
