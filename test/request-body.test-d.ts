@@ -6,12 +6,32 @@ import type { paths } from "./fixtures/request-body.api.js";
 describe("Given an OpenAPI schema endpoint with request content", () => {
   const http = createOpenApiHttp<paths>();
 
+  test("When the request is used, Then it extend MSW's request object", () => {
+    type Endpoint = typeof http.get<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const request = resolver.parameter(0).toHaveProperty("request");
+
+    request.toMatchTypeOf<Omit<StrictRequest<null>, "text" | "json">>();
+  });
+
+  test("When a request is not expected to contain content, Then json and text return never", () => {
+    type Endpoint = typeof http.get<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const request = resolver.parameter(0).toHaveProperty("request");
+
+    request.toHaveProperty("text").returns.toEqualTypeOf<never>();
+    request.toHaveProperty("json").returns.toEqualTypeOf<never>();
+  });
+
   test("When a request is expected to contain content, Then the content is strict-typed", () => {
     type Endpoint = typeof http.post<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
 
-    request.toEqualTypeOf<StrictRequest<{ name: string; value: number }>>();
+    request.toHaveProperty("text").returns.toEqualTypeOf<never>();
+    request
+      .toHaveProperty("json")
+      .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 
   test("When a request content is optional, Then the content is strict-typed with optional", () => {
@@ -19,16 +39,23 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
 
-    request.toEqualTypeOf<
-      StrictRequest<{ name: string; value: number } | undefined>
-    >();
+    request
+      .toHaveProperty("json")
+      .returns.resolves.toEqualTypeOf<
+        { name: string; value: number } | undefined
+      >();
   });
 
-  test("When a request is not expected to contain content, Then the content is undefined", () => {
-    type Endpoint = typeof http.get<"/resource">;
+  test("When a request accepts multiple media types, Then both body parsers are typed for their media type", () => {
+    type Endpoint = typeof http.post<"/multi-body">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
 
-    request.toEqualTypeOf<StrictRequest<undefined>>();
+    request
+      .toHaveProperty("text")
+      .returns.resolves.toEqualTypeOf<"Hello" | "Goodbye">();
+    request
+      .toHaveProperty("json")
+      .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 });

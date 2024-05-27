@@ -1,4 +1,5 @@
 import type {
+  OperationRequestBody,
   OperationRequestBodyContent,
   PathsWithMethod,
 } from "openapi-typescript-helpers";
@@ -63,6 +64,22 @@ export type QueryParams<
 type StrictQueryParams<Params> = [Params] extends [never]
   ? NonNullable<unknown>
   : Params;
+
+/**
+ * Extract a request map for a given path and method from an api spec.
+ * A request map has the shape of (media-type -> body).
+ */
+export type RequestMap<
+  ApiSpec extends AnyApiSpec,
+  Path extends keyof ApiSpec,
+  Method extends HttpMethod,
+> = Method extends keyof ApiSpec[Path]
+  ? undefined extends OperationRequestBody<ApiSpec[Path][Method]>
+    ? Partial<
+        NonNullable<OperationRequestBody<ApiSpec[Path][Method]>>["content"]
+      >
+    : OperationRequestBody<ApiSpec[Path][Method]>["content"]
+  : never;
 
 /** Extract the request body of a given path and method from an api spec. */
 export type RequestBody<

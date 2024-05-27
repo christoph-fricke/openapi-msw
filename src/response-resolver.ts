@@ -5,10 +5,12 @@ import type {
   PathParams,
   QueryParams,
   RequestBody,
+  RequestMap,
   ResponseBody,
   ResponseMap,
 } from "./api-spec.js";
 import { QueryParams as QueryParamsUtil } from "./query-params.js";
+import type { OpenApiRequest } from "./request.js";
 import { createResponseHelper, type OpenApiResponse } from "./response.js";
 
 /** Response resolver that gets provided to HTTP handler factories. */
@@ -26,6 +28,9 @@ export interface ResponseResolverInfo<
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > extends MSWResponseResolverInfo<ApiSpec, Path, Method> {
+  /** Standard request with enhanced typing for body methods based on the given OpenAPI spec. */
+  request: OpenApiRequest<RequestMap<ApiSpec, Path, Method>>;
+
   /**
    * Type-safe wrapper around {@link URLSearchParams} that implements methods for
    * reading query parameters.
@@ -88,6 +93,9 @@ export function createResolverWrapper<
   return (info) => {
     return resolver({
       ...info,
+      request: info.request as OpenApiRequest<
+        RequestMap<ApiSpec, Path, Method>
+      >,
       query: new QueryParamsUtil(info.request),
       response: createResponseHelper(),
     });
