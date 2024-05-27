@@ -1,5 +1,13 @@
 # openapi-msw
 
+## 0.6.0
+
+### Minor Changes
+
+- [#50](https://github.com/christoph-fricke/openapi-msw/pull/50) [`37da681`](https://github.com/christoph-fricke/openapi-msw/commit/37da6814e65105cfc5c38067bdf32ba1c6208d8f) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added compilation and exports for CommonJS modules. This makes OpenAPI-MSW usable in projects that still use CommonJS as their module system.
+
+- [#52](https://github.com/christoph-fricke/openapi-msw/pull/52) [`88ca9da`](https://github.com/christoph-fricke/openapi-msw/commit/88ca9da973ac0a9d25a3185e1cf05b88722c717d) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added enhanced typing for the `request` object. Now, `request.json()` and `request.text()` infer their return type from the given OpenAPI request-body content schema. Previously, only `request.json()` has been inferred without considering the content-type.
+
 ## 0.5.0
 
 ### Minor Changes
