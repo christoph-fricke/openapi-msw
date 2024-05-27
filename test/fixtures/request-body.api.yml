@@ -50,8 +50,8 @@ paths:
                 $ref: "#/components/schemas/Resource"
   /multi-body:
     post:
-      summary: "Create from Text"
-      operationId: postTextBody
+      summary: "Create from Text or JSON"
+      operationId: postMultiBody
       requestBody:
         required: true
         content:
