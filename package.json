@@ -8,6 +8,7 @@
   "description": "Tiny, type-safe wrapper around MSW for type inference from OpenAPI schemas.",
   "repository": "github:christoph-fricke/openapi-msw",
   "files": [
+    "cjs",
     "dist",
     "CHANGELOG.md",
     "README.md",
@@ -15,16 +16,23 @@
   ],
   "sideEffects": false,
   "types": "./dist/exports/main.d.ts",
+  "main": "./cjs/exports/main.js",
   "module": "./dist/exports/main.js",
   "exports": {
     ".": {
-      "types": "./dist/exports/main.d.ts",
-      "import": "./dist/exports/main.js"
+      "types": {
+        "import": "./dist/exports/main.d.ts",
+        "require": "./cjs/exports/main.d.js"
+      },
+      "import": "./dist/exports/main.js",
+      "require": "./cjs/exports/main.js"
     }
   },
   "scripts": {
     "prepare": "husky",
-    "build": "rimraf ./dist && tsc -p tsconfig.build.json",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "rimraf ./dist && tsc -p tsconfig.build.json",
+    "build:cjs": "rimraf ./cjs && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > ./cjs/package.json",
     "format": "prettier --write .",
     "lint": "eslint . && prettier -c .",
     "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml",
