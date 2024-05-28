@@ -22,7 +22,7 @@
     ".": {
       "types": {
         "import": "./dist/exports/main.d.ts",
-        "require": "./cjs/exports/main.d.js"
+        "require": "./cjs/exports/main.d.ts"
       },
       "import": "./dist/exports/main.js",
       "require": "./cjs/exports/main.js"
