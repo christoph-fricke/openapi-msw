@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 0.6.1
+
+### Patch Changes
+
+- [#54](https://github.com/christoph-fricke/openapi-msw/pull/54) [`6793dcc`](https://github.com/christoph-fricke/openapi-msw/commit/6793dccff4641dedc266f8096ede373dc95fca8f) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed type-exports for CommonJS refer to a non-existing file.
+
 ## 0.6.0
 
 ### Minor Changes
