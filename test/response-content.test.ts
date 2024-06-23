@@ -88,6 +88,36 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     expect(result?.response?.status).toBe(204);
   });
 
+  test("When an empty response is created, Then the response includes a content-length header", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
+    });
+
+    const handler = http.get("/resource", ({ response }) => {
+      return response(204).empty();
+    });
+    const result = await handler.run({ request });
+
+    expect(result?.response?.status).toBe(204);
+    expect(result?.response?.headers.has("content-length")).toBeTruthy();
+    expect(result?.response?.headers.get("content-length")).toBe("0");
+  });
+
+  test("When an empty response with content-length is created, Then the provided content-length header is used", async () => {
+    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+      method: "get",
+    });
+
+    const handler = http.get("/resource", ({ response }) => {
+      return response(204).empty({ headers: { "content-length": "32" } });
+    });
+    const result = await handler.run({ request });
+
+    expect(result?.response?.status).toBe(204);
+    expect(result?.response?.headers.has("content-length")).toBeTruthy();
+    expect(result?.response?.headers.get("content-length")).toBe("32");
+  });
+
   test("When the response helper is used for wildcard status codes, Then a specific response status must be chosen", async () => {
     const request = new Request(new URL("/resource", "http://localhost:3000"), {
       method: "get",
