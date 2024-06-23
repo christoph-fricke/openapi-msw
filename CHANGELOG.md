@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 0.7.0
+
+### Minor Changes
+
+- [#58](https://github.com/christoph-fricke/openapi-msw/pull/58) [`f08acf1`](https://github.com/christoph-fricke/openapi-msw/commit/f08acf19a6e792ab36214bf8c1925447c2489704) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added "content-length" header for `response(...).empty()`. If no "content-length" header is provided in the response init, the "content-length" header is now set with the value "0". See #56 for more details.
+
 ## 0.6.1
 
 ### Patch Changes
