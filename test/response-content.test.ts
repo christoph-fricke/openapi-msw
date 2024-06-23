@@ -88,7 +88,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     expect(result?.response?.status).toBe(204);
   });
 
-  test("When an empty response is created, Then the responses includes a content-length header", async () => {
+  test("When an empty response is created, Then the response includes a content-length header", async () => {
     const request = new Request(new URL("/resource", "http://localhost:3000"), {
       method: "get",
     });
@@ -103,7 +103,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     expect(result?.response?.headers.get("content-length")).toBe("0");
   });
 
-  test("When an empty response with content-length is created, Then the provided a content-length header is used", async () => {
+  test("When an empty response with content-length is created, Then the provided content-length header is used", async () => {
     const request = new Request(new URL("/resource", "http://localhost:3000"), {
       method: "get",
     });
