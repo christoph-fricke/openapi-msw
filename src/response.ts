@@ -91,9 +91,13 @@ export function createResponseHelper<
     };
 
     const empty: EmptyResponse<typeof status> = (init) => {
+      const headers = new Headers(init?.headers);
+      if (!headers.has("content-length")) headers.set("content-length", "0");
+
       return new HttpResponse(null, {
         status: status as number,
         ...init,
+        headers,
       }) as StrictResponse<null>;
     };
 
