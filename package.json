@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "openapi-msw",
+  "name": "@web-bee-ru/openapi-axios",
   "type": "module",
   "version": "0.7.0",
   "license": "MIT",
@@ -46,7 +46,8 @@
     "*.{ts,js,mjs}": "eslint --fix"
   },
   "dependencies": {
-    "openapi-typescript-helpers": "0.0.8"
+    "openapi-typescript-helpers": "^0.0.9",
+    "qs": "^6.12.3"
   },
   "peerDependencies": {
     "msw": "^2.0.0"
@@ -54,14 +55,20 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.5",
+    "@types/qs": "^6.9.15",
+    "axios": "^1.7.2",
     "eslint": "^9.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
+    "openapi-fetch": "^0.10.2",
     "openapi-typescript": "^7.0.0",
     "prettier": "^3.3.2",
     "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.7",
-    "typescript": "^5.5.2",
+    "ts-pattern": "^5.2.0",
+    "tsx": "^4.16.2",
+    "type-fest": "^4.21.0",
+    "typescript": "5.3",
     "typescript-eslint": "^8.0.0-alpha.30",
     "vitest": "^1.6.0"
   },
