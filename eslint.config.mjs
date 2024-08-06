@@ -9,6 +9,11 @@ export default tsEslint.config(
   ...tsEslint.configs.recommended,
   ...tsEslint.configs.stylistic,
   {
+    files: ["test/**/*.test-d.ts"],
+    // Type tests commonly create a variable which is only used for type checks.
+    rules: { "@typescript-eslint/no-unused-vars": "off" },
+  },
+  {
     rules: {
       "@typescript-eslint/no-empty-object-type": [
         "error",
