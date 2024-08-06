@@ -1,9 +1,0 @@
-echo ""
-echo "Starting pre-commit hook..."
-
-echo "Running Prettier and ESLint on staged files..."
-npx lint-staged
-
-echo ""
-echo "All checks successful."
-echo ""

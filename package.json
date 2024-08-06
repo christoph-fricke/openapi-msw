@@ -29,7 +29,7 @@
     }
   },
   "scripts": {
-    "prepare": "husky",
+    "prepare": "lefthook install",
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "rimraf ./dist && tsc -p tsconfig.build.json",
     "build:cjs": "rimraf ./cjs && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > ./cjs/package.json",
@@ -41,10 +41,6 @@
     "version": "changeset version && npm i",
     "release": "changeset publish"
   },
-  "lint-staged": {
-    "*": "prettier --ignore-unknown --write",
-    "*.{ts,js,mjs}": "eslint --fix"
-  },
   "dependencies": {
     "openapi-typescript-helpers": "0.0.8"
   },
@@ -55,8 +51,7 @@
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.7",
     "eslint": "^9.8.0",
-    "husky": "^9.1.4",
-    "lint-staged": "^15.2.8",
+    "lefthook": "^1.7.11",
     "openapi-typescript": "^7.3.0",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0",
