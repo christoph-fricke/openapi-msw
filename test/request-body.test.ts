@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
 import type { paths } from "./fixtures/request-body.api.js";
@@ -19,10 +19,10 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
         { status: 201 },
       );
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
-    expect(result?.response?.status).toBe(201);
+    const responseBody = await response?.json();
+    expect(response?.status).toBe(201);
     expect(responseBody).toStrictEqual({
       id: "test-id",
       name: "test-name",

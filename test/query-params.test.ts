@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
 import type { paths } from "./fixtures/query-params.api.js";
@@ -26,9 +26,9 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
 
       return HttpResponse.json({ id: "test-id" });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    expect(result?.response?.status).toBe(200);
+    expect(response?.status).toBe(200);
   });
 
   test("When a endpoint is mocked, Then multiple query parameters are grouped into an array", async () => {
@@ -43,8 +43,8 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
 
       return HttpResponse.json({ id: "test-id" });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    expect(result?.response?.status).toBe(200);
+    expect(response?.status).toBe(200);
   });
 });

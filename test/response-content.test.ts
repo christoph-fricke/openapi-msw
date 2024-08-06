@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
 import type { paths } from "./fixtures/response-content.api.js";
@@ -14,15 +14,15 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", () => {
       return HttpResponse.json({ id: "test-id", name: "Test", value: 16 });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
+    const responseBody = await response?.json();
     expect(responseBody).toStrictEqual({
       id: "test-id",
       name: "Test",
       value: 16,
     });
-    expect(result?.response?.status).toBe(200);
+    expect(response?.status).toBe(200);
   });
 
   test("When a TEXT endpoint is mocked, Then text response content can be returned", async () => {
@@ -34,11 +34,11 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/text-resource", () => {
       return HttpResponse.text("Hello World");
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.text();
+    const responseBody = await response?.text();
     expect(responseBody).toBe("Hello World");
-    expect(result?.response?.status).toBe(200);
+    expect(response?.status).toBe(200);
   });
 
   test("When the response helper is used for fix status codes, Then a JSON response can be returned", async () => {
@@ -49,14 +49,14 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", ({ response }) => {
       return response(418).json({ code: 123, error: "Something wrong." });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
+    const responseBody = await response?.json();
     expect(responseBody).toStrictEqual({
       code: 123,
       error: "Something wrong.",
     });
-    expect(result?.response?.status).toBe(418);
+    expect(response?.status).toBe(418);
   });
 
   test("When the response helper is used for fix status codes, Then a TEXT response can be returned", async () => {
@@ -67,11 +67,11 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", ({ response }) => {
       return response(200).text("Hello");
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.text();
+    const responseBody = await response?.text();
     expect(responseBody).toBe("Hello");
-    expect(result?.response?.status).toBe(200);
+    expect(response?.status).toBe(200);
   });
 
   test("When the response helper is used for fix status codes, Then a EMPTY response can be returned", async () => {
@@ -82,10 +82,10 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", ({ response }) => {
       return response(204).empty();
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    expect(result?.response?.body).toBeNull();
-    expect(result?.response?.status).toBe(204);
+    expect(response?.body).toBeNull();
+    expect(response?.status).toBe(204);
   });
 
   test("When an empty response is created, Then the response includes a content-length header", async () => {
@@ -96,11 +96,11 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", ({ response }) => {
       return response(204).empty();
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    expect(result?.response?.status).toBe(204);
-    expect(result?.response?.headers.has("content-length")).toBeTruthy();
-    expect(result?.response?.headers.get("content-length")).toBe("0");
+    expect(response?.status).toBe(204);
+    expect(response?.headers.has("content-length")).toBeTruthy();
+    expect(response?.headers.get("content-length")).toBe("0");
   });
 
   test("When an empty response with content-length is created, Then the provided content-length header is used", async () => {
@@ -111,11 +111,11 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     const handler = http.get("/resource", ({ response }) => {
       return response(204).empty({ headers: { "content-length": "32" } });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    expect(result?.response?.status).toBe(204);
-    expect(result?.response?.headers.has("content-length")).toBeTruthy();
-    expect(result?.response?.headers.get("content-length")).toBe("32");
+    expect(response?.status).toBe(204);
+    expect(response?.headers.has("content-length")).toBeTruthy();
+    expect(response?.headers.get("content-length")).toBe("32");
   });
 
   test("When the response helper is used for wildcard status codes, Then a specific response status must be chosen", async () => {
@@ -129,14 +129,14 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
         { status: 503 },
       );
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
+    const responseBody = await response?.json();
     expect(responseBody).toStrictEqual({
       code: 123,
       error: "Something wrong.",
     });
-    expect(result?.response?.status).toBe(503);
+    expect(response?.status).toBe(503);
   });
 
   test("When an endpoint is mocked with the fallback helper, Then any response can be returned", async () => {
@@ -148,10 +148,10 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
         HttpResponse.text("Unexpected Error", { status: 500 }),
       );
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.text();
-    expect(result?.response?.status).toBe(500);
+    const responseBody = await response?.text();
+    expect(response?.status).toBe(500);
     expect(responseBody).toBe("Unexpected Error");
   });
 });

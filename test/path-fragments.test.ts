@@ -1,4 +1,4 @@
-import { HttpResponse } from "msw";
+import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
 import type { paths } from "./fixtures/path-fragments.api.js";
@@ -14,9 +14,9 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
     const handler = http.get("/resource/{id}/{name}", ({ params }) => {
       return HttpResponse.json({ id: params.id, name: params.name });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
+    const responseBody = await response?.json();
     expect(responseBody?.id).toBe("test-id");
     expect(responseBody?.name).toBe("test-name");
   });
@@ -31,9 +31,9 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
 
       return HttpResponse.json({ count });
     });
-    const result = await handler.run({ request });
+    const response = await getResponse([handler], request);
 
-    const responseBody = await result?.response?.json();
+    const responseBody = await response?.json();
     expect(responseBody?.count).toBe(42);
   });
 });
