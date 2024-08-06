@@ -1,5 +1,4 @@
 import { defineProject } from "vitest/config";
-import { exports, name } from "./package.json";
 
 const suite = process.env["TEST_SUITE"];
 
@@ -16,10 +15,7 @@ function getTestDir(suite?: string): string | undefined {
 
 export default defineProject({
   test: {
-    name: suite ?? name,
+    name: suite,
     dir: getTestDir(suite),
-    alias: {
-      [name]: new URL(exports["."].import, import.meta.url).pathname,
-    },
   },
 });
