@@ -34,7 +34,7 @@
     "build:esm": "rimraf ./dist && tsc -p tsconfig.build.json",
     "build:cjs": "rimraf ./cjs && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > ./cjs/package.json",
     "format": "prettier --write .",
-    "lint": "tsc --noEmit && eslint . && prettier -c .",
+    "lint": "eslint . && prettier -c .",
     "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml",
     "test:unit": "TEST_SUITE=unit vitest",
     "test:int": "TEST_SUITE=integration vitest --typecheck",
