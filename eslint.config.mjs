@@ -1,14 +1,12 @@
 import eslint from "@eslint/js";
 import tsEslint from "typescript-eslint";
 
-export default tsEslint.config(
-  {
+export default tsEslint.config({
     ignores: ["coverage", "cjs", "dist", "test/fixtures/*.ts"],
   },
   eslint.configs.recommended,
   ...tsEslint.configs.recommended,
-  ...tsEslint.configs.stylistic,
-  {
+  ...tsEslint.configs.stylistic, {
     rules: {
       "@typescript-eslint/no-empty-object-type": [
         "error",
@@ -16,8 +14,11 @@ export default tsEslint.config(
         // which can lead to verbose and hard-to-understand type signatures.
         // Interfaces keep their name in previews, which can be used to clarify
         // previews by using interfaces that only extend a type.
-        { allowInterfaces: "with-single-extends" },
+        {
+          allowInterfaces: "with-single-extends"
+        },
       ],
+      "@typescript-eslint/consistent-type-definitions": 'off'
     },
   },
 );

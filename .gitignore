@@ -3,3 +3,4 @@ cjs
 dist
 node_modules
 test/fixtures/*.ts
+

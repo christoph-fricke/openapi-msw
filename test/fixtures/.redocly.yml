@@ -27,3 +27,12 @@ apis:
     root: ./response-content.api.yml
     x-openapi-ts:
       output: ./response-content.api.ts
+
+  example:
+    root: ./example.api.yml
+    x-openapi-ts:
+      output: ./example.api.ts
+  large-example:
+    root: ./fetcher-modes.api.yml
+    x-openapi-ts:
+      output: ./fetcher-modes.api.ts
