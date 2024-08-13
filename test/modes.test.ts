@@ -197,5 +197,14 @@ describe("Checking all mods for correct works.", () => {
 
       expect(false).toBe("Test isn't passed.");
     });
+
+    test("Timeout error", async () => {
+      const api = new OpenApiAxios<paths, "all">(axiosInstance, {
+        validStatus: "all",
+      });
+
+      const { error } = await api.get("/get-timeout-error", {});
+      expect(axios.isAxiosError(error) && error.code).toBe("ECONNABORTED");
+    });
   });
 });

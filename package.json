@@ -46,19 +46,14 @@
     "*.{ts,js,mjs}": "eslint --fix"
   },
   "dependencies": {
-    "axios-mock-adapter": "^2.0.0",
-    "openapi-typescript-helpers": "^0.0.9",
-    "qs": "^6.12.3",
-    "taxios": "^0.1.2"
-  },
-  "peerDependencies": {
-    "msw": "^2.3.4"
+    "axios": "^1.7.3",
+    "qs": "^6.12.3"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^2.0.0",
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.5",
     "@types/qs": "^6.9.15",
-    "axios": "^1.7.3",
     "eslint": "^9.5.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",

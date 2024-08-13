@@ -1,14 +1,23 @@
 import type { AxiosError, AxiosResponse } from "axios";
-import type { OkStatus, ValidStatusType } from "./types.js";
+import type { ErrorStatus, OkStatus, ValidStatusType } from "./types.js";
 
 export type GetApiResponse<
   ValidStatus extends ValidStatusType,
   DataByCode extends Record<number, unknown>,
 > =
-  | (ValidStatus extends "all" ? ApiResponseAll<never, unknown> : never)
+  | (ValidStatus extends "all"
+      ? ApiResponseAll<never, undefined, undefined>
+      : never)
   | {
       [K in keyof DataByCode]: ValidStatus extends "all"
-        ? ApiResponseAll<DataByCode[K], K>
+        ? ApiResponseAll<
+            DataByCode[K],
+            K,
+            K extends OkStatus | ErrorStatus
+              ? AxiosResponse<DataByCode[K]>
+              : never,
+            AxiosError
+          >
         : ValidStatus extends "fetch"
           ? ApiResponseFetch<DataByCode[K], K>
           : ValidStatus extends "axios"
@@ -61,7 +70,12 @@ export interface ApiResponseFetch<T, S> {
   response: AxiosResponse<T>;
 }
 
-export interface ApiResponseAll<T, S> {
+export interface ApiResponseAll<
+  T,
+  S,
+  Response = AxiosResponse<T>,
+  Error = unknown,
+> {
   /**
    * HTTP status code. Can be undefined, check error description.
    */
@@ -79,10 +93,10 @@ export interface ApiResponseAll<T, S> {
    * - Errors when the server does not respond (e.g., due to a network error).
    * - Errors handled by a custom interceptor.
    */
-  error: unknown;
+  error: Error;
 
   /**
    * Axios response object. Contains all the information about the request.
    */
-  response: AxiosResponse<T>;
+  response: Response;
 }

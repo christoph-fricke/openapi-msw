@@ -1,4 +1,5 @@
 import type { AxiosRequestConfig } from "axios";
+import type { MakeNeverEmpty } from "./utils.js";
 
 // prettier-ignore
 export type MethodType = "get" | "post" | "patch" | "put" | "delete" | "head" | "options";
@@ -53,13 +54,13 @@ type ParametersPathType<
   CurrentFieldType<Schema, Method, Route, Field> extends Partial<
     Record<"path", object>
   >
-    ? CurrentFieldType<Schema, Method, Route, Field>["path"]
+    ? Required<Required<CurrentFieldType<Schema, Method, Route, Field>>["path"]>
     : never;
 
 /**
  * @description Extracts all query parameters
  */
-type ParametersQueryType<
+export type ParametersQueryType<
   Schema extends SchemaType,
   Method extends MethodType,
   Route extends RoutesType<Schema, Method>,
@@ -68,7 +69,9 @@ type ParametersQueryType<
   CurrentFieldType<Schema, Method, Route, Field> extends Partial<
     Record<"query", object>
   >
-    ? CurrentFieldType<Schema, Method, Route, Field>["query"]
+    ? Required<
+        Required<CurrentFieldType<Schema, Method, Route, Field>>["query"]
+      >
     : never;
 
 /**
@@ -79,11 +82,20 @@ export type OptionsType<
   Method extends MethodType,
   Route extends RoutesType<Schema, Method>,
   Status extends ValidStatusType | undefined = undefined,
-> = {
-  params?: ParametersPathType<Schema, Method, Route, "parameters">;
-  query?: ParametersQueryType<Schema, Method, Route, "parameters">;
+> = MakeNeverEmpty<{
+  params: ParametersPathType<Schema, Method, Route, "parameters">;
+  query: ParametersQueryType<Schema, Method, Route, "parameters">;
+}> & {
   axios?: AxiosRequestConfig;
   validStatus?: Status;
+};
+export type OptionsTypeParams<
+  Schema extends SchemaType,
+  Method extends MethodType,
+  Route extends RoutesType<Schema, Method>,
+> = {
+  params: ParametersPathType<Schema, Method, Route, "parameters">;
+  query: ParametersQueryType<Schema, Method, Route, "parameters">;
 };
 
 export type ValidStatusType = "all" | "axios" | "fetch";

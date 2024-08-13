@@ -1,5 +1,4 @@
-import type { AxiosInstance, AxiosResponse } from "axios";
-import type { Opaque } from "type-fest";
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { defaultOptions } from "./const/defaultOptions.js";
 import { interpolateParams } from "./interpolate-params.js";
 import type { GetApiResponse } from "./types/response.js";
@@ -8,6 +7,7 @@ import type {
   IOpenApiAxiosOptions,
   MethodType,
   OptionsType,
+  OptionsTypeParams,
   RoutesType,
   SchemaType,
   StatusCodeData,
@@ -43,10 +43,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.get(urlString, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.get(urlString, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -60,10 +57,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.delete(urlString, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.delete(urlString, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -77,10 +71,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.options(urlString, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.options(urlString, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -95,10 +86,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.head(urlString, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.head(urlString, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -117,10 +105,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.post(urlString, body, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.post(urlString, body, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -139,10 +124,7 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.put(urlString, body, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.put(urlString, body, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
   }
@@ -161,12 +143,24 @@ export class OpenApiAxios<
     const { urlString, newOptions } = this.prepareOptions(path, options);
 
     return this.prepareResponse(
-      this.axios.patch(urlString, body, {
-        params: newOptions?.query,
-        ...newOptions?.axios,
-      }),
+      this.axios.patch(urlString, body, this.optionsToAxiosOptions(newOptions)),
       newOptions,
     );
+  }
+
+  private optionsToAxiosOptions<
+    Method extends MethodType,
+    Route extends RoutesType<Schema, Method>,
+    MethodValidStatus extends ValidStatusType,
+  >(
+    options: OptionsType<Schema, Method, Route, MethodValidStatus>,
+  ): AxiosRequestConfig {
+    return {
+      params: (
+        options as never as OptionsTypeParams<Schema, Method, Route> | undefined
+      )?.query,
+      ...options.axios,
+    };
   }
 
   private async prepareResponse<
@@ -197,29 +191,30 @@ export class OpenApiAxios<
     }
   }
 
-  public async getUri<
-    Method extends MethodType,
-    Route extends RoutesType<Schema, Method>,
-  >(
-    method: Method,
-    path: Route,
-    options?: Pick<
-      OptionsType<Schema, Method, Route>,
-      "params" | "query" | "axios"
-    >,
-  ) {
-    const { urlString } = this.prepareOptions<Method, Route, ClassValidStatus>(
-      path,
-      options,
-    );
-    const uri = this.axios.getUri({
-      url: urlString,
-      method,
-      params: options?.query,
-      ...options?.axios,
-    }) as Opaque<string, [Schema, Route, Method]>;
-    return uri;
-  }
+  // @TODO: override
+  // public async getUri<
+  //   Method extends MethodType,
+  //   Route extends RoutesType<Schema, Method>,
+  // >(
+  //   method: Method,
+  //   path: Route,
+  //   options?: Pick<
+  //     OptionsType<Schema, Method, Route>,
+  //     "params" | "query" | "axios"
+  //   >,
+  // ) {
+  //   const { urlString } = this.prepareOptions<Method, Route, ClassValidStatus>(
+  //     path,
+  //     options,
+  //   );
+  //   const uri = this.axios.getUri({
+  //     url: urlString,
+  //     method,
+  //     params: options?.query,
+  //     ...options?.axios,
+  //   }) as Opaque<string, [Schema, Route, Method]>;
+  //   return uri;
+  // }
 
   private prepareOptions<
     Method extends MethodType,
@@ -237,11 +232,23 @@ export class OpenApiAxios<
       IsNullable<MethodValidStatus> extends true
         ? ClassValidStatus
         : NonNullable<MethodValidStatus>
+    > = Object.assign({}, options, {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    > = { validStatus: this.opt.validStatus as any, ...options };
+      validStatus: this.opt.validStatus as any,
+    });
 
-    if (newOptions?.params)
-      urlString = interpolateParams(urlString, newOptions.params);
+    if (
+      (
+        newOptions as never as
+          | OptionsTypeParams<Schema, Method, Route>
+          | undefined
+      )?.params
+    )
+      urlString = interpolateParams(
+        urlString,
+        (newOptions as never as OptionsTypeParams<Schema, Method, Route>)
+          .params,
+      );
 
     return {
       urlString,

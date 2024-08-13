@@ -23,21 +23,20 @@ export async function convertToAll<
 ): Promise<GetApiResponse<"all", DataByCode>> {
   return (
     response
+      // @ts-expect-error You can't do it any other way, that's the end of my rope
       .then<GetApiResponse<"all", DataByCode>>((response) => ({
         response,
         error: null,
         status: response.status,
         data: response.data,
       }))
-      // @ts-expect-error You can't do it any other way, that's the end of my rope
       .catch<GetApiResponse<"all", DataByCode>>((error) => {
         if (!axios.isAxiosError(error)) {
           return {
             error,
-            // @TODO: undefened & type nevers
-            data: null,
-            response: null,
-            status: null,
+            data: undefined as never,
+            response: undefined,
+            status: undefined,
           };
         }
 
@@ -46,7 +45,7 @@ export async function convertToAll<
           status: Number(error.response?.status) || undefined,
           data: error.response?.data || undefined,
           response: error.response,
-        };
+        } as GetApiResponse<"all", DataByCode>;
       })
   );
 }
