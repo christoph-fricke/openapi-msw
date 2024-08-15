@@ -1,4 +1,9 @@
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CustomParamsSerializer,
+} from "axios";
 import { defaultOptions } from "./const/defaultOptions.js";
 import { interpolateParams } from "./interpolate-params.js";
 import type { GetApiResponse } from "./types/response.js";
@@ -14,6 +19,7 @@ import type {
   ValidStatusType,
 } from "./types/types.js";
 import type { IsNullable } from "./types/utils.js";
+import { getQuerySerializer } from "./utils/querySerializer.js";
 import { convertToAll } from "./utils/response-converters/convertToAll.js";
 import { convertToAxios } from "./utils/response-converters/convertToAxios.js";
 import { convertToFetch } from "./utils/response-converters/convertToFetch.js";
@@ -148,18 +154,74 @@ export class OpenApiAxios<
     );
   }
 
-  private optionsToAxiosOptions<
+  public async getUri<
     Method extends MethodType,
     Route extends RoutesType<Schema, Method>,
-    MethodValidStatus extends ValidStatusType,
+  >(method: Method, path: Route, options?: OptionsType<Schema, Method, Route>) {
+    const { urlString, newOptions } = this.prepareOptions(path, options);
+    const { paramsSerializer, params, ...axios } =
+      this.optionsToAxiosOptions(newOptions);
+
+    const queryUrl =
+      Object.keys(params || {}).length > 0
+        ? `?${(paramsSerializer as CustomParamsSerializer)(params)}`
+        : "";
+
+    return this.axios.getUri({
+      url: `${urlString}${queryUrl}`,
+      method,
+      ...axios,
+    }) as string;
+  }
+
+  private prepareOptions<
+    Method extends MethodType,
+    Route extends RoutesType<Schema, Method>,
+    MethodValidStatus extends ValidStatusType | undefined,
   >(
-    options: OptionsType<Schema, Method, Route, MethodValidStatus>,
-  ): AxiosRequestConfig {
+    path: Route,
+    options?: OptionsType<Schema, Method, Route, MethodValidStatus>,
+  ) {
+    let urlString = path as string;
+
+    // Assign ValidStatus from class if not exists in request options
+    const newOptions: OptionsType<
+      Schema,
+      Method,
+      Route,
+      IsNullable<MethodValidStatus> extends true
+        ? ClassValidStatus
+        : NonNullable<MethodValidStatus>
+    > = Object.assign({}, options, {
+      validStatus: this.opt.validStatus,
+    });
+
+    // Create url by swagger pattern with request params
+    if (
+      (
+        newOptions as never as
+          | OptionsTypeParams<Schema, Method, Route>
+          | undefined
+      )?.params
+    )
+      urlString = interpolateParams(
+        urlString,
+        (newOptions as never as OptionsTypeParams<Schema, Method, Route>)
+          .params,
+      );
+
+    // Assign query serializer to axios
+    const querySerializationParams =
+      options?.querySerializationParams || this.opt.querySerializationParams;
+    if (!options?.axios?.paramsSerializer && querySerializationParams) {
+      newOptions.axios = Object.assign({}, newOptions.axios, {
+        paramsSerializer: getQuerySerializer(querySerializationParams),
+      });
+    }
+
     return {
-      params: (
-        options as never as OptionsTypeParams<Schema, Method, Route> | undefined
-      )?.query,
-      ...options.axios,
+      urlString,
+      newOptions,
     };
   }
 
@@ -191,68 +253,18 @@ export class OpenApiAxios<
     }
   }
 
-  // @TODO: override
-  // public async getUri<
-  //   Method extends MethodType,
-  //   Route extends RoutesType<Schema, Method>,
-  // >(
-  //   method: Method,
-  //   path: Route,
-  //   options?: Pick<
-  //     OptionsType<Schema, Method, Route>,
-  //     "params" | "query" | "axios"
-  //   >,
-  // ) {
-  //   const { urlString } = this.prepareOptions<Method, Route, ClassValidStatus>(
-  //     path,
-  //     options,
-  //   );
-  //   const uri = this.axios.getUri({
-  //     url: urlString,
-  //     method,
-  //     params: options?.query,
-  //     ...options?.axios,
-  //   }) as Opaque<string, [Schema, Route, Method]>;
-  //   return uri;
-  // }
-
-  private prepareOptions<
+  private optionsToAxiosOptions<
     Method extends MethodType,
     Route extends RoutesType<Schema, Method>,
-    MethodValidStatus extends ValidStatusType | undefined,
+    MethodValidStatus extends ValidStatusType,
   >(
-    path: Route,
-    options?: OptionsType<Schema, Method, Route, MethodValidStatus>,
-  ) {
-    let urlString = path as string;
-    const newOptions: OptionsType<
-      Schema,
-      Method,
-      Route,
-      IsNullable<MethodValidStatus> extends true
-        ? ClassValidStatus
-        : NonNullable<MethodValidStatus>
-    > = Object.assign({}, options, {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      validStatus: this.opt.validStatus as any,
-    });
-
-    if (
-      (
-        newOptions as never as
-          | OptionsTypeParams<Schema, Method, Route>
-          | undefined
-      )?.params
-    )
-      urlString = interpolateParams(
-        urlString,
-        (newOptions as never as OptionsTypeParams<Schema, Method, Route>)
-          .params,
-      );
-
+    options: OptionsType<Schema, Method, Route, MethodValidStatus>,
+  ): AxiosRequestConfig {
     return {
-      urlString,
-      newOptions,
+      params: (
+        options as never as OptionsTypeParams<Schema, Method, Route> | undefined
+      )?.query,
+      ...options.axios,
     };
   }
 }

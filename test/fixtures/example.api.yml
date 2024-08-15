@@ -39,6 +39,14 @@ tags:
     description: Operations about user
 
 paths:
+  /:
+    get:
+      description: empty handle for tests
+      operationId: getRoot
+      responses:
+        "404":
+          description: Not found
+
   /pet:
     put:
       tags:
