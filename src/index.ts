@@ -5,25 +5,34 @@ import type {
   CustomParamsSerializer,
 } from "axios";
 import { defaultOptions } from "./const/defaultOptions.js";
+import { type MethodType, type MethodTypeWithBody } from "./const/methods.js";
 import { interpolateParams } from "./interpolate-params.js";
+import type {
+  FetcherWithBodyParameters,
+  FetcherWithoutBodyParameters,
+} from "./types/requestParameters.js";
 import type { GetApiResponse } from "./types/response.js";
 import type {
-  BodyType,
   IOpenApiAxiosOptions,
-  MethodType,
   OptionsType,
-  OptionsTypeParams,
   RoutesType,
   SchemaType,
   StatusCodeData,
   ValidStatusType,
-} from "./types/types.js";
+} from "./types/schemeTypes.js";
 import type { IsNullable } from "./types/utils.js";
 import { getQuerySerializer } from "./utils/querySerializer.js";
 import { convertToAll } from "./utils/response-converters/convertToAll.js";
 import { convertToAxios } from "./utils/response-converters/convertToAxios.js";
 import { convertToFetch } from "./utils/response-converters/convertToFetch.js";
 
+/**
+ * @description OpenApiAxios class is a wrapper around Axios that provides methods to handle API requests
+ * and responses based on OpenAPI specifications.
+ *
+ * @template Schema - The OpenAPI schema type.
+ * @template ClassValidStatus - The type that configures the error handling strategy.
+ */
 export class OpenApiAxios<
   Schema extends SchemaType,
   ClassValidStatus extends ValidStatusType,
@@ -31,6 +40,12 @@ export class OpenApiAxios<
   private axios: AxiosInstance;
   private opt: IOpenApiAxiosOptions<ClassValidStatus>;
 
+  /**
+   * @description Creates an instance of OpenApiAxios.
+   *
+   * @param axios - The Axios instance to use for requests.
+   * @param options - Configuration options for the OpenApiAxios instance.
+   */
   constructor(
     axios: AxiosInstance,
     options: IOpenApiAxiosOptions<ClassValidStatus>,
@@ -39,121 +54,25 @@ export class OpenApiAxios<
     this.opt = Object.assign({}, defaultOptions, options);
   }
 
-  public async get<
-    Route extends RoutesType<Schema, "get">,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    options?: OptionsType<Schema, "get", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
+  // HTTP methods without a request body
+  public get = this.factoryWithoutBody("get");
+  public head = this.factoryWithoutBody("head");
+  public delete = this.factoryWithoutBody("delete");
+  public options = this.factoryWithoutBody("options");
 
-    return this.prepareResponse(
-      this.axios.get(urlString, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-  public async delete<
-    Route extends RoutesType<Schema, "delete">,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    options?: OptionsType<Schema, "delete", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
+  // HTTP methods with a request body
+  public put = this.factoryWithBody("put");
+  public post = this.factoryWithBody("post");
+  public patch = this.factoryWithBody("patch");
 
-    return this.prepareResponse(
-      this.axios.delete(urlString, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-  public async options<
-    Route extends RoutesType<Schema, "options">,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    options?: OptionsType<Schema, "options", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
-
-    return this.prepareResponse(
-      this.axios.options(urlString, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-
-  public async head<
-    Route extends RoutesType<Schema, "head">,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    options?: OptionsType<Schema, "head", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
-
-    return this.prepareResponse(
-      this.axios.head(urlString, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-
-  public async post<
-    Route extends RoutesType<Schema, "post">,
-    Body extends
-      | BodyType<Schema, "post", Route, "requestBody">
-      | undefined = undefined,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    body?: Body,
-    options?: OptionsType<Schema, "post", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
-
-    return this.prepareResponse(
-      this.axios.post(urlString, body, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-
-  public async put<
-    Route extends RoutesType<Schema, "put">,
-    Body extends
-      | BodyType<Schema, "put", Route, "requestBody">
-      | undefined = undefined,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    body?: Body,
-    options?: OptionsType<Schema, "put", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
-
-    return this.prepareResponse(
-      this.axios.put(urlString, body, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-
-  public async patch<
-    Route extends RoutesType<Schema, "patch">,
-    Body extends
-      | BodyType<Schema, "patch", Route, "requestBody">
-      | undefined = undefined,
-    MethodValidStatus extends ValidStatusType | undefined = undefined,
-  >(
-    path: Route,
-    body?: Body,
-    options?: OptionsType<Schema, "patch", Route, MethodValidStatus>,
-  ) {
-    const { urlString, newOptions } = this.prepareOptions(path, options);
-
-    return this.prepareResponse(
-      this.axios.patch(urlString, body, this.optionsToAxiosOptions(newOptions)),
-      newOptions,
-    );
-  }
-
+  /**
+   * @description Generates a URI for a given API endpoint, including query parameters.
+   *
+   * @param method - The HTTP method to use.
+   * @param path - The API route.
+   * @param options - Additional options for the request.
+   * @returns The generated URI as a string.
+   */
   public async getUri<
     Method extends MethodType,
     Route extends RoutesType<Schema, Method>,
@@ -162,18 +81,26 @@ export class OpenApiAxios<
     const { paramsSerializer, params, ...axios } =
       this.optionsToAxiosOptions(newOptions);
 
-    const queryUrl =
+    // Axios getUri doesn't support serializers
+    const queryUri =
       Object.keys(params || {}).length > 0
         ? `?${(paramsSerializer as CustomParamsSerializer)(params)}`
         : "";
 
     return this.axios.getUri({
-      url: `${urlString}${queryUrl}`,
+      url: `${urlString}${queryUri}`,
       method,
       ...axios,
     }) as string;
   }
 
+  /**
+   * @description Prepares the options and URL for an API request.
+   *
+   * @param path - The API route.
+   * @param options - Additional options for the request.
+   * @returns An object containing the prepared URL string and new options.
+   */
   private prepareOptions<
     Method extends MethodType,
     Route extends RoutesType<Schema, Method>,
@@ -184,7 +111,7 @@ export class OpenApiAxios<
   ) {
     let urlString = path as string;
 
-    // Assign ValidStatus from class if not exists in request options
+    // Assign ValidStatus from class if not provided in request options
     const newOptions: OptionsType<
       Schema,
       Method,
@@ -196,21 +123,16 @@ export class OpenApiAxios<
       validStatus: this.opt.validStatus,
     });
 
-    // Create url by swagger pattern with request params
-    if (
-      (
-        newOptions as never as
-          | OptionsTypeParams<Schema, Method, Route>
-          | undefined
-      )?.params
-    )
+    // Create URL by interpolating parameters based on the OpenAPI pattern
+    // @ts-expect-error; @TODO try to fix types
+    if (newOptions?.params)
       urlString = interpolateParams(
         urlString,
-        (newOptions as never as OptionsTypeParams<Schema, Method, Route>)
-          .params,
+        // @ts-expect-error; @TODO try to fix types
+        newOptions.params,
       );
 
-    // Assign query serializer to axios
+    // Assign query serializer to Axios
     const querySerializationParams =
       options?.querySerializationParams || this.opt.querySerializationParams;
     if (!options?.axios?.paramsSerializer && querySerializationParams) {
@@ -225,6 +147,13 @@ export class OpenApiAxios<
     };
   }
 
+  /**
+   * @description Prepares the API response based on the valid status type.
+   *
+   * @param response - The Axios response promise.
+   * @param options - Options for the request.
+   * @returns A promise that resolves to the processed API response.
+   */
   private async prepareResponse<
     ValidStatus extends ValidStatusType,
     Method extends MethodType,
@@ -241,18 +170,27 @@ export class OpenApiAxios<
   ): Promise<GetApiResponse<ValidStatus, DataByCode>> {
     switch (options.validStatus) {
       case "all":
-        // @ts-expect-error @TODO: try to fix it (unlikely)
-        return convertToAll<Schema, Method, Route, DataByCode>(response);
+        return convertToAll<Schema, Method, Route, DataByCode>(
+          response,
+        ) as Promise<GetApiResponse<ValidStatus, DataByCode>>;
       case "fetch":
-        // @ts-expect-error @TODO: try to fix it (unlikely)
-        return convertToFetch<Schema, Method, Route, DataByCode>(response);
+        return convertToFetch<Schema, Method, Route, DataByCode>(
+          response,
+        ) as Promise<GetApiResponse<ValidStatus, DataByCode>>;
       case "axios":
       default:
-        // @ts-expect-error @TODO: try to fix it (unlikely)
-        return convertToAxios<Schema, Method, Route, DataByCode>(response);
+        return convertToAxios<Schema, Method, Route, DataByCode>(
+          response,
+        ) as Promise<GetApiResponse<ValidStatus, DataByCode>>;
     }
   }
 
+  /**
+   * @description Converts OpenAPI options to Axios request options.
+   *
+   * @param options - The options to convert.
+   * @returns The converted Axios request configuration.
+   */
   private optionsToAxiosOptions<
     Method extends MethodType,
     Route extends RoutesType<Schema, Method>,
@@ -261,10 +199,71 @@ export class OpenApiAxios<
     options: OptionsType<Schema, Method, Route, MethodValidStatus>,
   ): AxiosRequestConfig {
     return {
-      params: (
-        options as never as OptionsTypeParams<Schema, Method, Route> | undefined
-      )?.query,
+      // @ts-expect-error; @TODO try to fix types
+      params: options?.query,
       ...options.axios,
+    };
+  }
+
+  /**
+   * @description Creates a fetcher method for HTTP methods that do not have a request body (e.g., GET, DELETE).
+   *
+   * @param method - The HTTP method to create a fetcher for.
+   * @returns A function that performs the API request.
+   */
+  private factoryWithoutBody<
+    Method extends Exclude<MethodType, MethodTypeWithBody>,
+  >(method: Method) {
+    return <
+      Route extends RoutesType<Schema, Method>,
+      MethodValidStatus extends ValidStatusType | undefined = undefined,
+    >(
+      ...args: FetcherWithoutBodyParameters<
+        Schema,
+        Method,
+        Route,
+        MethodValidStatus
+      >
+    ) => {
+      const [path, options] = args;
+      const { urlString, newOptions } = this.prepareOptions(path, options);
+
+      return this.prepareResponse(
+        this.axios[method](urlString, this.optionsToAxiosOptions(newOptions)),
+        newOptions,
+      );
+    };
+  }
+
+  /**
+   * @description Creates a fetcher method for HTTP methods that have a request body (e.g., POST, PUT).
+   *
+   * @param method - The HTTP method to create a fetcher for.
+   * @returns A function that performs the API request.
+   */
+  private factoryWithBody<Method extends MethodTypeWithBody>(method: Method) {
+    return <
+      Route extends RoutesType<Schema, Method>,
+      MethodValidStatus extends ValidStatusType | undefined,
+    >(
+      ...args: FetcherWithBodyParameters<
+        Schema,
+        Method,
+        Route,
+        MethodValidStatus
+      >
+    ) => {
+      const [path, body, options] = args;
+      const { urlString, newOptions } = this.prepareOptions(path, options);
+
+      return this.prepareResponse(
+        this.axios[method](
+          urlString,
+          body,
+          this.optionsToAxiosOptions(newOptions),
+        ),
+        newOptions,
+      );
     };
   }
 }

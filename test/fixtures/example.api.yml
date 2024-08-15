@@ -138,7 +138,7 @@ paths:
           style: form
           explode: true
           description: Status values that need to be considered for filter
-          required: false
+          required: true
           schema:
             type: string
             default: available

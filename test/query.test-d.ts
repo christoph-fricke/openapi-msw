@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { OptionsTypeParams } from "../src/types/types.js";
+import type { OptionsTypeParams } from "../src/types/schemeTypes.js";
 import type {
   PathsPetFindByStatusGetParametersQueryStatus,
   paths,

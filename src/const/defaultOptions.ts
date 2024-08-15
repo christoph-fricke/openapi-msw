@@ -1,8 +1,11 @@
 import {
   QuerySerializerStyle,
   type IOpenApiAxiosOptions,
-} from "../types/types.js";
+} from "../types/schemeTypes.js";
 
+/**
+ * @description Default options for OpenAPI requests using Axios.
+ */
 export const defaultOptions: IOpenApiAxiosOptions<"axios"> = {
   validStatus: "axios",
   querySerializationParams: {

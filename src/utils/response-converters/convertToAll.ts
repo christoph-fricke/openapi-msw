@@ -1,12 +1,12 @@
 import type { AxiosResponse } from "axios";
 import axios from "axios";
+import type { MethodType } from "../../const/methods.js";
 import type { GetApiResponse } from "../../types/response.js";
 import type {
-  MethodType,
   RoutesType,
   SchemaType,
   StatusCodeData,
-} from "../../types/types.js";
+} from "../../types/schemeTypes.js";
 
 export async function convertToAll<
   Schema extends SchemaType,

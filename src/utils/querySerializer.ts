@@ -1,17 +1,14 @@
 import type { CustomParamsSerializer } from "axios";
-import { QuerySerializerStyle } from "../types/types.js";
+import { QuerySerializerStyle } from "../types/schemeTypes.js";
 
 import queryString from "query-string";
-import type { QuerySerializationParams } from "../types/types.js";
+import type { QuerySerializationParams } from "../types/schemeTypes.js";
 
 export function getQuerySerializer({
   style,
   explode,
 }: QuerySerializationParams): CustomParamsSerializer {
-  return (
-    params: Record<string, string | number>,
-    // options?: ParamsSerializerOptions,
-  ): string => {
+  return (params) => {
     switch (style) {
       case QuerySerializerStyle.From:
         // form true: simple  /users?id=5, arr: /users?id=3&id=4&id=5, obj: /users?role=admin&firstName=Alex
