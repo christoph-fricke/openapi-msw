@@ -24,43 +24,45 @@ describe("Params type tests", () => {
 
   test("Check is bodyless method, options params type are may be required", () => {
     expectTypeOf<
-      IsUndefinable<
+      IsNotUndefinable<
         FetcherWithoutBodyParameters<paths, "get", "/pet/findByStatus">[1]
       >
-    >().toEqualTypeOf<never>();
+    >().toMatchTypeOf<true>();
   });
 
   test("Check is bodyless method, options params type are may be optional", () => {
     expectTypeOf<
-      IsNotUndefinable<
+      IsUndefinable<
         FetcherWithoutBodyParameters<paths, "get", "/user/{username}">[1]
       >
-    >().toEqualTypeOf<never>();
+    >().toMatchTypeOf<true>();
   });
 
   test("Check is method with body, body params type are may be required", () => {
     expectTypeOf<
-      IsUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[1]>
-    >().toEqualTypeOf<never>();
+      IsNotUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[1]>
+    >().toMatchTypeOf<true>();
   });
 
   test("Check is method with body, body params type are may be optional", () => {
     expectTypeOf<
-      IsNotUndefinable<
+      IsUndefinable<
         FetcherWithBodyParameters<paths, "post", "/pet/{petId}/uploadImage">[1]
       >
-    >().toEqualTypeOf<never>();
+    >().toMatchTypeOf<true>();
   });
 
   test("Check is method with body, options params type are may be required", () => {
     expectTypeOf<
-      IsUndefinable<FetcherWithBodyParameters<paths, "post", "/pet/{petId}">[2]>
-    >().toEqualTypeOf<never>();
+      IsNotUndefinable<
+        FetcherWithBodyParameters<paths, "post", "/pet/{petId}">[2]
+      >
+    >().toMatchTypeOf<true>();
   });
 
   test("Check is method with body, options params type are may be optional", () => {
     expectTypeOf<
-      IsNotUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[2]>
-    >().toEqualTypeOf<never>();
+      IsUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[2]>
+    >().toMatchTypeOf<true>();
   });
 });
