@@ -24,11 +24,11 @@ jobs:
         run: npm ci
       - name: Lint Project
         run: npm run lint
-      - name: Run Unit Tests
-        run: npm run test:unit
-      - name: Build Package
-        run: npm run build
+      # - name: Run Unit Tests # there's no tests yet
+      #   run: npm run test:unit
       - name: Generate Test Fixtures
         run: npm run generate
       - name: Run Integration Tests
-        run: npm run test:int
+        run: npm run test:int -- --run
+      - name: Build Package
+        run: npm run build

@@ -20,7 +20,7 @@ export async function convertToAxios<
   response: Promise<AxiosResponse>,
 ): Promise<GetApiResponse<"axios", DataByCode>> {
   return response.then<GetApiResponse<"axios", DataByCode>>(
-    // @ts-expect-error You can't do it any other way, that's the end of my rope
+    // @ts-expect-error @TODO See issue #3 - https://github.com/web-bee-ru/openapi-axios/issues/3
     (response) => ({
       response,
       status: response.status,

@@ -126,11 +126,11 @@ export class OpenApiAxios<
     });
 
     // Create URL by interpolating parameters based on the OpenAPI pattern
-    // @ts-expect-error; @TODO try to fix types
+    // @ts-expect-error; @TODO See issue #2 - https://github.com/web-bee-ru/openapi-axios/issues/2
     if (newOptions?.params)
       urlString = interpolateParams(
         urlString,
-        // @ts-expect-error; @TODO try to fix types
+        // @ts-expect-error; @TODO See issue #2 - https://github.com/web-bee-ru/openapi-axios/issues/2
         newOptions.params,
       );
 
@@ -200,7 +200,7 @@ export class OpenApiAxios<
     options: OptionsType<Schema, Method, Route, MethodValidStatus>,
   ): AxiosRequestConfig {
     return {
-      // @ts-expect-error; @TODO try to fix types
+      // @ts-expect-error; @TODO See issue #2 - https://github.com/web-bee-ru/openapi-axios/issues/2
       params: options?.query,
       ...options.axios,
     };

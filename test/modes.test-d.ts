@@ -14,7 +14,7 @@ const error5xxMock = undefined;
 beforeEach(() => {
   axiosInstance = Axios.create({});
 
-  // @ts-expect-error Ошибка из-за тс, но по версиям всё ок
+  // @ts-expect-error @TODO See issue #4 - https://github.com/web-bee-ru/openapi-axios/issues/4
   mockAdapter = new MockAdapter(axiosInstance);
 
   mockAdapter.onGet("/get-data-success").reply(200, userMock);
