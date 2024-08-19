@@ -62,7 +62,7 @@
     "query-string": "9.1.0"
   },
   "peerDependencies": {
-    "axios": ">=1.7.4",
+    "axios": ">=0.21.1",
     "typescript": ">=5.3.0",
     "node": ">=16.20.2"
   },
