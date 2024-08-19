@@ -3,10 +3,6 @@ apis:
     root: ./query-params.api.yml
     x-openapi-ts:
       output: ./query-params.api.ts
-  response-content:
-    root: ./response-content.api.yml
-    x-openapi-ts:
-      output: ./response-content.api.ts
   fetcher-modes:
     root: ./fetcher-modes.api.yml
     x-openapi-ts:
