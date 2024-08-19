@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { OptionsTypeParams } from "../src/types/schemeTypes.js";
+import type { RouteQuery } from "../src/types/schemeTypes.js";
 import type {
   PathsPetFindByStatusGetParametersQueryStatus,
   paths,
@@ -8,7 +8,7 @@ import type {
 describe("Query type tests", () => {
   test("Check is query type are valid when is filled", () => {
     expectTypeOf<
-      OptionsTypeParams<paths, "get", "/pet/findByStatus">["query"]
+      RouteQuery<paths, "get", "/pet/findByStatus">
     >().toEqualTypeOf<{
       status: PathsPetFindByStatusGetParametersQueryStatus;
     }>();
@@ -16,7 +16,7 @@ describe("Query type tests", () => {
 
   test("Check is query type are valid when is empty", () => {
     expectTypeOf<
-      OptionsTypeParams<paths, "get", "/pet/{petId}">["query"]
+      RouteQuery<paths, "get", "/pet/{petId}">
     >().toEqualTypeOf<never>();
   });
 });

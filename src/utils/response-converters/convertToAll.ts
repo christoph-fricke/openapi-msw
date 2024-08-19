@@ -3,20 +3,19 @@ import axios from "axios";
 import type { MethodType } from "../../const/methods.js";
 import type { GetApiResponse } from "../../types/response.js";
 import type {
-  RoutesType,
+  RouteResponsesByStatusCode,
+  RoutesForMethod,
   SchemaType,
-  StatusCodeData,
 } from "../../types/schemeTypes.js";
 
 export async function convertToAll<
   Schema extends SchemaType,
   Method extends MethodType,
-  Route extends RoutesType<Schema, Method>,
-  DataByCode extends Record<number, unknown> = StatusCodeData<
+  Route extends RoutesForMethod<Schema, Method>,
+  DataByCode extends Record<number, unknown> = RouteResponsesByStatusCode<
     Schema,
     Method,
-    Route,
-    "responses"
+    Route
   >,
 >(
   response: Promise<AxiosResponse>,

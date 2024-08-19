@@ -2,11 +2,23 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@web-bee-ru/openapi-axios",
   "type": "module",
-  "version": "0.7.0",
+  "version": "0.0.1",
   "license": "MIT",
   "author": "Christoph Fricke <christoph@frickeonline.de>",
-  "description": "Tiny, type-safe wrapper around MSW for type inference from OpenAPI schemas.",
-  "repository": "github:christoph-fricke/openapi-msw",
+  "description": "A TypeScript abstraction over Axios for typed requests generated from OpenAPI (Swagger) schemas using openapi-typescript.",
+  "keywords": [
+    "axios",
+    "typescript",
+    "openapi",
+    "swagger",
+    "openapi-typescript",
+    "api-client",
+    "typed-requests"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/web-bee-ru/openapi-axios.git"
+  },
   "files": [
     "cjs",
     "dist",
@@ -47,27 +59,22 @@
   },
   "dependencies": {
     "axios": "1.7.4",
-    "qs": "6.12.3",
     "query-string": "9.1.0"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.5",
     "@eslint/js": "9.5.0",
-    "@types/qs": "6.9.15",
     "axios-mock-adapter": "2.0.0",
     "cross-env": "^7.0.3",
     "eslint": "9.5.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.7",
-    "openapi-fetch": "0.10.2",
     "openapi-typescript": "7.0.0",
+    "openapi-typescript-helpers": "^0.0.12",
     "prettier": "3.3.2",
     "prettier-plugin-organize-imports": "3.2.4",
-    "rimraf": "5.0.7",
-    "ts-pattern": "5.2.0",
     "tsx": "4.16.2",
-    "type-fest": "4.23.0",
     "typescript": "5.3",
     "typescript-eslint": "8.0.0-alpha.30",
     "vitest": "1.6.0"

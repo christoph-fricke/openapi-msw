@@ -3,7 +3,7 @@ import type {
   FetcherWithBodyParameters,
   FetcherWithoutBodyParameters,
 } from "../src/types/requestParameters.js";
-import type { OptionsTypeParams } from "../src/types/schemeTypes.js";
+import type { RoutePath } from "../src/types/schemeTypes.js";
 import type { paths } from "./fixtures/example.api.js";
 
 type IsUndefinable<T> = T extends undefined ? true : never;
@@ -11,14 +11,14 @@ type IsNotUndefinable<T> = IsUndefinable<T> extends never ? true : never;
 
 describe("Params type tests", () => {
   test("Check is params type are valid when is filled", () => {
-    expectTypeOf<
-      OptionsTypeParams<paths, "get", "/pet/{petId}">["params"]
-    >().toEqualTypeOf<{ petId: number }>();
+    expectTypeOf<RoutePath<paths, "get", "/pet/{petId}">>().toEqualTypeOf<{
+      petId: number;
+    }>();
   });
 
   test("Check is params type are valid when is empty", () => {
     expectTypeOf<
-      OptionsTypeParams<paths, "get", "/pet/findByStatus">["params"]
+      RoutePath<paths, "get", "/pet/findByStatus">
     >().toEqualTypeOf<never>();
   });
 

@@ -1,8 +1,10 @@
 import type { CustomParamsSerializer } from "axios";
-import { QuerySerializerStyle } from "../types/schemeTypes.js";
 
 import queryString from "query-string";
-import type { QuerySerializationParams } from "../types/schemeTypes.js";
+import {
+  QuerySerializerStyle,
+  type QuerySerializationParams,
+} from "../types/serializer.js";
 
 export function getQuerySerializer({
   style,

@@ -1,11 +1,10 @@
 import type { MethodType, MethodTypeWithBody } from "../const/methods.js";
+import type { OptionsType, ValidStatusType } from "./options.js";
 import type {
-  BodyType,
-  OptionsType,
-  ParametersQueryType,
-  RoutesType,
+  RouteQuery,
+  RouteRequestBody,
+  RoutesForMethod,
   SchemaType,
-  ValidStatusType,
 } from "./schemeTypes.js";
 import type { NotNever } from "./utils.js";
 
@@ -20,11 +19,9 @@ import type { NotNever } from "./utils.js";
 export type FetcherWithoutBodyParameters<
   Schema extends SchemaType,
   Method extends Exclude<MethodType, MethodTypeWithBody>,
-  Route extends RoutesType<Schema, Method>,
+  Route extends RoutesForMethod<Schema, Method>,
   MethodValidStatus extends ValidStatusType | undefined = undefined,
-  StrictOptions extends boolean = NotNever<
-    ParametersQueryType<Schema, Method, Route, "parameters">
-  >,
+  StrictOptions extends boolean = NotNever<RouteQuery<Schema, Method, Route>>,
 > = Parameters<
   (
     // prettier-ignore
@@ -45,23 +42,17 @@ export type FetcherWithoutBodyParameters<
 export type FetcherWithBodyParameters<
   Schema extends SchemaType,
   Method extends MethodTypeWithBody,
-  Route extends RoutesType<Schema, Method>,
+  Route extends RoutesForMethod<Schema, Method>,
   MethodValidStatus extends ValidStatusType | undefined = undefined,
-  Body extends NotNever<
-    BodyType<Schema, Method, Route, "requestBody">
-  > extends true
-    ? BodyType<Schema, Method, Route, "requestBody">
-    : undefined = NotNever<
-    BodyType<Schema, Method, Route, "requestBody">
-  > extends true
-    ? BodyType<Schema, Method, Route, "requestBody">
+  Body extends NotNever<RouteRequestBody<Schema, Method, Route>> extends true
+    ? RouteRequestBody<Schema, Method, Route>
+    : undefined = NotNever<RouteRequestBody<Schema, Method, Route>> extends true
+    ? RouteRequestBody<Schema, Method, Route>
     : undefined,
   StrictBody extends boolean = NotNever<
-    BodyType<Schema, Method, Route, "requestBody">
+    RouteRequestBody<Schema, Method, Route>
   >,
-  StrictOptions extends boolean = NotNever<
-    ParametersQueryType<Schema, Method, Route, "parameters">
-  >,
+  StrictOptions extends boolean = NotNever<RouteQuery<Schema, Method, Route>>,
   HasBody extends boolean = StrictOptions extends true ? true : StrictBody,
 > = Parameters<
   (

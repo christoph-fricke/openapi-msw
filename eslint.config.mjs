@@ -25,7 +25,6 @@ export default tsEslint.config(
         },
       ],
       "@typescript-eslint/consistent-type-definitions": "off",
-      "constructor-super": "error",
     },
   },
 );

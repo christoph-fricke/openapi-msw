@@ -1,5 +1,6 @@
 import type { AxiosError, AxiosResponse } from "axios";
-import type { ErrorStatus, OkStatus, ValidStatusType } from "./schemeTypes.js";
+import type { ErrorStatus, OkStatus } from "openapi-typescript-helpers";
+import type { ValidStatusType } from "./options.js";
 
 /**
  * @description Type for retrieving an API response based on the ValidStatus type and data by status code.

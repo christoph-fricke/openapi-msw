@@ -4,7 +4,7 @@ import { OpenApiAxios } from "../src/index.js";
 import {
   QuerySerializerStyle,
   type QuerySerializationParams,
-} from "../src/types/schemeTypes.js";
+} from "../src/types/serializer.js";
 import {
   PathsMultiQueryGetParametersQuerySortBy,
   PathsSingleQueryGetParametersQuerySort,

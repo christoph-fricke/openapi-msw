@@ -8,17 +8,19 @@ import { defaultOptions } from "./const/defaultOptions.js";
 import { type MethodType, type MethodTypeWithBody } from "./const/methods.js";
 import { interpolateParams } from "./interpolate-params.js";
 import type {
+  IOpenApiAxiosOptions,
+  OptionsType,
+  ValidStatusType,
+} from "./types/options.js";
+import type {
   FetcherWithBodyParameters,
   FetcherWithoutBodyParameters,
 } from "./types/requestParameters.js";
 import type { GetApiResponse } from "./types/response.js";
 import type {
-  IOpenApiAxiosOptions,
-  OptionsType,
-  RoutesType,
+  RouteResponsesByStatusCode,
+  RoutesForMethod,
   SchemaType,
-  StatusCodeData,
-  ValidStatusType,
 } from "./types/schemeTypes.js";
 import type { IsNullable } from "./types/utils.js";
 import { getQuerySerializer } from "./utils/querySerializer.js";
@@ -75,7 +77,7 @@ export class OpenApiAxios<
    */
   public async getUri<
     Method extends MethodType,
-    Route extends RoutesType<Schema, Method>,
+    Route extends RoutesForMethod<Schema, Method>,
   >(method: Method, path: Route, options?: OptionsType<Schema, Method, Route>) {
     const { urlString, newOptions } = this.prepareOptions(path, options);
     const { paramsSerializer, params, ...axios } =
@@ -103,7 +105,7 @@ export class OpenApiAxios<
    */
   private prepareOptions<
     Method extends MethodType,
-    Route extends RoutesType<Schema, Method>,
+    Route extends RoutesForMethod<Schema, Method>,
     MethodValidStatus extends ValidStatusType | undefined,
   >(
     path: Route,
@@ -157,12 +159,11 @@ export class OpenApiAxios<
   private async prepareResponse<
     ValidStatus extends ValidStatusType,
     Method extends MethodType,
-    Route extends RoutesType<Schema, Method>,
-    DataByCode extends Record<number, unknown> = StatusCodeData<
+    Route extends RoutesForMethod<Schema, Method>,
+    DataByCode extends Record<number, unknown> = RouteResponsesByStatusCode<
       Schema,
       Method,
-      Route,
-      "responses"
+      Route
     >,
   >(
     response: Promise<AxiosResponse>,
@@ -193,7 +194,7 @@ export class OpenApiAxios<
    */
   private optionsToAxiosOptions<
     Method extends MethodType,
-    Route extends RoutesType<Schema, Method>,
+    Route extends RoutesForMethod<Schema, Method>,
     MethodValidStatus extends ValidStatusType,
   >(
     options: OptionsType<Schema, Method, Route, MethodValidStatus>,
@@ -215,7 +216,7 @@ export class OpenApiAxios<
     Method extends Exclude<MethodType, MethodTypeWithBody>,
   >(method: Method) {
     return <
-      Route extends RoutesType<Schema, Method>,
+      Route extends RoutesForMethod<Schema, Method>,
       MethodValidStatus extends ValidStatusType | undefined = undefined,
     >(
       ...args: FetcherWithoutBodyParameters<
@@ -243,7 +244,7 @@ export class OpenApiAxios<
    */
   private factoryWithBody<Method extends MethodTypeWithBody>(method: Method) {
     return <
-      Route extends RoutesType<Schema, Method>,
+      Route extends RoutesForMethod<Schema, Method>,
       MethodValidStatus extends ValidStatusType | undefined,
     >(
       ...args: FetcherWithBodyParameters<
