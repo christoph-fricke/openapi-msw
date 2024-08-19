@@ -105,8 +105,7 @@ const { status, data, error, response } = await api.get("/users");
 if (error) {
   if (typeof status === "number") {
     // status >= 400
-  }
-  else if (api.isAxiosError(error)) {
+  } else if (api.isAxiosError(error)) {
     // request failed (e.g. network error)
   }
   throw error; // axios.interceptors error
