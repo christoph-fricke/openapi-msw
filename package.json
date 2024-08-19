@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@web-bee-ru/openapi-axios",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "author": "Christoph Fricke <christoph@frickeonline.de>",
   "description": "A TypeScript abstraction over Axios for typed requests generated from OpenAPI (Swagger) schemas using openapi-typescript.",

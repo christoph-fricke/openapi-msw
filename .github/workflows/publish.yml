@@ -1,9 +1,7 @@
-name: release
+name: Publish to npm
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -14,9 +12,8 @@ permissions:
   pull-requests: write #  to create pull request (changesets/action)
 
 jobs:
-  release:
-    if: github.repository == 'christoph-fricke/openapi-msw'
-    runs-on: macos-latest
+  publish:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4

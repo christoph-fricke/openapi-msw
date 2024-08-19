@@ -22,7 +22,7 @@ export async function convertToAll<
 ): Promise<GetApiResponse<"all", DataByCode>> {
   return (
     response
-      // @ts-expect-error You can't do it any other way, that's the end of my rope
+      // @ts-expect-error @TODO See issue #3 - https://github.com/web-bee-ru/openapi-axios/issues/3
       .then<GetApiResponse<"all", DataByCode>>((response) => ({
         response,
         error: null,
