@@ -1,38 +1,17 @@
 apis:
-  http-methods:
-    root: ./http-methods.api.yml
-    x-openapi-ts:
-      output: ./http-methods.api.ts
-  no-content:
-    root: ./no-content.api.yml
-    x-openapi-ts:
-      output: ./no-content.api.ts
-  options:
-    root: ./options.api.yml
-    x-openapi-ts:
-      output: ./options.api.ts
-  path-fragments:
-    root: ./path-fragments.api.yml
-    x-openapi-ts:
-      output: ./path-fragments.api.ts
   query-params:
     root: ./query-params.api.yml
     x-openapi-ts:
       output: ./query-params.api.ts
-  request-body:
-    root: ./request-body.api.yml
-    x-openapi-ts:
-      output: ./request-body.api.ts
   response-content:
     root: ./response-content.api.yml
     x-openapi-ts:
       output: ./response-content.api.ts
-
+  fetcher-modes:
+    root: ./fetcher-modes.api.yml
+    x-openapi-ts:
+      output: ./fetcher-modes.api.ts
   example:
     root: ./example.api.yml
     x-openapi-ts:
       output: ./example.api.ts
-  large-example:
-    root: ./fetcher-modes.api.yml
-    x-openapi-ts:
-      output: ./fetcher-modes.api.ts
