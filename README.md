@@ -47,7 +47,7 @@ try {
 }
 ```
 
-## "fetch" mode
+### "fetch" mode
 
 Throws error in next cases:
 
@@ -82,7 +82,7 @@ try {
 }
 ```
 
-## "all" mode
+### "all" mode
 
 Never throws error (thus no try/catch required)
 

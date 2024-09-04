@@ -4,7 +4,6 @@
   "type": "module",
   "version": "0.0.4",
   "license": "MIT",
-  "author": "Christoph Fricke <christoph@frickeonline.de>",
   "description": "A TypeScript abstraction over Axios for typed requests generated from OpenAPI (Swagger) schemas using openapi-typescript.",
   "keywords": [
     "axios",
@@ -59,36 +58,29 @@
     "*.{ts,js,mjs}": "eslint --fix"
   },
   "dependencies": {
-    "axios": "1.7.4",
+    "openapi-typescript-helpers": "^0.0.12",
     "query-string": "9.1.0"
   },
   "peerDependencies": {
-    "axios": ">=0.21.1",
-    "typescript": ">=5.3.0",
-    "node": ">=16.20.2"
+    "axios": ">=0.21.1"
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.5",
     "@eslint/js": "9.5.0",
+    "axios": "^1.7.7",
     "axios-mock-adapter": "2.0.0",
     "cross-env": "^7.0.3",
     "eslint": "9.5.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.7",
     "openapi-typescript": "7.0.0",
-    "openapi-typescript-helpers": "^0.0.12",
     "prettier": "3.3.2",
     "prettier-plugin-organize-imports": "3.2.4",
+    "rimraf": "5.0.7",
     "tsx": "4.16.2",
     "typescript": "5.3",
     "typescript-eslint": "8.0.0-alpha.30",
-    "vitest": "1.6.0",
-    "rimraf": "5.0.7"
-  },
-  "overrides": {
-    "msw": {
-      "typescript": "$typescript"
-    }
+    "vitest": "1.6.0"
   }
 }
