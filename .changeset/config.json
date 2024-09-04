@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "christoph-fricke/openapi-msw" }
+    { "repo": "web-bee-ru/openapi-axios" }
   ],
   "commit": false,
   "access": "public",

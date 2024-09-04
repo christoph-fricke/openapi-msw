@@ -1,13 +1,9 @@
-export type { AnyApiSpec, HttpMethod } from "../src/api-spec.js";
-
-export {
-  createOpenApiHttp,
-  type HttpHandlerFactory,
-  type HttpOptions,
-  type OpenApiHttpHandlers,
-} from "../src/openapi-http.js";
-
+export type { MethodType } from "../src/const/methods.js";
 export type {
-  ResponseResolver,
-  ResponseResolverInfo,
-} from "../src/response-resolver.js";
+  RoutePath,
+  RouteQuery,
+  RouteRequestBody,
+  RouteResponsesByStatusCode,
+} from "../src/types/schemeTypes.js";
+
+export { OpenApiAxios } from "../src/index.js";

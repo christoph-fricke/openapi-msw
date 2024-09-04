@@ -4,6 +4,9 @@ echo "Starting pre-commit hook..."
 echo "Running Prettier and ESLint on staged files..."
 npx lint-staged
 
+echo "Running integration tests..."
+npm run test:int -- --run || exit 1
+
 echo ""
 echo "All checks successful."
 echo ""

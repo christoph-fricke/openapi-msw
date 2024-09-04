@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: Simple Data Retrieval API
+  version: 1.0.0
+  description:
+    This API provides three different endpoints for testing different response
+    codes.
+
+paths:
+  /get-data-success:
+    get:
+      summary: Retrieve data successfully
+      description:
+        This endpoint always returns a successful response with a 200 status
+        code.
+      responses:
+        "200":
+          description: Data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+              example:
+                id: 1
+                name: "Sample Data"
+                description: "This is a sample data item."
+
+  /get-data-bad-request:
+    get:
+      summary: Trigger a 400 Bad Request response
+      description:
+        This endpoint always returns a 400 status code to simulate a bad
+        request.
+      responses:
+        "400":
+          description: Bad Request - Invalid input provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              example:
+                error: "Invalid input provided."
+
+  /get-data-server-error:
+    get:
+      summary: Trigger a 500 Internal Server Error response
+      description:
+        This endpoint always returns a 500 status code to simulate an internal
+        server error.
+      responses:
+        "500":
+          description: Internal Server Error
+  /get-timeout-error:
+    get:
+      summary: Trigger a timeout
+      responses:
+        "200":
+          description: Never complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /get-network-error:
+    get:
+      summary: Trigger a network error
+      responses:
+        "200":
+          description: Never complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

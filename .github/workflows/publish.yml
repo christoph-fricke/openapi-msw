@@ -1,0 +1,39 @@
+name: Publish to npm
+
+on:
+  workflow_dispatch:
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  id-token: write # to publish with provenance
+  contents: write #  to create release (changesets/action)
+  issues: write # to post issue comments (changesets/action)
+  pull-requests: write #  to create pull request (changesets/action)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build Package
+        run: npm run build
+      - name: Version and/or Publish Package
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+          version: npm run version
+          commit: "ci: release package"
+          title: "ci: release package"
+        env:
+          NPM_CONFIG_PROVENANCE: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

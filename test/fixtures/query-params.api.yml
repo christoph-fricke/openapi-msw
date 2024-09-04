@@ -5,6 +5,13 @@ info:
 servers:
   - url: http://localhost:3000
 paths:
+  /:
+    get:
+      description: empty handle for tests
+      operationId: getRoot
+      responses:
+        "404":
+          description: Not found
   /no-query:
     get:
       summary: No Query Params
@@ -61,6 +68,55 @@ paths:
             items:
               type: string
               enum: ["asc", "desc"]
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /object-query:
+    get:
+      summary: Multi Query Params
+      operationId: getObjectQuery
+      parameters:
+        - name: user
+          in: query
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+              test:
+                type: number
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /deep-object-query:
+    get:
+      summary: Multi Query Params
+      operationId: getDeepObjectQuery
+      parameters:
+        - name: user
+          in: query
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+              test:
+                type: object
+                properties:
+                  prop:
+                    type: string
       responses:
         200:
           description: Success
