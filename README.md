@@ -128,3 +128,11 @@ if (error) {
 // - if another error (e.g. request failed), then catch (isAxiosError works)
 // - if interceptor error, then catch (isAxiosError DOESN't work)
 ```
+
+# Other
+
+Special thanks to
+
+- [@IRaccoonI](https://github.com/IRaccoonI) (contributor)
+- [@Denwa799](https://github.com/Denwa799) (contributor)
+- [@simplesmiler](https://github.com/simplesmiler) (creator of [taxios](https://github.com/simplesmiler/taxios))
