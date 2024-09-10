@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 0.7.1
+
+### Patch Changes
+
+- [#63](https://github.com/christoph-fricke/openapi-msw/pull/63) [`b9f4bea`](https://github.com/christoph-fricke/openapi-msw/commit/b9f4bead7907eb7cd0d1c7458e6c89520c65414f) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Fixed type inference for extended JSON mime types, such as `application/problem+json`. Previously, APIs like `response(...).json` would be typed as `never` for such mime types. Now, they will be properly typed.
+
 ## 0.7.0
 
 ### Minor Changes
