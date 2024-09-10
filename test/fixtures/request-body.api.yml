@@ -65,6 +65,19 @@ paths:
       responses:
         204:
           description: NoContent
+  /special-json:
+    post:
+      summary: Create for Special JSON
+      operationId: postSpecialJSON
+      requestBody:
+        required: true
+        content:
+          application/ld+json:
+            schema:
+              $ref: "#/components/schemas/NewResource"
+      responses:
+        204:
+          description: NoContent
 components:
   schemas:
     Resource:

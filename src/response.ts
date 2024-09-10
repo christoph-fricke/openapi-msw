@@ -4,8 +4,9 @@ import {
   type HttpResponseInit,
   type StrictResponse,
 } from "msw";
-import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
+import type { FilterKeys } from "openapi-typescript-helpers";
 import type { Wildcard } from "./http-status-wildcard.js";
+import type { JSONLike } from "./type-utils.js";
 
 /**
  * Requires or removes the status code from {@linkcode HttpResponseInit} depending

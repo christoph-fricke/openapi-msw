@@ -1,3 +1,11 @@
+import type { FilterKeys } from "openapi-typescript-helpers";
+
+/**
+ * Returns any JSON mime type. Similar to `openapi-typescript-helpers`
+ * version but actually works with types like "application/problem+json".
+ */
+export type JSONLike<T> = FilterKeys<T, `${string}/${string}json`>;
+
 /**
  * Converts a type to string while preserving string literal types.
  * {@link Array}s are unboxed to their stringified value.

@@ -34,6 +34,17 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 
+  test("When a request uses a special JSON mime type, Then the content is strict-typed", async () => {
+    type Endpoint = typeof http.post<"/special-json">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const request = resolver.parameter(0).toHaveProperty("request");
+
+    request.toHaveProperty("text").returns.toEqualTypeOf<never>();
+    request
+      .toHaveProperty("json")
+      .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
+  });
+
   test("When a request content is optional, Then the content is strict-typed with optional", () => {
     type Endpoint = typeof http.patch<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
