@@ -51,6 +51,24 @@ paths:
             text/plain:
               schema:
                 type: string
+  /special-json:
+    get:
+      summary: Get Special JSON Response
+      operationId: getSpecialJSON
+      responses:
+        200:
+          description: Success
+          content:
+            application/ld+json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+
+        401:
+          description: Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Exception"
 components:
   schemas:
     Resource:

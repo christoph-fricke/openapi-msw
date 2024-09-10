@@ -144,4 +144,16 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
       >
     >();
   });
+
+  test("When special JSON mime types are used, Then the response json helper still works", async () => {
+    http.get("/special-json", ({ response }) => {
+      expectTypeOf(response(200).json).returns.toEqualTypeOf<
+        StrictResponse<{ id: string; name: string; value: number }>
+      >();
+
+      expectTypeOf(response(401).json).returns.toEqualTypeOf<
+        StrictResponse<{ error: string; code: number }>
+      >();
+    });
+  });
 });
