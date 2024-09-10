@@ -1,4 +1,5 @@
-import type { FilterKeys, JSONLike } from "openapi-typescript-helpers";
+import type { FilterKeys } from "openapi-typescript-helpers";
+import type { JSONLike } from "./type-utils.js";
 
 /** A type-safe request helper that enhances native body methods based on the given OpenAPI spec. */
 export interface OpenApiRequest<RequestMap> extends Request {
