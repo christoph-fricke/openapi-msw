@@ -1,7 +1,7 @@
 import type { FilterKeys } from "openapi-typescript-helpers";
 
 /**
- * Return any media type containing "json". Similar to `openapi-typescript-helpers`
+ * Returns any JSON mime type. Similar to `openapi-typescript-helpers`
  * version but actually works with types like "application/problem+json".
  */
 export type JSONLike<T> = FilterKeys<T, `${string}/${string}json`>;
