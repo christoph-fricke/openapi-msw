@@ -67,8 +67,8 @@ paths:
           description: NoContent
   /special-json:
     post:
-      summary: Get Special JSON Response
-      operationId: getSpecialJSON
+      summary: Create for Special JSON
+      operationId: postSpecialJSON
       requestBody:
         required: true
         content:
