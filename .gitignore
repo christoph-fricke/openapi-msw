@@ -4,3 +4,4 @@ dist
 node_modules
 test/fixtures/*.ts
 tsconfig.vitest-temp.json
+.env
