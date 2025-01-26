@@ -4,9 +4,8 @@ import {
   type HttpResponseInit,
   type StrictResponse,
 } from "msw";
-import type { FilterKeys } from "openapi-typescript-helpers";
 import type { Wildcard } from "./http-status-wildcard.js";
-import type { JSONLike } from "./type-utils.js";
+import type { JSONLike, NoContent, TextLike } from "./type-utils.js";
 
 /**
  * Requires or removes the status code from {@linkcode HttpResponseInit} depending
@@ -52,15 +51,15 @@ export interface OpenApiResponse<
   <Status extends keyof ResponseMap>(
     status: Status,
   ): {
-    text: FilterKeys<ResponseMap[Status], `text/${string}`> extends never
+    text: TextLike<ResponseMap[Status]> extends never
       ? unknown
-      : TextResponse<FilterKeys<ResponseMap[Status], `text/${string}`>, Status>;
+      : TextResponse<TextLike<ResponseMap[Status]>, Status>;
 
     json: JSONLike<ResponseMap[Status]> extends never
       ? unknown
       : JsonResponse<JSONLike<ResponseMap[Status]>, Status>;
 
-    empty: FilterKeys<ResponseMap[Status], "no-content"> extends never
+    empty: NoContent<ResponseMap[Status]> extends never
       ? unknown
       : EmptyResponse<Status>;
   };
@@ -75,7 +74,7 @@ export function createResponseHelper<
     status,
   ) => {
     const text: TextResponse<
-      FilterKeys<ResponseMap[typeof status], `text/${string}`>,
+      TextLike<ResponseMap[typeof status]>,
       typeof status
     > = (body, init) => {
       return HttpResponse.text(body, {

@@ -1,9 +1,4 @@
 import type {
-  OperationRequestBody,
-  OperationRequestBodyContent,
-  PathsWithMethod,
-} from "openapi-typescript-helpers";
-import type {
   ConvertToStringified,
   MapToValues,
   ResolvedObjectUnion,
@@ -26,7 +21,11 @@ export type HttpMethod =
 export type PathsForMethod<
   ApiSpec extends AnyApiSpec,
   Method extends HttpMethod,
-> = PathsWithMethod<ApiSpec, Method>;
+> = {
+  [Path in keyof ApiSpec]: ApiSpec[Path] extends Record<Method, unknown>
+    ? Path
+    : never;
+}[keyof ApiSpec];
 
 /** Extract the path params of a given path and method from an api spec. */
 export type PathParams<
@@ -74,11 +73,14 @@ export type RequestMap<
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
 > = Method extends keyof ApiSpec[Path]
-  ? undefined extends OperationRequestBody<ApiSpec[Path][Method]>
-    ? Partial<
-        NonNullable<OperationRequestBody<ApiSpec[Path][Method]>>["content"]
-      >
-    : OperationRequestBody<ApiSpec[Path][Method]>["content"]
+  ? ApiSpec[Path][Method] extends {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      requestBody?: any;
+    }
+    ? undefined extends ApiSpec[Path][Method]["requestBody"]
+      ? Partial<NonNullable<ApiSpec[Path][Method]["requestBody"]>["content"]>
+      : ApiSpec[Path][Method]["requestBody"]["content"]
+    : never
   : never;
 
 /** Extract the request body of a given path and method from an api spec. */
@@ -86,9 +88,7 @@ export type RequestBody<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
-> = Method extends keyof ApiSpec[Path]
-  ? OperationRequestBodyContent<ApiSpec[Path][Method]>
-  : never;
+> = MapToValues<RequestMap<ApiSpec, Path, Method>>;
 
 /**
  * Extract a response map for a given path and method from an api spec.

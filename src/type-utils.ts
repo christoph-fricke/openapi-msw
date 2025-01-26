@@ -1,10 +1,13 @@
-import type { FilterKeys } from "openapi-typescript-helpers";
+export type FilterKeys<Obj, Matchers> = Obj[keyof Obj & Matchers];
 
-/**
- * Returns any JSON mime type. Similar to `openapi-typescript-helpers`
- * version but actually works with types like "application/problem+json".
- */
+/** Returns any JSON mime type. Works with types like "application/problem+json". */
 export type JSONLike<T> = FilterKeys<T, `${string}/${string}json`>;
+
+/** Returns any TEXT mime type. */
+export type TextLike<T> = FilterKeys<T, `text/${string}`>;
+
+/** Returns any special "no-content" entry. Special no-content entries are added by `ConvertContent`. */
+export type NoContent<T> = FilterKeys<T, "no-content">;
 
 /**
  * Converts a type to string while preserving string literal types.
