@@ -1,0 +1,31 @@
+name: compatibility-check
+
+on:
+  schedule:
+    - cron: "21 12 * * 5"
+  workflow_dispatch:
+
+env:
+  CI: true
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build Package
+        run: npm run build
+      - name: Install latest MSW and OpenAPI-TS versions
+        run: npm install msw@latest openapi-typescript@latest
+      - name: Generate Test Fixtures
+        run: npm run generate
+      - name: Run Integration Tests
+        run: npm run test:int
