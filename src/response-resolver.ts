@@ -1,4 +1,7 @@
-import type { AsyncResponseResolverReturnType, http } from "msw";
+import type {
+  AsyncResponseResolverReturnType,
+  HttpResponseResolver,
+} from "msw";
 import type {
   AnyApiSpec,
   HttpMethod,
@@ -114,10 +117,8 @@ export type MSWResponseResolver<
   ApiSpec extends AnyApiSpec,
   Path extends keyof ApiSpec,
   Method extends HttpMethod,
-> = Parameters<
-  typeof http.all<
-    PathParams<ApiSpec, Path, Method>,
-    RequestBody<ApiSpec, Path, Method>,
-    ResponseBody<ApiSpec, Path, Method>
-  >
->[1];
+> = HttpResponseResolver<
+  PathParams<ApiSpec, Path, Method>,
+  RequestBody<ApiSpec, Path, Method>,
+  ResponseBody<ApiSpec, Path, Method>
+>;
