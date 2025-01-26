@@ -1,5 +1,17 @@
 # openapi-msw
 
+## 1.0.0
+
+### Major Changes
+
+- [#70](https://github.com/christoph-fricke/openapi-msw/pull/70) [`bc9a50f`](https://github.com/christoph-fricke/openapi-msw/commit/bc9a50ff869583a070a08be6e1de0868440adb48) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Updated MSW peer dependency from _v2.0.0_ to _v2.7.0_. This is only a breaking change if you are not already using the latest version of MSW.
+
+- [#70](https://github.com/christoph-fricke/openapi-msw/pull/70) [`bc9a50f`](https://github.com/christoph-fricke/openapi-msw/commit/bc9a50ff869583a070a08be6e1de0868440adb48) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Renamed `HttpHandlerFactory` type to `OpenApiHttpRequestHandler`. This rename aligns its name with MSW's equivalent `HttpRequestHandler` type.
+
+### Minor Changes
+
+- [#68](https://github.com/christoph-fricke/openapi-msw/pull/68) [`33088be`](https://github.com/christoph-fricke/openapi-msw/commit/33088be804138e98647ffc0e9d85d71f2dfae6e8) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Removed dependency on _openapi-typescript-helpers_. We were depending on an older version without being able to easily update. With this refactoring, your projects should no longer resolve to multiple versions of _openapi-typescript-helpers_.
+
 ## 0.7.1
 
 ### Patch Changes
