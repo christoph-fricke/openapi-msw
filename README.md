@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="logo.svg" width="300" alt="OpenAPI-MSW logo" />
+</p>
+
 <h1 align="center">OpenAPI-MSW</h1>
 
 A tiny, type-safe wrapper around [MSW](https://mswjs.io) to add support for full
 type inference from OpenAPI schema definitions that are generated with
-[OpenAPI-TS](https://openapi-ts.pages.dev/introduction).
+[OpenAPI-TS](https://openapi-ts.dev/introduction).
 
 > _Please note that the lack of regular releases does not mean that OpenAPI-MSW
 > is abandoned. It works very reliably and includes all the features I intended
@@ -24,8 +28,8 @@ backwards compatibility for MSW v1.
 
 This guide assumes that you already have OpenAPI-TS set up and configured to
 generate `paths` definitions. If you have not set it up, please refer to the
-[OpenAPI-TS setup guide](https://openapi-ts.pages.dev/introduction) before
-continuing with this usage guide.
+[OpenAPI-TS setup guide](https://openapi-ts.dev/introduction) before continuing
+with this usage guide.
 
 ### Getting Started
 
