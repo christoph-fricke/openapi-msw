@@ -17,5 +17,6 @@ export default defineProject({
   test: {
     name: suite,
     dir: getTestDir(suite),
+    clearMocks: true,
   },
 });

@@ -49,20 +49,15 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.8",
-    "eslint": "^9.10.0",
-    "lefthook": "^1.7.15",
-    "openapi-typescript": "^7.4.0",
-    "prettier": "^3.3.3",
-    "prettier-plugin-organize-imports": "^4.0.0",
+    "@changesets/cli": "^2.27.12",
+    "eslint": "^9.19.0",
+    "lefthook": "^1.10.10",
+    "openapi-typescript": "^7.6.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "rimraf": "^6.0.1",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "^8.5.0",
-    "vitest": "^2.0.5"
-  },
-  "overrides": {
-    "msw": {
-      "typescript": "$typescript"
-    }
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0",
+    "vitest": "^3.0.4"
   }
 }
