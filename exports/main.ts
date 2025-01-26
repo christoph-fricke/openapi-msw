@@ -2,9 +2,9 @@ export type { AnyApiSpec, HttpMethod } from "../src/api-spec.js";
 
 export {
   createOpenApiHttp,
-  type HttpHandlerFactory,
   type HttpOptions,
   type OpenApiHttpHandlers,
+  type OpenApiHttpRequestHandler,
 } from "../src/openapi-http.js";
 
 export type {

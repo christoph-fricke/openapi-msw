@@ -1,4 +1,4 @@
-import { http, type RequestHandlerOptions } from "msw";
+import { http, type HttpHandler, type RequestHandlerOptions } from "msw";
 import type { AnyApiSpec, HttpMethod, PathsForMethod } from "./api-spec.js";
 import { convertToColonPath } from "./path-mapping.js";
 import {
@@ -7,14 +7,14 @@ import {
 } from "./response-resolver.js";
 
 /** HTTP handler factory with type inference for provided api paths. */
-export type HttpHandlerFactory<
+export type OpenApiHttpRequestHandler<
   ApiSpec extends AnyApiSpec,
   Method extends HttpMethod,
 > = <Path extends PathsForMethod<ApiSpec, Method>>(
   path: Path,
   resolver: ResponseResolver<ApiSpec, Path, Method>,
   options?: RequestHandlerOptions,
-) => ReturnType<typeof http.all>;
+) => HttpHandler;
 
 function createHttpWrapper<
   ApiSpec extends AnyApiSpec,
@@ -22,21 +22,18 @@ function createHttpWrapper<
 >(
   method: Method,
   httpOptions?: HttpOptions,
-): HttpHandlerFactory<ApiSpec, Method> {
+): OpenApiHttpRequestHandler<ApiSpec, Method> {
   return (path, resolver, options) => {
     const mswPath = convertToColonPath(path as string, httpOptions?.baseUrl);
     const mswResolver = createResolverWrapper(resolver);
 
-    // Since TS v5.4 mswResolver errors with "Type 'undefined' is not assignable to type 'RequestBody<ApiSpec, Path, Method>'"
-    // This assignment is only part of the inner workings and does not leak to the outer type-safety.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return http[method]<any, any, any>(mswPath, mswResolver, options);
+    return http[method](mswPath, mswResolver, options);
   };
 }
 
 /** Collection of enhanced HTTP handler factories for each available HTTP Method. */
 export type OpenApiHttpHandlers<ApiSpec extends AnyApiSpec> = {
-  [Method in HttpMethod]: HttpHandlerFactory<ApiSpec, Method>;
+  [Method in HttpMethod]: OpenApiHttpRequestHandler<ApiSpec, Method>;
 } & { untyped: typeof http };
 
 export interface HttpOptions {
