@@ -4,6 +4,11 @@ A tiny, type-safe wrapper around [MSW](https://mswjs.io) to add support for full
 type inference from OpenAPI schema definitions that are generated with
 [OpenAPI-TS](https://openapi-ts.pages.dev/introduction).
 
+> _Please note that the lack of regular releases does not mean that OpenAPI-MSW
+> is abandoned. It works very reliably and includes all the features I intended
+> to include. I rely heavily on the package myself and will resolve future
+> problems and incompatibilities._
+
 ## Installation
 
 You can install OpenAPI-MSW with this shell command:
@@ -12,8 +17,8 @@ You can install OpenAPI-MSW with this shell command:
 npm i -D openapi-msw
 ```
 
-**Note:** This package has a peer-dependency to MSW **v2**. There is no plan to
-provide backwards compatibility for MSW v1.
+This package has a peer-dependency to MSW **v2**. There is no plan to provide
+backwards compatibility for MSW v1.
 
 ## Usage Guide
 
