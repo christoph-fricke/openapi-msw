@@ -41,9 +41,6 @@
     "version": "changeset version && npm i",
     "release": "changeset publish"
   },
-  "dependencies": {
-    "openapi-typescript-helpers": "0.0.8"
-  },
   "peerDependencies": {
     "msw": "^2.0.0"
   },
