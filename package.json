@@ -58,11 +58,6 @@
     "rimraf": "^6.0.1",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0",
-    "vitest": "^2.0.5"
-  },
-  "overrides": {
-    "msw": {
-      "typescript": "$typescript"
-    }
+    "vitest": "^3.0.4"
   }
 }
