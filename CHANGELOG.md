@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 1.1.0
+
+### Minor Changes
+
+- [#73](https://github.com/christoph-fricke/openapi-msw/pull/73) [`f81ae29`](https://github.com/christoph-fricke/openapi-msw/commit/f81ae2928233fb5d3dd22d2bb0d9123da8afc6ca) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added a `request.clone()` type override to continue returning type-safe `OpenApiRequest`s when called. With this, cloning the `request` in resolvers does not lose its type-safety on body parsing methods.
+
 ## 1.0.0
 
 ### Major Changes
