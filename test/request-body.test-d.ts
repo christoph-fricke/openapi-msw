@@ -69,4 +69,18 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       .toHaveProperty("json")
       .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
+
+  test("When the request is cloned, Then it remains strict-typed", () => {
+    type Endpoint = typeof http.post<"/multi-body">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const request = resolver.parameter(0).toHaveProperty("request");
+    const cloned = request.toHaveProperty("clone").returns;
+
+    cloned
+      .toHaveProperty("text")
+      .returns.resolves.toEqualTypeOf<"Hello" | "Goodbye">();
+    cloned
+      .toHaveProperty("json")
+      .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
+  });
 });
