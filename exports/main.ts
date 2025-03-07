@@ -1,4 +1,4 @@
-export type { AnyApiSpec, HttpMethod } from "../src/api-spec.js";
+export type { AnyApiSpec, HttpMethod, PathsForMethod, ResponseBody } from "../src/api-spec.js";
 
 export {
   createOpenApiHttp,
