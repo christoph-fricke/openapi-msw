@@ -1,5 +1,5 @@
 pre-commit:
-  piped: true
+  parallel: false
   commands:
     lint:
       priority: 1

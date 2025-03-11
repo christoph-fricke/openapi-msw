@@ -1,13 +1,12 @@
-import eslint from "@eslint/js";
-import tsEslint from "typescript-eslint";
+import js from "@eslint/js";
+import { defineConfig, globalIgnores } from "eslint/config";
+import ts from "typescript-eslint";
 
-export default tsEslint.config(
-  {
-    ignores: ["coverage", "cjs", "dist", "test/fixtures/*.ts"],
-  },
-  eslint.configs.recommended,
-  ...tsEslint.configs.recommended,
-  ...tsEslint.configs.stylistic,
+export default defineConfig(
+  globalIgnores(["coverage", "cjs", "dist", "test/fixtures/*.ts"]),
+  js.configs.recommended,
+  ts.configs.recommended,
+  ts.configs.stylistic,
   {
     files: ["test/**/*.test-d.ts"],
     // Type tests commonly create a variable which is only used for type checks.
