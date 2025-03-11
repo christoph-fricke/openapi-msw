@@ -9,12 +9,13 @@
     /* Modules */
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "resolveJsonModule": true,
+    "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": true,
 
     /* Type Checking */
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,

@@ -1,22 +1,25 @@
-import { defineProject } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
-const suite = process.env["TEST_SUITE"];
-
-function getTestDir(suite?: string): string | undefined {
-  switch (suite) {
-    case "unit":
-      return "src";
-    case "integration":
-      return "test";
-    default:
-      return undefined;
-  }
-}
-
-export default defineProject({
+export default defineConfig({
   test: {
-    name: suite,
-    dir: getTestDir(suite),
+    watch: false,
     clearMocks: true,
+    workspace: [
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          root: "src",
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "integration",
+          root: "test",
+          typecheck: { enabled: true },
+        },
+      },
+    ],
   },
 });

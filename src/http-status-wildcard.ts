@@ -5,7 +5,7 @@
  * @see Allowed Wildcards: https://spec.openapis.org/oas/v3.1.0#patterned-fields-0
  * @see Default Code: https://spec.openapis.org/oas/v3.1.0#fixed-fields-13
  * @see Specified Status Codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
- * */
+ */
 export interface Wildcard {
   "1XX": 100 | 101 | 102 | 103;
   "2XX": 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207 | 208 | 226;
