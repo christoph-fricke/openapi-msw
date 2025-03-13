@@ -3,6 +3,10 @@ apis:
     root: ./http-methods.api.yml
     x-openapi-ts:
       output: ./http-methods.api.ts
+  http-utilities:
+    root: ./http-utilities.api.yml
+    x-openapi-ts:
+      output: ./http-utilities.api.ts
   no-content:
     root: ./no-content.api.yml
     x-openapi-ts:

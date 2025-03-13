@@ -11,3 +11,10 @@ export type {
   ResponseResolver,
   ResponseResolverInfo,
 } from "../src/response-resolver.js";
+
+export type {
+  AnyOpenApiHttpRequestHandler,
+  PathsFor,
+  RequestBodyFor,
+  ResponseBodyFor,
+} from "../src/openapi-http-utilities.js";

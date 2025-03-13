@@ -1,0 +1,66 @@
+openapi: 3.0.2
+info:
+  title: Http Utilities API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get Resource By Id
+      operationId: getResourceById
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /resource:
+    post:
+      summary: Create Resource
+      operationId: createResource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewResource"
+      responses:
+        201:
+          description: Created
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    NewResource:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string

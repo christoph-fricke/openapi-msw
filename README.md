@@ -254,6 +254,32 @@ const handler = http.get("/untyped-response-example", ({ response }) => {
 });
 ```
 
+### Advanced: Utility Types
+
+OpenAPI-MSW exports utility types that can help you with creating type-safe
+functionality around OpenAPI-MSW. These utility types are centered around the
+request handlers exposed through the `http` object.
+
+```typescript
+import {
+  createOpenApiHttp,
+  type PathsFor,
+  type RequestBodyFor,
+  type ResponseBodyFor,
+} from "openapi-msw";
+
+const http = createOpenApiHttp<paths>();
+
+// A union of all possible GET paths.
+type Paths = PathsFor<typeof http.get>;
+
+// The request body for POST /tasks.
+type RequestBody = RequestBodyFor<typeof http.post, "/tasks">;
+
+// The response body for GET /tasks.
+type ResponseBody = ResponseBodyFor<typeof http.get, "/tasks">;
+```
+
 ## License
 
 This package is published under the [MIT license](./LICENSE).
