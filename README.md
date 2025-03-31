@@ -31,8 +31,8 @@ const axios = Axios.create({
   adapter: "fetch", // strongly recommended (available since axios@1.7.0)
 });
 
-const api = new OpenApiAxios<paths, "axios">(axios, { validStatus: "axios" });
-// const api =  new OpenApiAxios<paths>(axios) // same result
+const api = new OpenApiAxios<paths>(axios);
+// const api = new OpenApiAxios<paths, "axios">(axios, { validStatus: "axios" }); // same result
 
 try {
   const { status, data, response } = await api.get("/users");
