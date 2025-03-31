@@ -1,6 +1,6 @@
 A tiny, type-safe wrapper around [axios](https://axios-http.com) to add support
 for full type inference from OpenAPI schema definitions that are generated with
-[OpenAPI-TS](https://openapi-ts.pages.dev/introduction).
+[OpenAPI-TS](https://openapi-ts.dev/introduction).
 
 # API
 
