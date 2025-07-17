@@ -40,7 +40,13 @@ describe("Params type tests", () => {
 
   test("Check is method with body, body params type are may be required", () => {
     expectTypeOf<
-      IsNotUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[1]>
+      IsNotUndefinable<FetcherWithBodyParameters<paths, "put", "/pet">[1]>
+    >().toMatchTypeOf<true>();
+  });
+
+  test("Check is method with body, body params type are may be optional", () => {
+    expectTypeOf<
+      IsUndefinable<FetcherWithBodyParameters<paths, "post", "/pet">[1]>
     >().toMatchTypeOf<true>();
   });
 

@@ -29,6 +29,19 @@ export type MakeNeverEmpty<T> = {
 export type NotNever<T> = [T] extends [never] ? false : true;
 
 /**
+ * @description Type utility to determine if a field in an object type `T` can be `undefined`.
+ * Returns `true` if the field `K` of type `T` can be `undefined`, otherwise `false`.
+ *
+ * @template T - The object type to check.
+ * @template K - The key of the field in the object type `T` to check for `undefined`.
+ */
+export type IsFieldOptional<T, K extends string> = K extends keyof T
+  ? undefined extends T[K]
+    ? true
+    : false
+  : false;
+
+/**
  * @description Type utility to filter the key `K` from type `T`.
  * Returns the type of `T[K]` if `K` is a key of `T` and `T[K]` is not `undefined`.
  * Otherwise, returns `never`.

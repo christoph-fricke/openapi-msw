@@ -1,6 +1,6 @@
 import type { FilterKeys, PathsWithMethod } from "openapi-typescript-helpers";
 import type { MethodType } from "../const/methods.js";
-import type { FilterKeyOrNever } from "./utils.js";
+import type { FilterKeyOrNever, IsFieldOptional } from "./utils.js";
 
 /**
  * @description Define possible field types in OpenAPI schema
@@ -37,12 +37,21 @@ export type SchemaType = {
 /**
  * @description Checks for the existence of an internal field. If it exists, it retrieves it
  */
+export type SchemeRoute<
+  Schema extends SchemaType,
+  Method extends MethodType,
+  Route extends RoutesForMethod<Schema, Method>,
+> = FilterKeys<FilterKeys<Schema, Route>, Method>;
+
+/**
+ * @description Checks for the existence of an internal field. If it exists, it retrieves it
+ */
 export type SchemeRouteField<
   Schema extends SchemaType,
   Method extends MethodType,
   Route extends RoutesForMethod<Schema, Method>,
   Field extends FieldType,
-> = FilterKeys<FilterKeys<FilterKeys<Schema, Route>, Method>, Field>;
+> = FilterKeys<SchemeRoute<Schema, Method, Route>, Field>;
 
 /**
  * @description Extracts all path parameters for a given route and method in the schema
@@ -85,10 +94,41 @@ export type RouteRequestBody<
   Schema extends SchemaType,
   Method extends MethodType,
   Route extends RoutesForMethod<Schema, Method>,
-> = FilterKeys<
-  FilterKeys<SchemeRouteField<Schema, Method, Route, "requestBody">, "content">,
-  TargetMimeTypes
->;
+> =
+  IsFieldOptional<
+    SchemeRoute<Schema, Method, Route>,
+    "requestBody"
+  > extends true
+    ?
+        | FilterKeys<
+            FilterKeys<
+              FilterKeys<
+                Required<SchemeRoute<Schema, Method, Route>>,
+                "requestBody"
+              >,
+              "content"
+            >,
+            TargetMimeTypes
+          >
+        | undefined
+    : FilterKeys<
+        FilterKeys<
+          FilterKeys<
+            FilterKeys<FilterKeys<Schema, Route>, Method>,
+            "requestBody"
+          >,
+          "content"
+        >,
+        TargetMimeTypes
+      >;
+// : FilterKeys<FilterKeys<SchemeRouteField<Schema, Method, Route, "requestBody">, "content">, TargetMimeTypes>
+
+// : FilterKeys<FilterKeys<Required<SchemeRouteField<Schema, Method, Route, "requestBody">>, "content">, TargetMimeTypes> ;
+
+// FilterKeys<
+//   FilterKeys<SchemeRouteField<Schema, Method, Route, "requestBody">, "content">,
+//   TargetMimeTypes
+// >;
 
 /**
  * @example

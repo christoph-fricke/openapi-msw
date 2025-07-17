@@ -105,7 +105,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/Pet"
-        required: true
+        required: false
       responses:
         "200":
           description: Successful operation
