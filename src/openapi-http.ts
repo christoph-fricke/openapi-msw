@@ -42,12 +42,11 @@ export interface HttpOptions {
 }
 
 /**
- * Creates a wrapper around MSW's {@link http} object, which is enhanced with
+ * Creates a wrapper around MSW's {@linkcode http} object, which is enhanced with
  * type inference from the provided OpenAPI-TS `paths` definition.
  *
- * @param options Additional options that are used by all defined HTTP handlers.
- *
- * @example
+ * **Usage**
+ * ```typescript
  * import { HttpResponse } from "msw";
  * import { createOpenApiHttp } from "openapi-msw";
  * // 1. Import the paths from your OpenAPI schema definitions
@@ -57,10 +56,13 @@ export interface HttpOptions {
  * const http = createOpenApiHttp<paths>();
  *
  * // TS only suggests available GET paths
- * const getHandler = http.get("/resource/{id}", ({ params }) => {
+ * const handler = http.get("/resource/{id}", ({ params }) => {
  *   const id = params.id;
  *   return HttpResponse.json({ id, other: "..." });
  * });
+ * ```
+ *
+ * @param options Additional options that are used by all defined HTTP handlers.
  */
 export function createOpenApiHttp<ApiSpec extends AnyApiSpec>(
   options?: HttpOptions,
