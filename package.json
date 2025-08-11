@@ -31,8 +31,8 @@
   "scripts": {
     "prepare": "lefthook install",
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "rimraf ./dist && tsc -p tsconfig.build.json",
-    "build:cjs": "rimraf ./cjs && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > ./cjs/package.json",
+    "build:esm": "rm -rf ./dist && tsc -p tsconfig.build.json",
+    "build:cjs": "rm -rf ./cjs && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > ./cjs/package.json",
     "format": "prettier --write .",
     "lint": "eslint . && prettier -c .",
     "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml",
@@ -46,15 +46,14 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.28.1",
-    "eslint": "^9.22.0",
-    "lefthook": "^1.11.3",
-    "openapi-typescript": "^7.6.1",
-    "prettier": "^3.5.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
-    "vitest": "^3.0.8"
+    "@changesets/cli": "^2.29.5",
+    "eslint": "^9.33.0",
+    "lefthook": "^1.12.2",
+    "openapi-typescript": "^7.9.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0",
+    "vitest": "^3.2.4"
   }
 }
