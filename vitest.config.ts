@@ -3,8 +3,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     watch: false,
-    clearMocks: true,
-    workspace: [
+    projects: [
       {
         extends: true,
         test: {

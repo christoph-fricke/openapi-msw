@@ -33,7 +33,7 @@ describe(createOpenApiHttp, () => {
 
 describe.each(methods)("openapi %s http handlers", (method) => {
   it("should forward its arguments to MSW", () => {
-    const spy = vi.spyOn(mswHttp, method);
+    using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
     const http = createOpenApiHttp<any>();
@@ -46,7 +46,7 @@ describe.each(methods)("openapi %s http handlers", (method) => {
   });
 
   it("should convert openapi paths to MSW compatible paths", () => {
-    const spy = vi.spyOn(mswHttp, method);
+    using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
     const http = createOpenApiHttp<any>();
@@ -61,7 +61,7 @@ describe.each(methods)("openapi %s http handlers", (method) => {
   });
 
   it("should prepend a configured baseUrl to the path for MSW", () => {
-    const spy = vi.spyOn(mswHttp, method);
+    using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
     const http = createOpenApiHttp<any>({ baseUrl: "*/api/rest" });

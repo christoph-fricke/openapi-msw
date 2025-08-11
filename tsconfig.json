@@ -8,7 +8,6 @@
 
     /* Modules */
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
     "moduleDetection": "force",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
