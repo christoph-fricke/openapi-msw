@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { http as mswHttp } from "msw";
 import { describe, expect, it, vi } from "vitest";
-import type { HttpMethod } from "./api-spec.js";
-import { createOpenApiHttp } from "./openapi-http.js";
+import type { HttpMethod } from "./api-spec.ts";
+import { createOpenApiHttp } from "./openapi-http.ts";
 
 const methods: HttpMethod[] = [
   "get",

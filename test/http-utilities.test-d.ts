@@ -5,7 +5,7 @@ import {
   type ResponseBodyFor,
 } from "openapi-msw";
 import { describe, expectTypeOf, test } from "vitest";
-import type { paths } from "./fixtures/http-utilities.api.js";
+import type { paths } from "./fixtures/http-utilities.api.ts";
 
 describe("Given an OpenApiHttpHandlers namespace", () => {
   const http = createOpenApiHttp<paths>();

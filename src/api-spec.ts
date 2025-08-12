@@ -2,7 +2,7 @@ import type {
   ConvertToStringified,
   MapToValues,
   ResolvedObjectUnion,
-} from "./type-utils.js";
+} from "./type-utils.ts";
 
 /** Base type that any api spec should extend. */
 export type AnyApiSpec = NonNullable<unknown>;

@@ -1,7 +1,7 @@
 import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
-import type { paths } from "./fixtures/request-body.api.js";
+import type { paths } from "./fixtures/request-body.api.ts";
 
 describe("Given an OpenAPI schema endpoint with request content", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });

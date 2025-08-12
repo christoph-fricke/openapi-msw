@@ -1,10 +1,10 @@
 import { http, type HttpHandler, type RequestHandlerOptions } from "msw";
-import type { AnyApiSpec, HttpMethod, PathsForMethod } from "./api-spec.js";
-import { convertToColonPath } from "./path-mapping.js";
+import type { AnyApiSpec, HttpMethod, PathsForMethod } from "./api-spec.ts";
+import { convertToColonPath } from "./path-mapping.ts";
 import {
   createResolverWrapper,
   type ResponseResolver,
-} from "./response-resolver.js";
+} from "./response-resolver.ts";
 
 /** HTTP handler factory with type inference for provided api paths. */
 export type OpenApiHttpRequestHandler<

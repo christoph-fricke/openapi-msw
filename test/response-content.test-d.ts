@@ -1,7 +1,7 @@
 import { type StrictResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expectTypeOf, test } from "vitest";
-import type { paths } from "./fixtures/response-content.api.js";
+import type { paths } from "./fixtures/response-content.api.ts";
 
 describe("Given an OpenAPI schema endpoint with response content", () => {
   const http = createOpenApiHttp<paths>();

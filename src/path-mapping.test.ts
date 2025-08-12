@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { convertToColonPath } from "./path-mapping.js";
+import { convertToColonPath } from "./path-mapping.ts";
 
 describe(convertToColonPath, () => {
   it("should leave paths with no path fragments untouched", () => {

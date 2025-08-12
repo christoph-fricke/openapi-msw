@@ -3,7 +3,6 @@
   "compilerOptions": {
     /* Language and Environment */
     "target": "ESNext",
-    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
 
     /* Modules */
@@ -13,6 +12,8 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
 
     /* Type Checking */
     "strict": true,

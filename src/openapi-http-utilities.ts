@@ -4,8 +4,8 @@ import type {
   PathsForMethod,
   RequestBody,
   ResponseBody,
-} from "./api-spec.js";
-import type { OpenApiHttpRequestHandler } from "./openapi-http.js";
+} from "./api-spec.ts";
+import type { OpenApiHttpRequestHandler } from "./openapi-http.ts";
 
 /**
  * Base type that generic {@link OpenApiHttpRequestHandler | OpenApiHttpRequestHandlers}
