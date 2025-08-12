@@ -3,7 +3,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import ts from "typescript-eslint";
 
 export default defineConfig(
-  globalIgnores(["coverage", "cjs", "dist", "test/fixtures/*.ts"]),
+  globalIgnores(["coverage", "dist", "test/fixtures/*.ts"]),
   js.configs.recommended,
   ts.configs.recommended,
   ts.configs.stylistic,
