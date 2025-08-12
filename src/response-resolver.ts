@@ -38,7 +38,8 @@ export interface ResponseResolverInfo<
    * Type-safe wrapper around {@link URLSearchParams} that implements methods for
    * reading query parameters.
    *
-   * @example
+   * **Example**
+   * ```typescript
    * const handler = http.get("/query-example", ({ query }) => {
    *   const filter = query.get("filter");
    *   const sortBy = query.getAll("sortBy");
@@ -47,6 +48,7 @@ export interface ResponseResolverInfo<
    *
    *   return HttpResponse.json({ ... });
    * });
+   * ```
    */
   query: QueryParamsUtil<QueryParams<ApiSpec, Path, Method>>;
 
@@ -62,7 +64,8 @@ export interface ResponseResolverInfo<
    * A fallback for returning any response without casting is provided
    * through `response.untyped(...)`.
    *
-   * @example
+   * **Example**
+   * ```typescript
    * const handler = http.get("/response-example", ({ response }) => {
    *   return response(200).json({ id: 123 });
    * });
@@ -78,6 +81,7 @@ export interface ResponseResolverInfo<
    * const fallback = http.get("/response-example", ({ response }) => {
    *   return response.untyped(new Response("Hello"));
    * });
+   * ```
    */
   response: OpenApiResponse<
     ResponseMap<ApiSpec, Path, Method>,

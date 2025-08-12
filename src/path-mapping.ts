@@ -2,7 +2,7 @@
  * Converts a OpenAPI path fragment convention to the colon convention that is
  * commonly used in Node.js and also MSW.
  *
- * @example /users/{id} --> /users/:id
+ * **Example:** `/users/{id} --> /users/:id`
  */
 export function convertToColonPath(path: string, baseUrl?: string): string {
   const resolvedPath = path.replaceAll("{", ":").replaceAll("}", "");

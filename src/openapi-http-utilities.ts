@@ -19,10 +19,12 @@ export type AnyOpenApiHttpRequestHandler = OpenApiHttpRequestHandler<
 /**
  * Extracts a union of all paths that can be provided to the given request handler.
  *
- * @example
+ * **Example**
+ * ```typescript
  * const http = createOpenApiHttp<paths>();
  *
  * type Paths = PathsFor<typeof http.get>;
+ * ```
  */
 export type PathsFor<Handler extends AnyOpenApiHttpRequestHandler> =
   Handler extends OpenApiHttpRequestHandler<infer ApiSpec, infer Method>
@@ -32,10 +34,12 @@ export type PathsFor<Handler extends AnyOpenApiHttpRequestHandler> =
 /**
  * Extracts the request body of a specific path for the given request handler.
  *
- * @example
+ * **Example**
+ * ```typescript
  * const http = createOpenApiHttp<paths>();
  *
  * type RequestBody = RequestBodyFor<typeof http.post, "/create">;
+ * ```
  */
 export type RequestBodyFor<
   Handler extends AnyOpenApiHttpRequestHandler,
@@ -48,10 +52,12 @@ export type RequestBodyFor<
 /**
  * Extracts the response body of a specific path for the given request handler.
  *
- * @example
+ * **Example**
+ * ```typescript
  * const http = createOpenApiHttp<paths>();
  *
  * type ResponseBody = ResponseBodyFor<typeof http.get, "/tasks">;
+ * ```
  */
 export type ResponseBodyFor<
   Handler extends AnyOpenApiHttpRequestHandler,
