@@ -8,10 +8,10 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  id-token: write # to publish with provenance
-  contents: write #  to create release (changesets/action)
-  issues: write # to post issue comments (changesets/action)
-  pull-requests: write #  to create pull request (changesets/action)
+  id-token: write # for trusted publishing via OIDC
+  contents: write # for creating releases (changesets/action)
+  issues: write # for posting issue comments (changesets/action)
+  pull-requests: write # for creating pull requests (changesets/action)
 
 jobs:
   release:
@@ -37,6 +37,4 @@ jobs:
           commit: "ci: release package"
           title: "ci: release package"
         env:
-          NPM_CONFIG_PROVENANCE: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
