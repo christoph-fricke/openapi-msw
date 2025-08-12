@@ -1,5 +1,15 @@
 # openapi-msw
 
+## 1.3.0
+
+### Minor Changes
+
+- [#87](https://github.com/christoph-fricke/openapi-msw/pull/87) [`0a8a892`](https://github.com/christoph-fricke/openapi-msw/commit/0a8a89273adb808b2971aaf82f1f179162cd652f) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added a section to the README explaining how to use OpenAPI-MSW handlers with MSW, which provides clearer guidance for integration.
+
+- [#88](https://github.com/christoph-fricke/openapi-msw/pull/88) [`e7fab35`](https://github.com/christoph-fricke/openapi-msw/commit/e7fab35911bc269d0b6dd7b178f1732a075e4d2b) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Changed the publishing flow to use [trusted publishing](https://docs.npmjs.com/trusted-publishers) via OIDC instead of a token-based approach.
+
+- [#86](https://github.com/christoph-fricke/openapi-msw/pull/86) [`be6f731`](https://github.com/christoph-fricke/openapi-msw/commit/be6f73129429044186be996a2e759098950dc92d) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Updated TSDoc comments for `response` and `query` to show their code examples. Previously, VS Code did not display their `@example` blocks.
+
 ## 1.2.0
 
 ### Minor Changes
