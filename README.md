@@ -21,8 +21,8 @@ You can install OpenAPI-MSW with this shell command:
 npm i -D openapi-msw
 ```
 
-This package has a peer-dependency to MSW **v2**. There is no plan to provide
-backwards compatibility for MSW v1.
+This package has a peer dependency on MSW **v2**, which you must install as
+well. There are no plans to provide backward compatibility for MSW v1.
 
 ## Usage Guide
 
@@ -46,7 +46,7 @@ type-safety and editor suggestion benefits:
   current path
 - **Request Body:** Automatically typed with the request-body schema of the
   current path
-- **Response:** Automatically forced to match an specified status-code,
+- **Response:** Automatically forced to match a specified status-code,
   content-type, and response-body schema of the current path
 
 ```typescript
@@ -79,6 +79,19 @@ const postHandler = http.post(
 const otherHandler = http.get("/unknown", () => {
   return new HttpResponse();
 });
+```
+
+Just like regular MSW handlers, the handlers you define with OpenAPI-MSW are
+`HttpHandler` instances. They can be used with any MSW functionality that
+requires `HttpHandlers` as arguments. For example, you can use your handlers
+with `setupServer`:
+
+```typescript
+import { setupServer } from "msw/node";
+
+// Use the handlers defined above
+const server = setupServer(getHandler, postHandler);
+server.listen();
 ```
 
 ### Provide a Base URL for Paths
@@ -216,7 +229,7 @@ To align with this assumption, OpenAPI-MSW only allows matching `"4XX"` and
 const http = createOpenApiHttp<paths>();
 
 const handler = http.get("/wildcard-status-code-example", ({ response }) => {
-  // Error: A wildcards is used but no status code provided
+  // Error: A wildcard is used but no status code is provided
   const invalidRes = response("5XX").text("Fatal Error");
 
   // Error: Provided status code does not match the used wildcard
@@ -225,10 +238,10 @@ const handler = http.get("/wildcard-status-code-example", ({ response }) => {
   // Error: Provided status code is not defined in RFC 9110
   const invalidRes = response("5XX").text("Fatal Error", { status: 520 });
 
-  // No Error: Provided status code matches the used wildcard
+  // Valid: Provided status code matches the used wildcard
   const validRes = response("5XX").text("Fatal Error", { status: 503 });
 
-  // No Error: "default" wildcard allows 5XX and 4XX status codes
+  // Valid: The "default" wildcard allows 5XX and 4XX status codes
   const validRes = response("default").text("Fatal Error", { status: 507 });
 });
 ```
@@ -282,4 +295,4 @@ type ResponseBody = ResponseBodyFor<typeof http.get, "/tasks">;
 
 ## License
 
-This package is published under the [MIT license](./LICENSE).
+This package is licensed under the [MIT license](./LICENSE).
