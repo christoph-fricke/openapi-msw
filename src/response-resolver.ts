@@ -11,10 +11,10 @@ import type {
   RequestMap,
   ResponseBody,
   ResponseMap,
-} from "./api-spec.js";
-import { QueryParams as QueryParamsUtil } from "./query-params.js";
-import type { OpenApiRequest } from "./request.js";
-import { createResponseHelper, type OpenApiResponse } from "./response.js";
+} from "./api-spec.ts";
+import { QueryParams as QueryParamsUtil } from "./query-params.ts";
+import type { OpenApiRequest } from "./request.ts";
+import { createResponseHelper, type OpenApiResponse } from "./response.ts";
 
 /** Response resolver that gets provided to HTTP handler factories. */
 export type ResponseResolver<

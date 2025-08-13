@@ -1,4 +1,4 @@
-import type { OptionalKeys } from "./type-utils.js";
+import type { OptionalKeys } from "./type-utils.ts";
 
 /** Return values for getting the first value of a query param. */
 type ParamValuesGet<Params extends object> = {

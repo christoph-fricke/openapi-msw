@@ -1,20 +1,20 @@
-export type { AnyApiSpec, HttpMethod } from "../src/api-spec.js";
+export type { AnyApiSpec, HttpMethod } from "../src/api-spec.ts";
 
 export {
   createOpenApiHttp,
   type HttpOptions,
   type OpenApiHttpHandlers,
   type OpenApiHttpRequestHandler,
-} from "../src/openapi-http.js";
+} from "../src/openapi-http.ts";
 
 export type {
   ResponseResolver,
   ResponseResolverInfo,
-} from "../src/response-resolver.js";
+} from "../src/response-resolver.ts";
 
 export type {
   AnyOpenApiHttpRequestHandler,
   PathsFor,
   RequestBodyFor,
   ResponseBodyFor,
-} from "../src/openapi-http-utilities.js";
+} from "../src/openapi-http-utilities.ts";

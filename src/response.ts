@@ -4,8 +4,8 @@ import {
   type HttpResponseInit,
   type StrictResponse,
 } from "msw";
-import type { Wildcard } from "./http-status-wildcard.js";
-import type { JSONLike, NoContent, TextLike } from "./type-utils.js";
+import type { Wildcard } from "./http-status-wildcard.ts";
+import type { JSONLike, NoContent, TextLike } from "./type-utils.ts";
 
 /**
  * Requires or removes the status code from {@linkcode HttpResponseInit} depending

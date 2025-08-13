@@ -1,4 +1,4 @@
-import type { JSONLike, TextLike } from "./type-utils.js";
+import type { JSONLike, TextLike } from "./type-utils.ts";
 
 /** A type-safe request helper that enhances native body methods based on the given OpenAPI spec. */
 export interface OpenApiRequest<RequestMap> extends Request {

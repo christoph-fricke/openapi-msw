@@ -1,7 +1,7 @@
 import { HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
 import { describe, expect, test } from "vitest";
-import type { paths } from "./fixtures/options.api.js";
+import type { paths } from "./fixtures/options.api.ts";
 
 describe("Given a created HTTP object with options", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "http://localhost:3000" });
