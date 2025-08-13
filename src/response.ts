@@ -1,9 +1,4 @@
-import {
-  HttpResponse,
-  type DefaultBodyType,
-  type HttpResponseInit,
-  type StrictResponse,
-} from "msw";
+import { HttpResponse, type DefaultBodyType, type HttpResponseInit } from "msw";
 import type { Wildcard } from "./http-status-wildcard.ts";
 import type { JSONLike, NoContent, TextLike } from "./type-utils.ts";
 
@@ -26,18 +21,18 @@ interface ResponseInitForWildcard<Key extends keyof Wildcard>
 type TextResponse<ResponseBody, Status> = (
   body: ResponseBody extends string ? ResponseBody : never,
   init: DynamicResponseInit<Status>,
-) => StrictResponse<typeof body>;
+) => HttpResponse<typeof body>;
 
 /** Creates a type-safe json response, which may require an additional status code. */
 type JsonResponse<ResponseBody, Status> = (
   body: ResponseBody extends DefaultBodyType ? ResponseBody : never,
   init: DynamicResponseInit<Status>,
-) => StrictResponse<typeof body>;
+) => HttpResponse<typeof body>;
 
 /** Creates a type-safe empty response, which may require an additional status code. */
 type EmptyResponse<Status> = (
   init: DynamicResponseInit<Status>,
-) => StrictResponse<null>;
+) => HttpResponse<null>;
 
 /**
  * A type-safe response helper that narrows available status codes and content types,
@@ -63,7 +58,7 @@ export interface OpenApiResponse<
       ? unknown
       : EmptyResponse<Status>;
   };
-  untyped(response: Response): StrictResponse<ExpectedResponseBody>;
+  untyped(response: Response): HttpResponse<ExpectedResponseBody>;
 }
 
 export function createResponseHelper<
@@ -98,14 +93,14 @@ export function createResponseHelper<
         status: status as number,
         ...init,
         headers,
-      }) as StrictResponse<null>;
+      });
     };
 
     return { text, json, empty };
   };
 
   response.untyped = (response) => {
-    return response as StrictResponse<ExpectedResponseBody>;
+    return response as HttpResponse<ExpectedResponseBody>;
   };
 
   return response;
