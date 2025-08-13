@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { http as mswHttp } from "msw";
-import { describe, expect, it, vi } from "vitest";
+import { expect, suite, test, vi } from "vitest";
 import type { HttpMethod } from "./api-spec.ts";
 import { createOpenApiHttp } from "./openapi-http.ts";
 
@@ -14,8 +14,8 @@ const methods: HttpMethod[] = [
   "patch",
 ];
 
-describe(createOpenApiHttp, () => {
-  it("should create an http handlers object", () => {
+suite(createOpenApiHttp, () => {
+  test("creates an http handlers object", () => {
     const http = createOpenApiHttp();
 
     expect(http).toBeTypeOf("object");
@@ -24,15 +24,15 @@ describe(createOpenApiHttp, () => {
     }
   });
 
-  it("should include the original MSW methods in its return type", () => {
+  test("includes the original MSW methods in its return type", () => {
     const http = createOpenApiHttp();
 
     expect(http.untyped).toBe(mswHttp);
   });
 });
 
-describe.each(methods)("openapi %s http handlers", (method) => {
-  it("should forward its arguments to MSW", () => {
+suite.each(methods)("OpenAPI %s http handlers", (method) => {
+  test("forwards its arguments to MSW", () => {
     using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
@@ -45,7 +45,7 @@ describe.each(methods)("openapi %s http handlers", (method) => {
     });
   });
 
-  it("should convert openapi paths to MSW compatible paths", () => {
+  test("converts OpenAPI paths to MSW compatible paths", () => {
     using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
@@ -60,7 +60,7 @@ describe.each(methods)("openapi %s http handlers", (method) => {
     );
   });
 
-  it("should prepend a configured baseUrl to the path for MSW", () => {
+  test("prepends a configured baseUrl to the path for MSW", () => {
     using spy = vi.spyOn(mswHttp, method);
     const resolver = vi.fn();
 
