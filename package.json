@@ -9,6 +9,9 @@
   "repository": "github:christoph-fricke/openapi-msw",
   "files": [
     "dist",
+    "exports",
+    "src",
+    "!src/**/*.test.ts",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"
