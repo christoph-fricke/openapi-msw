@@ -1,5 +1,17 @@
 # openapi-msw
 
+## 2.0.0
+
+### Major Changes
+
+- [#90](https://github.com/christoph-fricke/openapi-msw/pull/90) [`a7a4b25`](https://github.com/christoph-fricke/openapi-msw/commit/a7a4b2567018ba1e5765f7cf1c696aa5fe1c091a) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Removed CommonJS compilation and exports. OpenAPI-MSW now publishes ESM only. All actively maintained Node.js versions support requiring ESM, so `const { createOpenApiHttp } = require("openapi-msw");` will still work.
+
+- [#94](https://github.com/christoph-fricke/openapi-msw/pull/94) [`72fac10`](https://github.com/christoph-fricke/openapi-msw/commit/72fac10de727884901daebf4b01a14b10676c47f) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Updated MSW peer dependency from v2.7.0 to v2.10.5. This is only a breaking change if you are not already using the latest version of MSW.
+
+### Minor Changes
+
+- [#91](https://github.com/christoph-fricke/openapi-msw/pull/91) [`905b985`](https://github.com/christoph-fricke/openapi-msw/commit/905b98506e7c254b2ab84ca1e64223c6a849a553) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added declaration maps to the build output. Together with packaged source files, this enables proper "Go To Definition" support in editors — jumping directly to the TypeScript source file instead of the declaration file.
+
 ## 1.3.0
 
 ### Minor Changes
