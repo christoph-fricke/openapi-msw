@@ -1,14 +1,14 @@
 import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expect, test } from "vitest";
+import { expect, suite, test } from "vitest";
 import type { paths } from "./fixtures/path-fragments.api.ts";
 
-describe("Given an OpenAPI schema endpoint that contains path fragments", () => {
+suite("Mocking paths with fragments", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
-  test("When a endpoint is mocked, Then OpenAPI path fragments can be parsed by the handler", async () => {
+  test("provides usable params to the resolver function", async () => {
     const request = new Request(
-      new URL("/resource/test-id/test-name", "http://localhost:3000"),
+      "http://localhost:3000/resource/test-id/test-name",
     );
 
     const handler = http.get("/resource/{id}/{name}", ({ params }) => {
@@ -21,15 +21,11 @@ describe("Given an OpenAPI schema endpoint that contains path fragments", () => 
     expect(responseBody?.name).toBe("test-name");
   });
 
-  test("When a path fragment is specified as a number, Then it can be parsed to a number", async () => {
-    const request = new Request(
-      new URL("/resource/42", "http://localhost:3000"),
-    );
+  test("can parse fragments as number when the fragment is specified as a number fragment", async () => {
+    const request = new Request("http://localhost:3000/resource/42");
 
     const handler = http.get("/resource/{count}", ({ params }) => {
-      const count = parseInt(params.count);
-
-      return HttpResponse.json({ count });
+      return HttpResponse.json({ count: parseInt(params.count) });
     });
     const response = await getResponse([handler], request);
 

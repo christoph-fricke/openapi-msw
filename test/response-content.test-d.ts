@@ -1,19 +1,18 @@
-import { type StrictResponse } from "msw";
+import type { AsyncResponseResolverReturnType, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expectTypeOf, test } from "vitest";
+import { expectTypeOf, suite, test } from "vitest";
 import type { paths } from "./fixtures/response-content.api.ts";
 
-describe("Given an OpenAPI schema endpoint with response content", () => {
+suite("Mocking responses in resolver functions", () => {
   const http = createOpenApiHttp<paths>();
 
-  test("When a JSON endpoint is mocked, Then responses must be a strict content response", async () => {
+  test("enforces strict-types for the response content", () => {
     type Endpoint = typeof http.get<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
-    const response = resolver.returns.extract<Response>();
+    const response = resolver.returns;
 
-    response.not.toEqualTypeOf<Response>();
     response.toEqualTypeOf<
-      StrictResponse<
+      AsyncResponseResolverReturnType<
         | { id: string; name: string; value: number }
         | "Hello"
         | "Goodbye"
@@ -23,7 +22,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     >();
   });
 
-  test("When the response helper is used, Then available status codes are strict typed", async () => {
+  test("enforces strict status codes for the response helper", () => {
     type Endpoint = typeof http.get<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const response = resolver.parameter(0).toHaveProperty("response");
@@ -34,7 +33,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     >();
   });
 
-  test("When a status code is given to the response helper, Then available content types get limited", async () => {
+  test("limits available content types for the response helper when a status code is provided", () => {
     http.get("/resource", ({ response }) => {
       expectTypeOf(response(200).text).toBeFunction();
       expectTypeOf(response(200).json).toBeFunction();
@@ -58,7 +57,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     });
   });
 
-  test("When a status code and content type are chosen, Then the specific response content is strict typed", async () => {
+  test("enforces strict content types for the response helper when a status code and content type are chosen", () => {
     http.get("/resource", ({ response }) => {
       expectTypeOf(response(200).text).parameters.toEqualTypeOf<
         [
@@ -92,7 +91,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
         ]
       >();
 
-      expectTypeOf(response("5XX").json).parameters.branded.toEqualTypeOf<
+      expectTypeOf(response("5XX").json).parameters.toEqualTypeOf<
         [
           body: { error: string; code: number },
           init: {
@@ -106,27 +105,27 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     });
   });
 
-  test("When the response helper is used, Then the matching strict-typed responses are returned", async () => {
+  test("returns strict-typed responses when the response helper is used", () => {
     http.get("/resource", ({ response }) => {
       expectTypeOf(response(200).text).returns.toEqualTypeOf<
-        StrictResponse<"Hello" | "Goodbye">
+        HttpResponse<"Hello" | "Goodbye">
       >();
 
       expectTypeOf(response(200).json).returns.toEqualTypeOf<
-        StrictResponse<{ id: string; name: string; value: number }>
+        HttpResponse<{ id: string; name: string; value: number }>
       >();
 
       expectTypeOf(response(204).empty).returns.toEqualTypeOf<
-        StrictResponse<null>
+        HttpResponse<null>
       >();
 
       expectTypeOf(response("default").json).returns.toEqualTypeOf<
-        StrictResponse<{ error: string; code: number }>
+        HttpResponse<{ error: string; code: number }>
       >();
     });
   });
 
-  test("When the response untyped fallback is used, Then any response is casted to the expected response body", async () => {
+  test("casts responses to match the expected body when the fallback helper is used", () => {
     type Endpoint = typeof http.get<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const response = resolver.parameter(0).toHaveProperty("response");
@@ -135,7 +134,7 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     untyped.toBeFunction();
     untyped.parameter(0).toEqualTypeOf<Response>();
     untyped.returns.toEqualTypeOf<
-      StrictResponse<
+      HttpResponse<
         | { id: string; name: string; value: number }
         | "Hello"
         | "Goodbye"
@@ -145,14 +144,14 @@ describe("Given an OpenAPI schema endpoint with response content", () => {
     >();
   });
 
-  test("When special JSON mime types are used, Then the response json helper still works", async () => {
+  test("returns strict-typed responses with the helper when special JSON mime types are used", () => {
     http.get("/special-json", ({ response }) => {
       expectTypeOf(response(200).json).returns.toEqualTypeOf<
-        StrictResponse<{ id: string; name: string; value: number }>
+        HttpResponse<{ id: string; name: string; value: number }>
       >();
 
       expectTypeOf(response(401).json).returns.toEqualTypeOf<
-        StrictResponse<{ error: string; code: number }>
+        HttpResponse<{ error: string; code: number }>
       >();
     });
   });

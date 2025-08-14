@@ -1,18 +1,15 @@
 import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expect, test } from "vitest";
+import { expect, suite, test } from "vitest";
 import type { paths } from "./fixtures/query-params.api.ts";
 
-describe("Given an OpenAPI schema endpoint with query parameters fragments", () => {
+suite("Using the query helper", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
-  test("When a endpoint is mocked, Then query parameters can be accessed through a 'query' helper", async () => {
-    expect.assertions(4); // Make sure that assertion in handler is executed.
+  test("exposes type-safe search-param values in the response resolver", async () => {
+    expect.assertions(4); // Make sure assertions in the handler are executed.
     const request = new Request(
-      new URL(
-        "/single-query?page=3&sort=desc&query=test",
-        "http://localhost:3000",
-      ),
+      "http://localhost:3000/single-query?page=3&sort=desc&query=test",
     );
 
     const handler = http.get("/single-query", ({ query }) => {
@@ -31,10 +28,10 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
     expect(response?.status).toBe(200);
   });
 
-  test("When a endpoint is mocked, Then multiple query parameters are grouped into an array", async () => {
-    expect.assertions(2); // Make sure that assertion in handler is executed.
+  test("aggregates multiple values for a search-param into an array", async () => {
+    expect.assertions(2); // Make sure assertions in the handler are executed.
     const request = new Request(
-      new URL("/multi-query?id=1&id=2&id=3", "http://localhost:3000"),
+      "http://localhost:3000/multi-query?id=1&id=2&id=3",
     );
 
     const handler = http.get("/multi-query", ({ query }) => {

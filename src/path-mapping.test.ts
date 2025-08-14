@@ -1,26 +1,26 @@
-import { describe, expect, it } from "vitest";
+import { expect, suite, test } from "vitest";
 import { convertToColonPath } from "./path-mapping.ts";
 
-describe(convertToColonPath, () => {
-  it("should leave paths with no path fragments untouched", () => {
+suite(convertToColonPath, () => {
+  test("leaves paths with no path fragments untouched", () => {
     const result = convertToColonPath("/users");
 
     expect(result).toBe("/users");
   });
 
-  it("should convert a path fragment to colon convention", () => {
+  test("converts a path fragment to colon convention", () => {
     const result = convertToColonPath("/users/{id}");
 
     expect(result).toBe("/users/:id");
   });
 
-  it("should convert all fragments in a path to colon convention", () => {
+  test("converts all fragments in a path to colon convention", () => {
     const result = convertToColonPath("/users/{userId}/posts/{postIds}");
 
     expect(result).toBe("/users/:userId/posts/:postIds");
   });
 
-  it("should append a baseUrl to the path when provided", () => {
+  test("appends a baseUrl to the path when provided", () => {
     const noBaseUrl = convertToColonPath("/users");
     const withBaseUrl = convertToColonPath("/users", "https://localhost:3000");
 
