@@ -66,9 +66,7 @@ suite("Mocking responses in resolver functions", () => {
   });
 
   test("returns EMPTY responses when the response helper is used with a exact status code", async () => {
-    const request = new Request(new URL("/resource", "http://localhost:3000"), {
-      method: "get",
-    });
+    const request = new Request("http://localhost:3000/resource");
 
     const handler = http.get("/resource", ({ response }) => {
       return response(204).empty();

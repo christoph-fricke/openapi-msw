@@ -7,7 +7,7 @@ suite("Using the query helper", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
   test("exposes type-safe search-param values in the response resolver", async () => {
-    expect.assertions(4); // Make sure that assertions in handler are executed.
+    expect.assertions(4); // Make sure assertions in the handler are executed.
     const request = new Request(
       "http://localhost:3000/single-query?page=3&sort=desc&query=test",
     );
@@ -29,7 +29,7 @@ suite("Using the query helper", () => {
   });
 
   test("aggregates multiple values for a search-param into an array", async () => {
-    expect.assertions(2); // Make sure that assertion in handler is executed.
+    expect.assertions(2); // Make sure assertions in the handler are executed.
     const request = new Request(
       "http://localhost:3000/multi-query?id=1&id=2&id=3",
     );

@@ -6,7 +6,7 @@ import type { paths } from "./fixtures/no-content.api.ts";
 suite("Mocking no-content routes", () => {
   const http = createOpenApiHttp<paths>();
 
-  test("expect a response with an empty body", () => {
+  test("expects a response with an empty body", () => {
     type Endpoint = typeof http.delete<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const response = resolver.returns;
