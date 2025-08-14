@@ -1,11 +1,11 @@
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expectTypeOf, test } from "vitest";
+import { expectTypeOf, suite, test } from "vitest";
 import type { paths } from "./fixtures/query-params.api.ts";
 
-describe("Given an OpenAPI schema endpoint with query parameters fragments", () => {
+suite("Using the query helper", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
-  test("When a endpoint is mocked, Then search parameter keys are strict typed", () => {
+  test("provides strict-typed search-param names for endpoints with defined search-params", () => {
     http.get("/single-query", ({ query }) => {
       expectTypeOf(query.get)
         .parameter(0)
@@ -19,7 +19,7 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
     });
   });
 
-  test("When a endpoint is mocked, Then search parameters are converted into their stringified version", () => {
+  test("converts search-param value types into stringified types", () => {
     http.get("/single-query", ({ query }) => {
       const sort = query.getAll("sort");
       const page = query.get("page");
@@ -31,7 +31,7 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
     });
   });
 
-  test("When a endpoint is mocked, Then multiple search parameters are parsed from arrays", () => {
+  test("parses search-param value types from multi-param definitions", () => {
     http.get("/multi-query", ({ query }) => {
       const single = query.get("id");
       const multi = query.getAll("id");
@@ -45,7 +45,7 @@ describe("Given an OpenAPI schema endpoint with query parameters fragments", () 
     });
   });
 
-  test("When a endpoint with no query params is mocked, Then no query keys can be passed to the query helper", () => {
+  test("accepts no search-param names for endpoints with no defined search-params", () => {
     http.get("/no-query", ({ query }) => {
       expectTypeOf(query.get).parameter(0).toEqualTypeOf<never>();
       expectTypeOf(query.getAll).parameter(0).toEqualTypeOf<never>();

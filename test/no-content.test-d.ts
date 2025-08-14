@@ -1,36 +1,30 @@
-import { type StrictResponse } from "msw";
+import type { AsyncResponseResolverReturnType } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expectTypeOf, test } from "vitest";
+import { expectTypeOf, suite, test } from "vitest";
 import type { paths } from "./fixtures/no-content.api.ts";
 
-describe("Given an OpenAPI schema endpoint with no-content", () => {
+suite("Mocking no-content routes", () => {
   const http = createOpenApiHttp<paths>();
 
-  test("When an endpoint is mocked, Then responses with content cannot be returned", async () => {
+  test("expect a response with an empty body", () => {
     type Endpoint = typeof http.delete<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
-    const response = resolver.returns.extract<Response>();
+    const response = resolver.returns;
 
-    response.not.toEqualTypeOf<StrictResponse<{ id: number }>>();
+    response.toEqualTypeOf<AsyncResponseResolverReturnType<null>>();
   });
 
-  test("When an endpoint is mocked, Then responses must be strict responses", async () => {
-    type Endpoint = typeof http.delete<"/resource">;
-    const resolver = expectTypeOf<Endpoint>().parameter(1);
-    const response = resolver.returns.extract<Response>();
-
-    response.not.toEqualTypeOf<Response>();
-    response.toEqualTypeOf<StrictResponse<null>>();
-  });
-
-  test("When a endpoint with a NoContent response is mocked, Then the no-content option is included in the response union", async () => {
+  test("combines multiple status codes with content and no-content into a response union", () => {
     type Endpoint = typeof http.get<"/no-content-resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
-    const response = resolver.returns.extract<Response>();
+    const response = resolver.returns;
 
-    response.not.toEqualTypeOf<Response>();
     response.toEqualTypeOf<
-      StrictResponse<{ id: string; name: string; value: number } | null>
+      AsyncResponseResolverReturnType<{
+        id: string;
+        name: string;
+        value: number;
+      } | null>
     >();
   });
 });

@@ -1,36 +1,36 @@
-import { HttpResponse, type StrictResponse, getResponse } from "msw";
+import { HttpResponse, getResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expect, test } from "vitest";
+import { expect, suite, test } from "vitest";
 import type { paths } from "./fixtures/no-content.api.ts";
 
-describe("Given an OpenAPI schema endpoint with no-content", () => {
+suite("Mocking no-content routes", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
-  test("When the DELETE method is mocked, Then empty responses can be returned", async () => {
-    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+  test("returns responses with an empty body for DELETE requests", async () => {
+    const request = new Request("http://localhost:3000/resource", {
       method: "delete",
     });
 
     const handler = http.delete("/resource", () => {
-      return new HttpResponse(null, { status: 204 }) as StrictResponse<null>;
+      return new HttpResponse(null, { status: 204 });
     });
     const response = await getResponse([handler], request);
 
-    expect(response?.body).toBeNull();
     expect(response?.status).toBe(204);
+    expect(response?.body).toBeNull();
   });
 
-  test("When the POST method is mocked, Then empty responses can be returned", async () => {
-    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+  test("returns responses with an empty body for POST requests", async () => {
+    const request = new Request("http://localhost:3000/resource", {
       method: "post",
     });
 
     const handler = http.post("/resource", () => {
-      return new HttpResponse(null, { status: 201 }) as StrictResponse<null>;
+      return new HttpResponse(null, { status: 201 });
     });
     const response = await getResponse([handler], request);
 
-    expect(response?.body).toBeNull();
     expect(response?.status).toBe(201);
+    expect(response?.body).toBeNull();
   });
 });

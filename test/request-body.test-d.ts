@@ -1,20 +1,20 @@
 import { type StrictRequest } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expectTypeOf, test } from "vitest";
+import { expectTypeOf, suite, test } from "vitest";
 import type { paths } from "./fixtures/request-body.api.ts";
 
-describe("Given an OpenAPI schema endpoint with request content", () => {
+suite("Accessing requests bodies", () => {
   const http = createOpenApiHttp<paths>();
 
-  test("When the request is used, Then it extend MSW's request object", () => {
+  test("extends MSW's request object", () => {
     type Endpoint = typeof http.get<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
 
-    request.toMatchTypeOf<Omit<StrictRequest<null>, "text" | "json">>();
+    request.toExtend<StrictRequest<null>>();
   });
 
-  test("When a request is not expected to contain content, Then json and text return never", () => {
+  test("returns never when json() or text() is called for requests with no expected content", () => {
     type Endpoint = typeof http.get<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
@@ -23,7 +23,7 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
     request.toHaveProperty("json").returns.toEqualTypeOf<never>();
   });
 
-  test("When a request is expected to contain content, Then the content is strict-typed", () => {
+  test("provides strict types for requests with expected JSON content", () => {
     type Endpoint = typeof http.post<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
@@ -34,7 +34,7 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 
-  test("When a request uses a special JSON mime type, Then the content is strict-typed", async () => {
+  test("provides strict types for requests with special JSON mime type content", () => {
     type Endpoint = typeof http.post<"/special-json">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
@@ -45,7 +45,7 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 
-  test("When a request content is optional, Then the content is strict-typed with optional", () => {
+  test("types the content as optional for requests with optional content", () => {
     type Endpoint = typeof http.patch<"/resource">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
@@ -57,7 +57,7 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       >();
   });
 
-  test("When a request accepts multiple media types, Then both body parsers are typed for their media type", () => {
+  test("provides types to each parsing method for requests that accept multiple media types", () => {
     type Endpoint = typeof http.post<"/multi-body">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");
@@ -70,7 +70,7 @@ describe("Given an OpenAPI schema endpoint with request content", () => {
       .returns.resolves.toEqualTypeOf<{ name: string; value: number }>();
   });
 
-  test("When the request is cloned, Then it remains strict-typed", () => {
+  test("preserves the typing of a request when the request is cloned", () => {
     type Endpoint = typeof http.post<"/multi-body">;
     const resolver = expectTypeOf<Endpoint>().parameter(1);
     const request = resolver.parameter(0).toHaveProperty("request");

@@ -1,13 +1,13 @@
 import { getResponse, HttpResponse } from "msw";
 import { createOpenApiHttp } from "openapi-msw";
-import { describe, expect, test } from "vitest";
+import { expect, suite, test } from "vitest";
 import type { paths } from "./fixtures/request-body.api.ts";
 
-describe("Given an OpenAPI schema endpoint with request content", () => {
+suite("Accessing requests bodies", () => {
   const http = createOpenApiHttp<paths>({ baseUrl: "*" });
 
-  test("When a request contains content, Then the content can be used in the response", async () => {
-    const request = new Request(new URL("/resource", "http://localhost:3000"), {
+  test("exposes the request content to response resolvers", async () => {
+    const request = new Request("http://localhost:3000/resource", {
       method: "post",
       body: JSON.stringify({ name: "test-name", value: 16 }),
     });

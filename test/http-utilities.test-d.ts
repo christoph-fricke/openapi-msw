@@ -4,19 +4,19 @@ import {
   type RequestBodyFor,
   type ResponseBodyFor,
 } from "openapi-msw";
-import { describe, expectTypeOf, test } from "vitest";
+import { expectTypeOf, suite, test } from "vitest";
 import type { paths } from "./fixtures/http-utilities.api.ts";
 
-describe("Given an OpenApiHttpHandlers namespace", () => {
+suite("Using request-handler utilities", () => {
   const http = createOpenApiHttp<paths>();
 
-  test("When paths are extracted, Then a path union is returned", () => {
+  test("extracts the expected path union from a request handler", () => {
     const result = expectTypeOf<PathsFor<typeof http.get>>();
 
     result.toEqualTypeOf<"/resource" | "/resource/{id}">();
   });
 
-  test("When the request body is extracted, Then the request body is returned", () => {
+  test("extracts the request body from a request handler", () => {
     const result =
       expectTypeOf<RequestBodyFor<typeof http.post, "/resource">>();
     const resultNoBody =
@@ -26,7 +26,7 @@ describe("Given an OpenApiHttpHandlers namespace", () => {
     resultNoBody.toEqualTypeOf<never>();
   });
 
-  test("When the response body is extracted, Then the response body is returned", () => {
+  test("extracts the response body from a request handler", () => {
     const result =
       expectTypeOf<ResponseBodyFor<typeof http.get, "/resource">>();
     const resultNoBody =
