@@ -25,6 +25,10 @@ jobs:
         run: npm run build
       - name: Install latest MSW and OpenAPI-TS versions
         run: npm install msw@latest openapi-typescript@latest
+      - name: Print installed MSW version
+        run: npm ls msw
+      - name: Print installed OpenAPI-TS version
+        run: npm ls openapi-typescript
       - name: Generate Test Fixtures
         run: npm run generate
       - name: Run Integration Tests
