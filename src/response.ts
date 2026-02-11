@@ -12,8 +12,9 @@ type DynamicResponseInit<Status> = Status extends keyof Wildcard
   : ResponseInitNoStatus | void;
 
 interface ResponseInitNoStatus extends Omit<HttpResponseInit, "status"> {}
-interface ResponseInitForWildcard<Key extends keyof Wildcard>
-  extends ResponseInitNoStatus {
+interface ResponseInitForWildcard<
+  Key extends keyof Wildcard,
+> extends ResponseInitNoStatus {
   status: Wildcard[Key];
 }
 
