@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "$schema": "../node_modules/@changesets/config/schema.json",
   "changelog": [
     "@changesets/changelog-github",
     { "repo": "christoph-fricke/openapi-msw" }
