@@ -1,0 +1,66 @@
+openapi: 3.0.2
+info:
+  title: Access Constraints API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    post:
+      summary: Create Resource
+      operationId: createResource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        201:
+          description: Created
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+        - name
+        - secret
+        - nested
+      properties:
+        id:
+          readOnly: true
+          type: string
+        name:
+          type: string
+        secret:
+          writeOnly: true
+          type: number
+        nested:
+          allOf:
+            - $ref: "#/components/schemas/NestedResource"
+    NestedResource:
+      type: object
+      required:
+        - id
+        - name
+        - secret
+      properties:
+        id:
+          readOnly: true
+          type: string
+        name:
+          type: string
+        secret:
+          writeOnly: true
+          type: number
