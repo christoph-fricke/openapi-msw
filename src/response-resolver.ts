@@ -123,8 +123,6 @@ export type MSWResponseResolver<
   Method extends HttpMethod,
 > = HttpResponseResolver<
   PathParams<ApiSpec, Path, Method>,
-  // FIXME:
-  // @ts-expect-error - Read/Write Markers integration hell...
   RequestBody<ApiSpec, Path, Method>,
   ResponseBody<ApiSpec, Path, Method>
 >;

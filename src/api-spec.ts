@@ -78,13 +78,13 @@ export type RequestMap<
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       requestBody?: any;
     }
-    ? StripReadOnly<
-        undefined extends ApiSpec[Path][Method]["requestBody"]
-          ? Partial<
-              NonNullable<ApiSpec[Path][Method]["requestBody"]>["content"]
-            >
-          : ApiSpec[Path][Method]["requestBody"]["content"]
-      >
+    ? undefined extends ApiSpec[Path][Method]["requestBody"]
+      ? Partial<
+          NonNullable<
+            StripReadOnly<ApiSpec[Path][Method]["requestBody"]>
+          >["content"]
+        >
+      : StripReadOnly<ApiSpec[Path][Method]["requestBody"]["content"]>
     : never
   : never;
 
