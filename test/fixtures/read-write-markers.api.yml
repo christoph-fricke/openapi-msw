@@ -1,0 +1,110 @@
+openapi: 3.0.2
+info:
+  title: Read-Write Markers API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /resource:
+    post:
+      summary: Create Resource
+      operationId: createResource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        201:
+          description: Created
+    patch:
+      summary: Patch Resource
+      operationId: patchResource
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        204:
+          description: No Content
+    get:
+      summary: Get Resource
+      operationId: getResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+  /resource-list:
+    get:
+      summary: Get Resource With Lists
+      operationId: getResourceLists
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceWithLists"
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - id
+        - name
+        - secret
+        - nested
+      properties:
+        id:
+          readOnly: true
+          type: string
+        name:
+          type: string
+        secret:
+          writeOnly: true
+          type: number
+        nested:
+          allOf:
+            - $ref: "#/components/schemas/NestedResource"
+    NestedResource:
+      type: object
+      required:
+        - id
+        - name
+        - secret
+      properties:
+        id:
+          readOnly: true
+          type: string
+        name:
+          type: string
+        secret:
+          writeOnly: true
+          type: number
+    ResourceWithLists:
+      type: object
+      required:
+        - ids
+        - names
+        - nested
+      properties:
+        ids:
+          readOnly: true
+          type: array
+          items:
+            type: number
+        names:
+          writeOnly: true
+          type: array
+          items:
+            type: string
+        nested:
+          type: array
+          items:
+            - $ref: "#/components/schemas/NestedResource"

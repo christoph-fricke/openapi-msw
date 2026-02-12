@@ -1,3 +1,4 @@
+import type { StripReadOnly, StripWriteOnly } from "./read-write-markers.ts";
 import type {
   ConvertToStringified,
   MapToValues,
@@ -78,8 +79,12 @@ export type RequestMap<
       requestBody?: any;
     }
     ? undefined extends ApiSpec[Path][Method]["requestBody"]
-      ? Partial<NonNullable<ApiSpec[Path][Method]["requestBody"]>["content"]>
-      : ApiSpec[Path][Method]["requestBody"]["content"]
+      ? Partial<
+          NonNullable<
+            StripReadOnly<ApiSpec[Path][Method]["requestBody"]>
+          >["content"]
+        >
+      : StripReadOnly<ApiSpec[Path][Method]["requestBody"]["content"]>
     : never
   : never;
 
@@ -104,9 +109,9 @@ export type ResponseMap<
       responses: any;
     }
     ? {
-        [Status in keyof ApiSpec[Path][Method]["responses"]]: ConvertContent<
-          ApiSpec[Path][Method]["responses"][Status]
-        >["content"];
+        [Status in keyof ApiSpec[Path][Method]["responses"]]: StripWriteOnly<
+          ConvertContent<ApiSpec[Path][Method]["responses"][Status]>["content"]
+        >;
       }
     : never
   : never;

@@ -27,7 +27,7 @@
     "format": "prettier --write .",
     "lint": "eslint . && prettier -c .",
     "test": "vitest",
-    "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml",
+    "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml --read-write-markers",
     "version": "changeset version && npm i",
     "release": "changeset publish"
   },
