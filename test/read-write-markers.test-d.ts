@@ -18,6 +18,21 @@ suite("Generating read-write markers", () => {
     }>();
   });
 
+  test("hides readOnly properties in optional request bodies", () => {
+    type Endpoint = typeof http.patch<"/resource">;
+    const resolver = expectTypeOf<Endpoint>().parameter(1);
+    const request = resolver.parameter(0).toHaveProperty("request");
+
+    request.toHaveProperty("json").returns.resolves.toEqualTypeOf<
+      | {
+          name: string;
+          secret: number;
+          nested: { name: string; secret: number };
+        }
+      | undefined
+    >();
+  });
+
   test("hides writeOnly properties in response helper", () => {
     http.get("/resource", ({ response }) => {
       expectTypeOf(response(200).json).parameter(0).toEqualTypeOf<{
@@ -48,5 +63,16 @@ suite("Generating read-write markers", () => {
         nested: { id: string; name: string };
       }>
     >();
+  });
+
+  test("strips markers from responses with arrays", () => {
+    http.get("/resource-list", ({ response }) => {
+      expectTypeOf(response(200).json).returns.toEqualTypeOf<
+        HttpResponse<{
+          ids: number[];
+          nested: { id: string; name: string }[];
+        }>
+      >();
+    });
   });
 });

@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  title: Access Constraints API
+  title: Read-Write Markers API
   version: 1.0.0
 servers:
   - url: http://localhost:3000
@@ -18,6 +18,18 @@ paths:
       responses:
         201:
           description: Created
+    patch:
+      summary: Patch Resource
+      operationId: patchResource
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        204:
+          description: No Content
     get:
       summary: Get Resource
       operationId: getResource
@@ -28,6 +40,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+  /resource-list:
+    get:
+      summary: Get Resource With Lists
+      operationId: getResourceLists
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceWithLists"
 components:
   schemas:
     Resource:
@@ -64,3 +87,24 @@ components:
         secret:
           writeOnly: true
           type: number
+    ResourceWithLists:
+      type: object
+      required:
+        - ids
+        - names
+        - nested
+      properties:
+        ids:
+          readOnly: true
+          type: array
+          items:
+            type: number
+        names:
+          writeOnly: true
+          type: array
+          items:
+            type: string
+        nested:
+          type: array
+          items:
+            - $ref: "#/components/schemas/NestedResource"
