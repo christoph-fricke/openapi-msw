@@ -22,6 +22,16 @@
       "default": "./dist/exports/main.js"
     }
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.15.0"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": "11.12.1"
+    }
+  },
   "scripts": {
     "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
