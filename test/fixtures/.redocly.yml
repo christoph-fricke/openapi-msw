@@ -23,6 +23,10 @@ apis:
     root: ./query-params.api.yml
     x-openapi-ts:
       output: ./query-params.api.ts
+  read-write-markers:
+    root: ./read-write-markers.api.yml
+    x-openapi-ts:
+      output: ./read-write-markers.api.ts
   request-body:
     root: ./request-body.api.yml
     x-openapi-ts:
