@@ -232,9 +232,7 @@
       /* ... */
     }
 
-    return HttpResponse.json({
-      /* ... */
-    });
+    return HttpResponse.json({/* ... */});
   });
   ```
 

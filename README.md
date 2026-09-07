@@ -161,9 +161,7 @@ const handler = http.get("/query-example", ({ query }) => {
     /* ... */
   }
 
-  return HttpResponse.json({
-    /* ... */
-  });
+  return HttpResponse.json({/* ... */});
 });
 ```
 
@@ -204,9 +202,7 @@ const handler = http.get("/response-example", ({ response }) => {
   const validRes = response(200).text("Hello World");
 
   // No Error: This combination is part of the defined OpenAPI spec
-  const validRes = response(200).json({
-    /* ... */
-  });
+  const validRes = response(200).json({/* ... */});
 });
 ```
 
