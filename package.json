@@ -25,11 +25,11 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "24.15.0"
+      "version": "24.20.0"
     },
     "packageManager": {
       "name": "npm",
-      "version": "11.12.1"
+      "version": "11.19.0"
     }
   },
   "scripts": {
