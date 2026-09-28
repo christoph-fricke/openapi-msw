@@ -9,13 +9,7 @@ export type AnyApiSpec = NonNullable<unknown>;
 
 /** Intersection of HTTP methods that are supported by both OpenAPI-TS and MSW. */
 export type HttpMethod =
-  | "get"
-  | "put"
-  | "post"
-  | "delete"
-  | "options"
-  | "head"
-  | "patch";
+  "get" | "put" | "post" | "delete" | "options" | "head" | "patch";
 
 /** Returns a union of all paths that exists in an api spec for a given method. */
 export type PathsForMethod<
