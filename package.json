@@ -41,7 +41,7 @@
     "version": "changeset version && npm i"
   },
   "peerDependencies": {
-    "msw": "^2.10.5"
+    "msw": "^2.10.5 || ^3.0.0"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
