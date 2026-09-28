@@ -4,7 +4,5 @@
     "@changesets/changelog-github",
     { "repo": "christoph-fricke/openapi-msw" }
   ],
-  "commit": false,
-  "access": "public",
-  "baseBranch": "main"
+  "access": "public"
 }
