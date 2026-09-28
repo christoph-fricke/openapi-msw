@@ -5,36 +5,81 @@ on:
     branches:
       - main
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+permissions: {}
 
-permissions:
-  id-token: write # for trusted publishing via OIDC
-  contents: write # for creating releases (changesets/action)
-  issues: write # for posting issue comments (changesets/action)
-  pull-requests: write # for creating pull requests (changesets/action)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release:
+  select-mode:
     if: github.repository == 'christoph-fricke/openapi-msw'
     runs-on: macos-latest
+    outputs:
+      mode: ${{ steps.select-mode.outputs.mode }}
+      publish-plan-artifact-id:
+        ${{ steps.select-mode.outputs.publish-plan-artifact-id }}
+    permissions:
+      contents: read
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup CI
+        uses: $/.github/actions/setup-ci
+      - name: Select Changesets Mode
+        id: select-mode
+        uses: changesets/action/select-mode@v2
+  version:
+    if: needs.select-mode.outputs.mode == 'version'
+    needs: select-mode
+    runs-on: macos-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Setup CI
+        uses: $/.github/actions/setup-ci
         with:
-          node-version-file: "package.json"
-          package-manager-cache: false
-      - name: Install Dependencies
-        run: npm ci
+          skip-cache: true
+      - name: Version Package
+        uses: changesets/action/version@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: npm run version
+          commit-message: "ci: release package"
+          pr-title: "ci: release package"
+  pack:
+    if: needs.select-mode.outputs.mode == 'publish'
+    needs: select-mode
+    runs-on: macos-latest
+    outputs:
+      pack-dir-artifact-id: ${{ steps.pack.outputs.pack-dir-artifact-id }}
+    permissions:
+      contents: read
+    steps:
+      - name: Setup CI
+        uses: $/.github/actions/setup-ci
+        with:
+          skip-cache: true
       - name: Build Package
         run: npm run build
-      - name: Version and/or Publish Package
-        uses: changesets/action@v1
+      - name: Pack Package
+        id: pack
+        uses: changesets/action/pack@v2
         with:
-          publish: npm run release
-          version: npm run version
-          commit: "ci: release package"
-          title: "ci: release package"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish-plan-artifact-id:
+            ${{ needs.select-mode.outputs.publish-plan-artifact-id }}
+  publish:
+    needs: pack
+    runs-on: macos-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Setup CI
+        uses: $/.github/actions/setup-ci
+        with:
+          skip-cache: true
+      - name: Publish Package
+        uses: changesets/action/publish@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pack-dir-artifact-id: ${{ needs.pack.outputs.pack-dir-artifact-id }}

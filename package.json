@@ -38,8 +38,7 @@
     "lint": "eslint . && prettier -c .",
     "test": "vitest run",
     "generate": "openapi-typescript -c ./test/fixtures/.redocly.yml",
-    "version": "changeset version && npm i",
-    "release": "changeset publish"
+    "version": "changeset version && npm i"
   },
   "peerDependencies": {
     "msw": "^2.10.5"
