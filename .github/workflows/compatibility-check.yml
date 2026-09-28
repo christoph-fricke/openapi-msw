@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   check:
+    name: Check with MSW v${{ matrix.msw }}
     runs-on: macos-latest
     strategy:
       matrix:
