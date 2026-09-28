@@ -49,7 +49,6 @@
     "@changesets/cli": "^2.29.8",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.11.0",
-    "lefthook": "^2.1.14",
     "openapi-typescript": "^7.13.0",
     "prettier": "^3.9.9",
     "prettier-plugin-organize-imports": "^4.3.0",
@@ -63,7 +62,7 @@
     }
   },
   "allowScripts": {
-    "lefthook@2.1.14": true,
+    "fsevents": false,
     "msw": false
   }
 }
