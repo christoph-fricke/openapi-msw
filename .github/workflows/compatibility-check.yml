@@ -10,14 +10,18 @@ permissions:
 
 jobs:
   check:
+    name: Check with MSW v${{ matrix.msw }}
     runs-on: macos-latest
+    strategy:
+      matrix:
+        msw: [2, 3]
     steps:
       - name: Setup CI
         uses: $/.github/actions/setup-ci
       - name: Build Package
         run: npm run build
-      - name: Install latest MSW and OpenAPI-TS versions
-        run: npm install msw@latest openapi-typescript@latest
+      - name: Install latest MSW v${{ matrix.msw }} and OpenAPI-TS versions
+        run: npm install msw@${{ matrix.msw }} openapi-typescript@latest
       - name: Print installed MSW version
         run: npm ls msw
       - name: Print installed OpenAPI-TS version

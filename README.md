@@ -21,8 +21,8 @@ You can install OpenAPI-MSW with this shell command:
 npm i -D openapi-msw
 ```
 
-This package has a peer dependency on MSW **v2**, which you must install as
-well. There are no plans to provide backward compatibility for MSW v1.
+This package has a peer dependency on MSW, which you must install as well. It is
+compatible with **v2** and **v3**.
 
 ## Usage Guide
 
