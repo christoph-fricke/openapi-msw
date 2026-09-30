@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 2.1.0
+
+### Minor Changes
+
+- [#103](https://github.com/christoph-fricke/openapi-msw/pull/103) [`eea2767`](https://github.com/christoph-fricke/openapi-msw/commit/eea27672d9df1cab3d57fb866c51b70051122f8d) Thanks [@christoph-fricke](https://github.com/christoph-fricke)! - Added support for MSW v3. OpenAPI-MSW is now compatible with both v2 and v3.
+
 ## 2.0.0
 
 ### Major Changes
