@@ -52,12 +52,15 @@
     "prettier": "^3.9.9",
     "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1",
-    "vitest": "^5.0.2"
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
   },
   "overrides": {
     "openapi-typescript": {
       "typescript": "$typescript"
+    },
+    "@vitest/mocker": {
+      "msw": "$msw"
     }
   },
   "allowScripts": {
