@@ -20,6 +20,23 @@ suite(convertToColonPath, () => {
     expect(result).toBe("/users/:userId/posts/:postIds");
   });
 
+  test("escapes colons that are part of the path", () => {
+    const result = convertToColonPath("/users/{id}:archive");
+    const withBaseUrl = convertToColonPath(
+      "/users/{id}:archive",
+      "https://localhost:3000",
+    );
+
+    expect(result).toBe("/users/:id\\:archive");
+    expect(withBaseUrl).toBe("https://localhost:3000/users/:id\\:archive");
+  });
+
+  test("leaves colons before an all-digit segment for MSW to treat as a port", () => {
+    const result = convertToColonPath("/users/{id}:123");
+
+    expect(result).toBe("/users/:id:123");
+  });
+
   test("appends a baseUrl to the path when provided", () => {
     const noBaseUrl = convertToColonPath("/users");
     const withBaseUrl = convertToColonPath("/users", "https://localhost:3000");
