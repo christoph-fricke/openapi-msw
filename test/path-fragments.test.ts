@@ -21,21 +21,25 @@ suite("Mocking paths with fragments", () => {
     expect(responseBody?.name).toBe("test-name");
   });
 
-  test("matches the colon before a custom method literally", async () => {
+  test("matches colons in a path literally as static parts", async () => {
+    const archiveReq = new Request(
+      "http://localhost:3000/resource/42:archive",
+      { method: "POST" },
+    );
+    const restoreReq = new Request(
+      "http://localhost:3000/resource/42:restore",
+      { method: "POST" },
+    );
+
     const handler = http.post("/resource/{id}:archive", ({ params }) => {
       return HttpResponse.json({ id: params.id, name: "archived" });
     });
-    const archive = new Request("http://localhost:3000/resource/42:archive", {
-      method: "POST",
-    });
-    const restore = new Request("http://localhost:3000/resource/42:restore", {
-      method: "POST",
-    });
+    const archiveRes = await getResponse([handler], archiveReq);
+    const restoreRes = await getResponse([handler], restoreReq);
 
-    const response = await getResponse([handler], archive);
-    const responseBody = await response?.json();
-    expect(responseBody?.id).toBe("42");
-    expect(await getResponse([handler], restore)).toBeUndefined();
+    const archiveBody = await archiveRes?.json();
+    expect(archiveBody?.id).toBe("42");
+    expect(restoreRes).toBeUndefined();
   });
 
   test("can parse fragments as number when the fragment is specified as a number fragment", async () => {

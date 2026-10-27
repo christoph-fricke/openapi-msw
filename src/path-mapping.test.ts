@@ -21,14 +21,9 @@ suite(convertToColonPath, () => {
   });
 
   test("escapes colons that are part of the path", () => {
-    const result = convertToColonPath("/users/{id}:archive");
-    const withBaseUrl = convertToColonPath(
-      "/users/{id}:archive",
-      "https://localhost:3000",
-    );
+    const result = convertToColonPath("/users/{id}:archive:delete");
 
-    expect(result).toBe("/users/:id\\:archive");
-    expect(withBaseUrl).toBe("https://localhost:3000/users/:id\\:archive");
+    expect(result).toBe("/users/:id\\:archive\\:delete");
   });
 
   test("appends a baseUrl to the path when provided", () => {
@@ -37,5 +32,14 @@ suite(convertToColonPath, () => {
 
     expect(noBaseUrl).toBe("/users");
     expect(withBaseUrl).toBe("https://localhost:3000/users");
+  });
+
+  test("does not escape colons in a provided baseUrl", () => {
+    const result = convertToColonPath(
+      "/users/{id}:archive",
+      "https://localhost:3000",
+    );
+
+    expect(result).toBe("https://localhost:3000/users/:id\\:archive");
   });
 });
