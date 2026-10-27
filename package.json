@@ -25,11 +25,11 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "24.21.0"
+      "version": "24.22.1"
     },
     "packageManager": {
       "name": "npm",
-      "version": "11.19.0"
+      "version": "11.19.1"
     }
   },
   "scripts": {
@@ -47,24 +47,20 @@
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.11.0",
+    "eslint": "^10.13.0",
     "openapi-typescript": "^7.13.0",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.0",
-    "vitest": "^5.0.3"
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
   },
   "overrides": {
     "openapi-typescript": {
       "typescript": "$typescript"
-    },
-    "@vitest/mocker": {
-      "msw": "$msw"
     }
   },
   "allowScripts": {
-    "fsevents": false,
-    "msw": false
+    "fsevents": false
   }
 }
