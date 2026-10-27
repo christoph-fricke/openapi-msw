@@ -62,6 +62,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+  /resource/{id}:archive:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      summary: Archive Resource
+      operationId: archiveResource
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
   /resource:
     get:
       summary: Get Resource
