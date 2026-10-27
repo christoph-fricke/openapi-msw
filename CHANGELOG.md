@@ -1,5 +1,11 @@
 # openapi-msw
 
+## 2.1.1
+
+### Patch Changes
+
+- [#105](https://github.com/christoph-fricke/openapi-msw/pull/105) [`1df55ac`](https://github.com/christoph-fricke/openapi-msw/commit/1df55acc554bda5479dddc43fa2c03eff43979eb) Thanks [@aklkv](https://github.com/aklkv)! - Fixed OpenAPI paths with literal colons, such as `/resource/{id}:archive`. Previously, MSW interpreted them as path parameters. Now, those colons are escaped and matched literally as static parts of the path.
+
 ## 2.1.0
 
 ### Minor Changes
